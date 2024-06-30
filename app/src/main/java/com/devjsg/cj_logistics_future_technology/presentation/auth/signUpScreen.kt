@@ -27,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -52,7 +51,7 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
     val isPasswordValid by derivedStateOf { Pattern.matches(passwordRegex, password) }
     val doPasswordsMatch by derivedStateOf { password == confirmPassword }
 
-    val context = LocalContext.current
+    var isPhoneSubmitted by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -121,30 +120,38 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
             onValueChange = viewModel::onPhoneChange,
             label = { Text("전화번호") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            readOnly = isPhoneSubmitted // 전화번호 필드를 수정할 수 없게 설정
         )
-        Button(
-            onClick = { viewModel.sendApprovalCode() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-        ) {
-            Text("인증 코드 발송")
+        if (!isPhoneSubmitted) {
+            Button(
+                onClick = {
+                    viewModel.sendApprovalCode()
+                    isPhoneSubmitted = true
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text("인증 코드 발송")
+            }
         }
-        OutlinedTextField(
-            value = approvalCode,
-            onValueChange = viewModel::onApprovalCodeChange,
-            label = { Text("인증 코드") },
-            modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        Button(
-            onClick = { viewModel.approveCode() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-        ) {
-            Text("인증 코드 확인")
+        if (isPhoneSubmitted) {
+            OutlinedTextField(
+                value = approvalCode,
+                onValueChange = viewModel::onApprovalCodeChange,
+                label = { Text("인증 코드") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Button(
+                onClick = { viewModel.approveCode() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text("인증 코드 확인")
+            }
         }
 
         when (uiState) {
