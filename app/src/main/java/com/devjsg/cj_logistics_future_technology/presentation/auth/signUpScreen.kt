@@ -2,12 +2,14 @@ package com.devjsg.cj_logistics_future_technology.presentation.auth
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -27,16 +29,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MemberViewModel
 import java.util.regex.Pattern
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) {
+fun SignUpScreen(
+    viewModel: MemberViewModel = hiltViewModel<MemberViewModel>(),
+    navController: NavController
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -46,12 +53,15 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
     val approvalCode by viewModel.approvalCodeState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     var gender by remember { mutableStateOf("Male") }
+    var employeeName by remember { mutableStateOf("") }
 
     val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
     val isPasswordValid by derivedStateOf { Pattern.matches(passwordRegex, password) }
     val doPasswordsMatch by derivedStateOf { password == confirmPassword }
 
     var isPhoneSubmitted by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -74,6 +84,18 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
                 Text("중복 확인")
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = employeeName,
+            onValueChange = { employeeName = it },
+            label = { Text("이름") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -156,8 +178,16 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
 
         when (uiState) {
             is MemberViewModel.UiState.Loading -> CircularProgressIndicator()
-            is MemberViewModel.UiState.CodeSent -> Text("인증 코드가 발송되었습니다.", color = MaterialTheme.colorScheme.primary)
-            is MemberViewModel.UiState.Approved -> Text("인증이 완료되었습니다.", color = MaterialTheme.colorScheme.primary)
+            is MemberViewModel.UiState.CodeSent -> Text(
+                "인증 코드가 발송되었습니다.",
+                color = MaterialTheme.colorScheme.primary
+            )
+
+            is MemberViewModel.UiState.Approved -> Text(
+                "인증이 완료되었습니다.",
+                color = MaterialTheme.colorScheme.primary
+            )
+
             is MemberViewModel.UiState.Error -> {
                 Text(
                     (uiState as MemberViewModel.UiState.Error).message,
@@ -165,6 +195,7 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
                 )
                 Log.d("SignUpScreen", (uiState as MemberViewModel.UiState.Error).message)
             }
+
             else -> {}
         }
 
@@ -189,7 +220,31 @@ fun SignUpScreen(viewModel: MemberViewModel = hiltViewModel<MemberViewModel>()) 
             Text(text = "여성")
         }
         Button(
-            onClick = { /* 회원가입 로직 */ },
+            onClick = {
+                val dateParts = birthDate.split("-")
+                val year = dateParts[0].toInt()
+                val month = dateParts[1].toInt()
+                val day = dateParts[2].toInt()
+
+                viewModel.signUp(
+                    loginId = username,
+                    password = password,
+                    phone = phoneNumber,
+                    gender = if (gender == "Male") "MALE" else "FEMALE",
+                    email = email,
+                    employeeName = employeeName,
+                    year = year,
+                    month = month,
+                    day = day,
+                    onSuccess = {
+                        Toast.makeText(context, "회원가입이 성공적으로 완료되었습니다", Toast.LENGTH_LONG).show()
+                        navController.navigate("login")
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(context, "회원가입 실패: $errorMessage", Toast.LENGTH_LONG).show()
+                    }
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)

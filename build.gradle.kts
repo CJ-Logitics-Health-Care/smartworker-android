@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
         classpath ("com.google.protobuf:protobuf-gradle-plugin:0.8.18")
+        classpath((kotlin("serialization", version = "1.8.20")))
     }
 }
 

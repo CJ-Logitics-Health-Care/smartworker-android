@@ -2,8 +2,10 @@ package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devjsg.cj_logistics_future_technology.data.network.SignUpRequest
 import com.devjsg.cj_logistics_future_technology.domain.uscase.ApproveCodeUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.SendApprovalCodeUseCase
+import com.devjsg.cj_logistics_future_technology.domain.uscase.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MemberViewModel @Inject constructor(
     private val sendApprovalCodeUseCase: SendApprovalCodeUseCase,
-    private val approveCodeUseCase: ApproveCodeUseCase
+    private val approveCodeUseCase: ApproveCodeUseCase,
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
     private val _phoneState = MutableStateFlow("")
@@ -62,6 +65,47 @@ class MemberViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun signUp(
+        loginId: String,
+        password: String,
+        phone: String,
+        gender: String,
+        email: String,
+        employeeName: String,
+        year: Int,
+        month: Int,
+        day: Int,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            _uiState.value = UiState.Loading
+            try {
+                val signUpRequest = SignUpRequest(
+                    loginId = loginId,
+                    password = password,
+                    phone = phone,
+                    gender = gender,
+                    email = email,
+                    employeeName = employeeName,
+                    year = year,
+                    month = month,
+                    day = day
+                )
+                val response = signUpUseCase(signUpRequest)
+                if (response.status.isSuccess()) {
+                    onSuccess()
+                } else {
+                    _uiState.value = UiState.Error("Failed to sign up")
+                    onError("Failed to sign up")
+                }
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(e.message ?: "Unknown error")
+                onError(e.message ?: "Unknown error")
             }
         }
     }
