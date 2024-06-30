@@ -2,7 +2,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devjsg.cj_logistics_future_technology.data.network.SignUpRequest
+import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import com.devjsg.cj_logistics_future_technology.domain.uscase.ApproveCodeUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.SendApprovalCodeUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.SignUpUseCase

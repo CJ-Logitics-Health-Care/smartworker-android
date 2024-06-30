@@ -45,6 +45,7 @@ fun SignUpScreen(
     navController: NavController
 ) {
     var username by remember { mutableStateOf("") }
+    var employeeName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -53,14 +54,18 @@ fun SignUpScreen(
     val approvalCode by viewModel.approvalCodeState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     var gender by remember { mutableStateOf("Male") }
-    var employeeName by remember { mutableStateOf("") }
 
     val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
     val isPasswordValid by derivedStateOf { Pattern.matches(passwordRegex, password) }
     val doPasswordsMatch by derivedStateOf { password == confirmPassword }
+    val isFormValid by derivedStateOf {
+        username.isNotEmpty() && employeeName.isNotEmpty() && password.isNotEmpty() &&
+                confirmPassword.isNotEmpty() && email.isNotEmpty() && birthDate.isNotEmpty() &&
+                phoneNumber.isNotEmpty() && approvalCode.isNotEmpty() && isPasswordValid &&
+                doPasswordsMatch && (uiState is MemberViewModel.UiState.Approved)
+    }
 
     var isPhoneSubmitted by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
     Column(
@@ -143,7 +148,7 @@ fun SignUpScreen(
             label = { Text("전화번호") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            readOnly = isPhoneSubmitted // 전화번호 필드를 수정할 수 없게 설정
+            readOnly = isPhoneSubmitted
         )
         if (!isPhoneSubmitted) {
             Button(
@@ -221,33 +226,36 @@ fun SignUpScreen(
         }
         Button(
             onClick = {
-                val dateParts = birthDate.split("-")
-                val year = dateParts[0].toInt()
-                val month = dateParts[1].toInt()
-                val day = dateParts[2].toInt()
+                if (isFormValid) {
+                    val dateParts = birthDate.split("-")
+                    val year = dateParts[0].toInt()
+                    val month = dateParts[1].toInt()
+                    val day = dateParts[2].toInt()
 
-                viewModel.signUp(
-                    loginId = username,
-                    password = password,
-                    phone = phoneNumber,
-                    gender = if (gender == "Male") "MALE" else "FEMALE",
-                    email = email,
-                    employeeName = employeeName,
-                    year = year,
-                    month = month,
-                    day = day,
-                    onSuccess = {
-                        Toast.makeText(context, "회원가입이 성공적으로 완료되었습니다", Toast.LENGTH_LONG).show()
-                        navController.navigate("login")
-                    },
-                    onError = { errorMessage ->
-                        Toast.makeText(context, "회원가입 실패: $errorMessage", Toast.LENGTH_LONG).show()
-                    }
-                )
+                    viewModel.signUp(
+                        loginId = username,
+                        password = password,
+                        phone = phoneNumber,
+                        gender = if (gender == "Male") "MALE" else "FEMALE",
+                        email = email,
+                        employeeName = employeeName,
+                        year = year,
+                        month = month,
+                        day = day,
+                        onSuccess = {
+                            Toast.makeText(context, "회원가입이 성공적으로 완료되었습니다", Toast.LENGTH_LONG).show()
+                            navController.navigate("login")
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(context, "회원가입 실패: $errorMessage", Toast.LENGTH_LONG).show()
+                        }
+                    )
+                } else {
+                    Toast.makeText(context, "모든 필드를 올바르게 작성해주세요.", Toast.LENGTH_LONG).show()
+                }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+            modifier = Modifier.fillMaxWidth(),
+            enabled = isFormValid
         ) {
             Text("회원가입")
         }

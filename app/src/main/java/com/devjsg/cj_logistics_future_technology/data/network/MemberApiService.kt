@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.data.network
 
 import com.devjsg.cj_logistics_future_technology.NetworkConstants
+import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -10,7 +11,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import kotlinx.serialization.Serializable
 
 class MemberApiService(private val client: HttpClient) {
     suspend fun sendApprovalCode(phone: String): HttpResponse {
@@ -44,16 +44,3 @@ class MemberApiService(private val client: HttpClient) {
         }
     }
 }
-
-@Serializable
-data class SignUpRequest(
-    val loginId: String,
-    val password: String,
-    val phone: String,
-    val gender: String,
-    val email: String,
-    val employeeName: String,
-    val year: Int,
-    val month: Int,
-    val day: Int
-)
