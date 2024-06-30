@@ -1,5 +1,5 @@
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
+
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -57,10 +57,16 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField("String", "baseUrl", getApiKey("baseUrl"))
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -92,6 +98,10 @@ android {
     }
 }
 
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -116,6 +126,12 @@ dependencies {
     //pagination
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.serialization)
 
     implementation ("io.grpc:grpc-okhttp:1.52.1")
     implementation("io.grpc:grpc-stub:1.52.1")
