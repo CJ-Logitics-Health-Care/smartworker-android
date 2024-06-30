@@ -21,6 +21,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @Provides
     @Singleton
     fun provideHttpClient(): HttpClient {
@@ -49,7 +50,6 @@ object NetworkModule {
 
             defaultRequest {
                 headers.append("Accept", "application/json")
-                headers.append("Content-Type", "application/json")
             }
         }
     }
