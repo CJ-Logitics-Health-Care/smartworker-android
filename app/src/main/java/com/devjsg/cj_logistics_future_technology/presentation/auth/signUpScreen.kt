@@ -51,7 +51,7 @@ fun SignUpScreen(
     var birthDate by remember { mutableStateOf("") }
     val phoneNumber by viewModel.phoneState.collectAsState()
     var gender by remember { mutableStateOf("Male") }
-
+    val loginIdMessage by viewModel.loginIdMessage.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
 
     val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
@@ -86,10 +86,10 @@ fun SignUpScreen(
                 Text("중복 확인")
             }
         }
-        if (uiState is MemberViewModel.UiState.Error) {
+        if (loginIdMessage.isNotEmpty()) {
             Text(
-                (uiState as MemberViewModel.UiState.Error).message,
-                color = MaterialTheme.colorScheme.error,
+                text = loginIdMessage,
+                color = if (isLoginIdValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium
             )
         }

@@ -24,17 +24,20 @@ class MemberViewModel @Inject constructor(
     private val _isLoginIdValid = MutableStateFlow(false)
     val isLoginIdValid: StateFlow<Boolean> = _isLoginIdValid
 
-    fun onPhoneChange(newPhone: String) {
-        _phoneState.value = newPhone
-    }
+    private val _loginIdMessage = MutableStateFlow("")
+    val loginIdMessage: StateFlow<String> = _loginIdMessage
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState
 
+    fun onPhoneChange(newPhone: String) {
+        _phoneState.value = newPhone
+    }
 
     fun checkLoginId(loginId: String) {
         if (loginId.length !in 4..8 || !loginId.matches("^[a-zA-Z0-9]*$".toRegex())) {
-            _uiState.value = UiState.Error("아이디는 4~8자리의 영문자와 숫자로만 구성되어야 합니다.")
+            _loginIdMessage.value = "아이디는 4~8자리의 영문자와 숫자로만 구성되어야 합니다."
+            _isLoginIdValid.value = false
             return
         }
         viewModelScope.launch {
@@ -42,14 +45,20 @@ class MemberViewModel @Inject constructor(
             try {
                 val response = checkLoginIdUseCase(loginId)
                 if (response.success) {
-                    _isLoginIdValid.value = response.data
-                    _uiState.value =
-                        if (response.data) UiState.LoginIdValid else UiState.Error("이미 사용 중인 아이디입니다.")
+                    if (response.data) {
+                        _loginIdMessage.value = "사용 가능한 아이디 입니다."
+                        _isLoginIdValid.value = true
+                    } else {
+                        _loginIdMessage.value = "이미 존재하는 아이디 입니다."
+                        _isLoginIdValid.value = false
+                    }
                 } else {
-                    _uiState.value = UiState.Error("아이디 중복 확인에 실패했습니다.")
+                    _loginIdMessage.value = "아이디 중복 확인에 실패했습니다."
+                    _isLoginIdValid.value = false
                 }
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message ?: "Unknown error")
+                _loginIdMessage.value = "아이디는 4~8자리의 영문자와 숫자로만 구성되어야 합니다."
+                _isLoginIdValid.value = false
             }
         }
     }
