@@ -3,8 +3,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
-import com.devjsg.cj_logistics_future_technology.domain.uscase.ApproveCodeUseCase
-import com.devjsg.cj_logistics_future_technology.domain.uscase.SendApprovalCodeUseCase
+import com.devjsg.cj_logistics_future_technology.domain.uscase.CheckLoginIdUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.http.isSuccess
@@ -15,53 +14,39 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MemberViewModel @Inject constructor(
-    private val sendApprovalCodeUseCase: SendApprovalCodeUseCase,
-    private val approveCodeUseCase: ApproveCodeUseCase,
-    private val signUpUseCase: SignUpUseCase
+    private val signUpUseCase: SignUpUseCase,
+    private val checkLoginIdUseCase: CheckLoginIdUseCase
 ) : ViewModel() {
 
     private val _phoneState = MutableStateFlow("")
     val phoneState: StateFlow<String> = _phoneState
 
-    private val _approvalCodeState = MutableStateFlow("")
-    val approvalCodeState: StateFlow<String> = _approvalCodeState
-
-    private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
-    val uiState: StateFlow<UiState> = _uiState
+    private val _isLoginIdValid = MutableStateFlow(false)
+    val isLoginIdValid: StateFlow<Boolean> = _isLoginIdValid
 
     fun onPhoneChange(newPhone: String) {
         _phoneState.value = newPhone
     }
 
-    fun onApprovalCodeChange(newCode: String) {
-        _approvalCodeState.value = newCode
-    }
+    private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
+    val uiState: StateFlow<UiState> = _uiState
 
-    fun sendApprovalCode() {
-        viewModelScope.launch {
-            _uiState.value = UiState.Loading
-            try {
-                val response = sendApprovalCodeUseCase(phoneState.value)
-                if (response.status.isSuccess()) {
-                    _uiState.value = UiState.CodeSent
-                } else {
-                    _uiState.value = UiState.Error("Failed to send code")
-                }
-            } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message ?: "Unknown error")
-            }
+
+    fun checkLoginId(loginId: String) {
+        if (loginId.length !in 4..8 || !loginId.matches("^[a-zA-Z0-9]*$".toRegex())) {
+            _uiState.value = UiState.Error("아이디는 4~8자리의 영문자와 숫자로만 구성되어야 합니다.")
+            return
         }
-    }
-
-    fun approveCode() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
-                val response = approveCodeUseCase(phoneState.value, approvalCodeState.value)
-                if (response.status.isSuccess()) {
-                    _uiState.value = UiState.Approved
+                val response = checkLoginIdUseCase(loginId)
+                if (response.success) {
+                    _isLoginIdValid.value = response.data
+                    _uiState.value =
+                        if (response.data) UiState.LoginIdValid else UiState.Error("이미 사용 중인 아이디입니다.")
                 } else {
-                    _uiState.value = UiState.Error("Failed to approve code")
+                    _uiState.value = UiState.Error("아이디 중복 확인에 실패했습니다.")
                 }
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.message ?: "Unknown error")
@@ -113,8 +98,7 @@ class MemberViewModel @Inject constructor(
     sealed class UiState {
         object Idle : UiState()
         object Loading : UiState()
-        object CodeSent : UiState()
-        object Approved : UiState()
+        object LoginIdValid : UiState()
         data class Error(val message: String) : UiState()
     }
 }

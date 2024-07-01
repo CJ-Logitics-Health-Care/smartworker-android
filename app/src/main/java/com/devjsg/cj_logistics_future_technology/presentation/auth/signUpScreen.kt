@@ -1,7 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.presentation.auth
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -46,14 +44,15 @@ fun SignUpScreen(
 ) {
     var username by remember { mutableStateOf("") }
     var employeeName by remember { mutableStateOf("") }
+    val isLoginIdValid by viewModel.isLoginIdValid.collectAsState()
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
     val phoneNumber by viewModel.phoneState.collectAsState()
-    val approvalCode by viewModel.approvalCodeState.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
     var gender by remember { mutableStateOf("Male") }
+
+    val uiState by viewModel.uiState.collectAsState()
 
     val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
     val isPasswordValid by derivedStateOf { Pattern.matches(passwordRegex, password) }
@@ -61,11 +60,9 @@ fun SignUpScreen(
     val isFormValid by derivedStateOf {
         username.isNotEmpty() && employeeName.isNotEmpty() && password.isNotEmpty() &&
                 confirmPassword.isNotEmpty() && email.isNotEmpty() && birthDate.isNotEmpty() &&
-                phoneNumber.isNotEmpty() && approvalCode.isNotEmpty() && isPasswordValid &&
-                doPasswordsMatch && (uiState is MemberViewModel.UiState.Approved)
+                phoneNumber.isNotEmpty() && isPasswordValid &&
+                doPasswordsMatch && isLoginIdValid
     }
-
-    var isPhoneSubmitted by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Column(
@@ -85,9 +82,16 @@ fun SignUpScreen(
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Button(onClick = { /* 중복 확인 로직 */ }) {
+            Button(onClick = { viewModel.checkLoginId(username) }) {
                 Text("중복 확인")
             }
+        }
+        if (uiState is MemberViewModel.UiState.Error) {
+            Text(
+                (uiState as MemberViewModel.UiState.Error).message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -147,63 +151,8 @@ fun SignUpScreen(
             onValueChange = viewModel::onPhoneChange,
             label = { Text("전화번호") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            readOnly = isPhoneSubmitted
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
         )
-        if (!isPhoneSubmitted) {
-            Button(
-                onClick = {
-                    viewModel.sendApprovalCode()
-                    isPhoneSubmitted = true
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            ) {
-                Text("인증 코드 발송")
-            }
-        }
-        if (isPhoneSubmitted) {
-            OutlinedTextField(
-                value = approvalCode,
-                onValueChange = viewModel::onApprovalCodeChange,
-                label = { Text("인증 코드") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            Button(
-                onClick = { viewModel.approveCode() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            ) {
-                Text("인증 코드 확인")
-            }
-        }
-
-        when (uiState) {
-            is MemberViewModel.UiState.Loading -> CircularProgressIndicator()
-            is MemberViewModel.UiState.CodeSent -> Text(
-                "인증 코드가 발송되었습니다.",
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            is MemberViewModel.UiState.Approved -> Text(
-                "인증이 완료되었습니다.",
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            is MemberViewModel.UiState.Error -> {
-                Text(
-                    (uiState as MemberViewModel.UiState.Error).message,
-                    color = MaterialTheme.colorScheme.error
-                )
-                Log.d("SignUpScreen", (uiState as MemberViewModel.UiState.Error).message)
-            }
-
-            else -> {}
-        }
-
         Text(
             text = "성별",
             style = MaterialTheme.typography.bodyMedium,
@@ -247,7 +196,8 @@ fun SignUpScreen(
                             navController.navigate("login")
                         },
                         onError = { errorMessage ->
-                            Toast.makeText(context, "회원가입 실패: $errorMessage", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "회원가입 실패: $errorMessage", Toast.LENGTH_LONG)
+                                .show()
                         }
                     )
                 } else {

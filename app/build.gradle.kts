@@ -1,4 +1,3 @@
-
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
@@ -135,7 +134,7 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization)
 
-    implementation ("io.grpc:grpc-okhttp:1.52.1")
+    implementation("io.grpc:grpc-okhttp:1.52.1")
     implementation("io.grpc:grpc-stub:1.52.1")
     implementation("io.grpc:grpc-protobuf-lite:1.52.1")
     implementation("io.grpc:grpc-kotlin-stub:1.3.0")

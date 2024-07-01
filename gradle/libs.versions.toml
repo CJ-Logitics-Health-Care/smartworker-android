@@ -51,14 +51,14 @@ horologist-compose-tools = { group = "com.google.android.horologist", name = "ho
 horologist-tiles = { group = "com.google.android.horologist", name = "horologist-tiles", version.ref = "horologistTiles" }
 androidx-watchface-complications-data-source-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version.ref = "watchfaceComplicationsDataSourceKtx" }
 
-hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "hilt"}
-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt"}
+hilt-core = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging"}
-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging"}
+paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
-ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion"}
-ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorVersion"}
+ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
+ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorVersion" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorVersion" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorVersion" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
@@ -66,6 +66,6 @@ ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", versi
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-android-hilt = {id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
