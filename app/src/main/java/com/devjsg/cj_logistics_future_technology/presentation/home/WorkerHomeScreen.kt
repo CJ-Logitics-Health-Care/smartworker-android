@@ -5,6 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun workerHomeScreen (navController: NavController){
+fun WorkerHomeScreen (navController: NavController){
     Text(text = "근로자")
 }

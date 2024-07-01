@@ -65,19 +65,20 @@ fun LoginScreen(viewModel: MemberViewModel = hiltViewModel(), navController: Nav
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                viewModel.login(id, password,
-                    onSuccess = { decodedSub ->
-                        if (decodedSub == "1") {
-                            navController.navigate("admin_home")
-                        } else {
-                            navController.navigate("worker_home")
+                viewModel.login(id, password, onSuccess = { sub ->
+                    if (sub == "1") {
+                        navController.navigate("admin_home") {
+                            popUpTo("login") { inclusive = true }
                         }
-                        Toast.makeText(context, "로그인에 성공했습니다.", Toast.LENGTH_LONG).show()
-                    },
-                    onError = { errorMessage ->
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                    } else {
+                        navController.navigate("worker_home") {
+                            popUpTo("login") { inclusive = true }
+                        }
                     }
-                )
+                }, onError = {
+                    Toast.makeText(context, "로그인에 실패했습니다. 아이디나 비밀번호를 다시 확인해주세요.", Toast.LENGTH_LONG)
+                        .show()
+                })
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -101,6 +102,7 @@ fun LoginScreen(viewModel: MemberViewModel = hiltViewModel(), navController: Nav
                     color = MaterialTheme.colorScheme.error
                 )
             }
+
             else -> {}
         }
     }
