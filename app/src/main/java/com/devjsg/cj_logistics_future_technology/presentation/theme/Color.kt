@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.ui.theme
+package com.devjsg.cj_logistics_future_technology.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

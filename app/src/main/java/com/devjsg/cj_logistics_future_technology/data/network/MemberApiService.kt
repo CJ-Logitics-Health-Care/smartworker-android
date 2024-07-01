@@ -1,6 +1,5 @@
 package com.devjsg.cj_logistics_future_technology.data.network
 
-import com.devjsg.cj_logistics_future_technology.NetworkConstants
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
