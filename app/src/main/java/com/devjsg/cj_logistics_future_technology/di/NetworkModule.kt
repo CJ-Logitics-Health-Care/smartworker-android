@@ -1,10 +1,13 @@
 package com.devjsg.cj_logistics_future_technology.di
 
+import android.content.Context
+import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -24,7 +27,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(): HttpClient {
+    fun provideHttpClient(
+        dataStoreManager: DataStoreManager
+    ): HttpClient {
         return HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(Json {
@@ -62,7 +67,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideMemberRepository(apiService: MemberApiService): MemberRepository {
-        return MemberRepository(apiService)
+    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
+        return DataStoreManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMemberRepository(apiService: MemberApiService, dataStoreManager: DataStoreManager): MemberRepository {
+        return MemberRepository(apiService, dataStoreManager)
     }
 }

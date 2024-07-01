@@ -119,6 +119,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation (libs.kotlinx.serialization.json)
 
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
@@ -133,6 +134,11 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization)
+
+    //implementation(libs.auth0.android)
+    implementation(libs.auth0.decode)
+
+    implementation(libs.datastore.preferences)
 
     implementation("io.grpc:grpc-okhttp:1.52.1")
     implementation("io.grpc:grpc-stub:1.52.1")

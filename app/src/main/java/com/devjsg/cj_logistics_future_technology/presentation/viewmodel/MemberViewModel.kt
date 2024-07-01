@@ -3,7 +3,9 @@ package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
+import com.devjsg.cj_logistics_future_technology.di.util.decodeJwt
 import com.devjsg.cj_logistics_future_technology.domain.uscase.CheckLoginIdUseCase
+import com.devjsg.cj_logistics_future_technology.domain.uscase.LoginUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.http.isSuccess
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MemberViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
-    private val checkLoginIdUseCase: CheckLoginIdUseCase
+    private val checkLoginIdUseCase: CheckLoginIdUseCase,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _phoneState = MutableStateFlow("")
@@ -103,6 +106,27 @@ class MemberViewModel @Inject constructor(
             }
         }
     }
+
+    fun login(id: String, password: String, onSuccess: (String?) -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            _uiState.value = UiState.Loading
+            try {
+                val response = loginUseCase(id, password)
+                if (response.success) {
+                    val decodedSub = decodeJwt(response.data.token)
+                    onSuccess(decodedSub)
+                } else {
+                    _uiState.value = UiState.Error("로그인에 실패했습니다. 아이디나 비밀번호를 다시 확인해주세요.")
+                    onError("로그인에 실패했습니다. 아이디나 비밀번호를 다시 확인해주세요.")
+                }
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(e.message ?: "Unknown error")
+                onError(e.message ?: "Unknown error")
+                e.printStackTrace()  // 추가하여 예외 로그를 확인
+            }
+        }
+    }
+
 
     sealed class UiState {
         object Idle : UiState()
