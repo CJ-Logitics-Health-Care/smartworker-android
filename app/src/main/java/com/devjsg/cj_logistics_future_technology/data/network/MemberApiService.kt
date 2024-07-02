@@ -48,7 +48,6 @@ class MemberApiService(private val client: HttpClient) {
             setBody(LoginRequest(loginId, password))
         }
         val responseBody = response.bodyAsText()
-        println("Response body: $responseBody")  // 응답 본문 로깅
         return Json.decodeFromString(responseBody)
     }
 }
