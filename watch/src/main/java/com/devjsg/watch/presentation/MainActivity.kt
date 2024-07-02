@@ -7,8 +7,14 @@
 package com.devjsg.watch.presentation
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
@@ -25,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         requestPermissions()
+        disableBatteryOptimizations()
 
         setTheme(android.R.style.Theme_DeviceDefault)
 
@@ -38,7 +45,9 @@ class MainActivity : ComponentActivity() {
     private fun requestPermissions() {
         val requiredPermissions = arrayOf(
             Manifest.permission.BODY_SENSORS,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.FOREGROUND_SERVICE,
+            Manifest.permission.WAKE_LOCK
         )
 
         val missingPermissions = requiredPermissions.filter {
@@ -48,5 +57,20 @@ class MainActivity : ComponentActivity() {
         if (missingPermissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), 0)
         }
+    }
+
+    @SuppressLint("BatteryLife")
+    private fun disableBatteryOptimizations() {
+        val intent = Intent()
+        val packageName = packageName
+        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        if (pm.isIgnoringBatteryOptimizations(packageName)) {
+            return
+        }
+
+        intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+        intent.data = Uri.parse("package:$packageName")
+        startActivity(intent)
     }
 }

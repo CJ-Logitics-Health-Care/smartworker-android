@@ -1,7 +1,6 @@
 package com.devjsg.watch.di
 
 import android.content.Context
-import com.devjsg.watch.data.DataSyncManager
 import com.devjsg.watch.data.HeartRateRepository
 import dagger.Module
 import dagger.Provides
@@ -20,13 +19,5 @@ object DataModule {
         @ApplicationContext context: Context
     ): HeartRateRepository {
         return HeartRateRepository(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideDataSyncManager(
-        @ApplicationContext context: Context
-    ): DataSyncManager {
-        return DataSyncManager(context)
     }
 }

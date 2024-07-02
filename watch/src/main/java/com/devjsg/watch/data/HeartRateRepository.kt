@@ -48,12 +48,8 @@ class HeartRateRepository @Inject constructor(
 
             override fun onDataReceived(data: DataPointContainer) {
                 val heartRateBpm = data.getData(DataType.HEART_RATE_BPM)
-                Log.d(TAG, "💓 Received heart rate data points: ${heartRateBpm.size}")
-                if (heartRateBpm.isNotEmpty()) {
-                    val heartRate = heartRateBpm.first().value
-                    Log.d(TAG, "💓 First heart rate value: $heartRate")
-                    trySendBlocking(MeasureMessage.MeasureData(heartRateBpm))
-                }
+                Log.d(TAG, "💓 Received heart rate: ${heartRateBpm.first().value}")
+                trySendBlocking(MeasureMessage.MeasureData(heartRateBpm))
             }
         }
 
