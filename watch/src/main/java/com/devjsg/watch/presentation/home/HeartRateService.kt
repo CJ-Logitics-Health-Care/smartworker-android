@@ -15,6 +15,9 @@ import androidx.core.content.ContextCompat
 import com.devjsg.watch.R
 import com.devjsg.watch.data.HeartRateRepository
 import com.devjsg.watch.data.MeasureMessage
+import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.PutDataMapRequest
+import com.google.android.gms.wearable.Wearable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +35,10 @@ class HeartRateService : Service() {
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
     private lateinit var wakeLock: PowerManager.WakeLock
+
+    private val dataClient: DataClient by lazy {
+        Wearable.getDataClient(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -73,7 +80,7 @@ class HeartRateService : Service() {
         val notification: Notification = NotificationCompat.Builder(this, notificationChannelId)
             .setContentTitle("Heart Rate Monitoring")
             .setContentText("Monitoring heart rate in background")
-            .setSmallIcon(R.drawable.baseline_monitor_heart_24)
+            .setSmallIcon(R.drawable.splash_icon)
             .build()
 
         startForeground(1, notification)
@@ -89,6 +96,7 @@ class HeartRateService : Service() {
                         val heartRateValue = message.data.first().value.toInt()
                         Log.d(TAG, "💓 Heart Rate: $heartRateValue")
                         sendHeartRateBroadcast(heartRateValue)
+                        sendHeartRateToPhone(heartRateValue)
                     }
                     is MeasureMessage.MeasureAvailability -> {
                         // Handle availability change if needed
@@ -102,6 +110,21 @@ class HeartRateService : Service() {
         val intent = Intent("com.devjsg.watch.HEART_RATE_UPDATE")
         intent.putExtra("heartRate", heartRate)
         sendBroadcast(intent)
+    }
+
+    private fun sendHeartRateToPhone(heartRate: Int) {
+        val putDataMapRequest = PutDataMapRequest.create("/heart_rate").apply {
+            dataMap.putInt("heartRate", heartRate)
+            dataMap.putLong("timestamp", System.currentTimeMillis())
+        }
+        val request = putDataMapRequest.asPutDataRequest()
+        dataClient.putDataItem(request)
+            .addOnSuccessListener {
+                Log.d(TAG, "Successfully sent heart rate data to phone: $heartRate")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to send heart rate data to phone", e)
+            }
     }
 
     private fun stopMonitoring() {

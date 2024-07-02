@@ -17,6 +17,7 @@ import com.devjsg.watch.presentation.viewmodel.HeartRateViewModel
 @Composable
 fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
     val heartRate by viewModel.heartRate.collectAsState()
+    val heartRateAvg by viewModel.heartRateAvg.collectAsState()
     val context = LocalContext.current
 
     Column(
@@ -35,5 +36,6 @@ fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
         }) {
             Text("Stop Monitoring")
         }
+        Text("Heart Rate: $heartRateAvg BPM")
     }
 }

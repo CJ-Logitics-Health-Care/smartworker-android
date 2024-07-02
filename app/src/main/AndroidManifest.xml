@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:name=".presentation.main.MyApplication"
@@ -15,6 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CJLogisticsFutureTechnology"
         tools:targetApi="31">
+
+        <service
+            android:name=".presentation.home.DataSyncService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="dataSync">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/heart_rate" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"
@@ -22,10 +36,8 @@
             android:theme="@style/Theme.CJLogisticsFutureTechnology">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

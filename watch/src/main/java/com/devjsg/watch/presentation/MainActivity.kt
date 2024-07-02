@@ -7,7 +7,6 @@
 package com.devjsg.watch.presentation
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -59,13 +58,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @SuppressLint("BatteryLife")
     private fun disableBatteryOptimizations() {
         val intent = Intent()
         val packageName = packageName
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
 
         if (pm.isIgnoringBatteryOptimizations(packageName)) {
+            // 이미 배터리 최적화에서 제외되어 있습니다.
             return
         }
 

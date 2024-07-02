@@ -1,7 +1,7 @@
-package com.devjsg.watch.di
+package com.devjsg.cj_logistics_future_technology.di
 
 import android.content.Context
-import com.devjsg.watch.data.HeartRateRepository
+import com.devjsg.cj_logistics_future_technology.data.datasync.DataSyncManager
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.Wearable
 import dagger.Module
@@ -17,15 +17,13 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideHeartRateRepository(
-        @ApplicationContext context: Context
-    ): HeartRateRepository {
-        return HeartRateRepository(context)
+    fun provideDataClient(@ApplicationContext context: Context): DataClient {
+        return Wearable.getDataClient(context)
     }
 
     @Provides
     @Singleton
-    fun provideDataClient(@ApplicationContext context: Context): DataClient {
-        return Wearable.getDataClient(context)
+    fun provideDataSyncManager(dataClient: DataClient): DataSyncManager {
+        return DataSyncManager(dataClient)
     }
 }
