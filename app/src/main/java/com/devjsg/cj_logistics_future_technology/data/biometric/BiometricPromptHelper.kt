@@ -16,42 +16,35 @@ class BiometricPromptHelper @Inject constructor(
 ) {
 
     private val executor = ContextCompat.getMainExecutor(context)
-    private lateinit var onSuccess: () -> Unit
-    private lateinit var onError: (String) -> Unit
-
     private val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
         override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
             super.onAuthenticationError(errorCode, errString)
-            if (::onError.isInitialized) {
-                onError(errString.toString())
-            }
+            onError?.invoke(errString.toString())
         }
 
         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
             super.onAuthenticationSucceeded(result)
-            if (::onSuccess.isInitialized) {
-                onSuccess()
-            }
+            onSuccess?.invoke()
         }
 
         override fun onAuthenticationFailed() {
             super.onAuthenticationFailed()
-            if (::onError.isInitialized) {
-                onError("Authentication failed")
-            }
+            onError?.invoke("Authentication failed")
         }
     })
 
     private val promptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle("Biometric login")
-        .setSubtitle("Log in using your biometric credential")
-        .setNegativeButtonText("Use account password")
+        .setTitle("생체 인증")
+        .setSubtitle("기기에 등록된 생체 정보를 이용하여 인증해주세요.")
+        .setNegativeButtonText("생체 인증 취소")
         .build()
+
+    private var onSuccess: (() -> Unit)? = null
+    private var onError: ((String) -> Unit)? = null
 
     fun authenticate(onSuccess: () -> Unit, onError: (String) -> Unit) {
         this.onSuccess = onSuccess
         this.onError = onError
-
         val biometricManager = BiometricManager.from(context)
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
