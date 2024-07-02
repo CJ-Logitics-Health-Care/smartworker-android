@@ -69,7 +69,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.concurrent)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.androidx.health.services)
 }
