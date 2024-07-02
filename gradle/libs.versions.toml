@@ -13,6 +13,7 @@ playServicesWearable = "18.0.0"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
 coreSplashscreen = "1.0.1"
+securityCrypto = "1.1.0-alpha06"
 tiles = "1.1.0"
 tilesMaterial = "1.1.0"
 horologistComposeTools = "0.4.8"
@@ -30,9 +31,12 @@ jwtDecode = "2.0.2"
 health-services = "1.0.0-rc02"
 ktorVersion = "2.3.12"
 concurrent = "1.2.0"
+biometric = "1.1.0"
+securityCryptoKtx = "1.1.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -76,6 +80,9 @@ ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", versi
 
 auth0-android = { module = "com.auth0.android:auth0", version.ref = "auth0"}
 auth0-decode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtDecode"}
+
+biometric = {module = "androidx.biometric:biometric", version.ref = "biometric"}
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

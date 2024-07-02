@@ -6,10 +6,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 private val Context.dataStore by preferencesDataStore("user_prefs")
 
-class DataStoreManager(context: Context) {
+class DataStoreManager @Inject constructor(context: Context) {
     private val dataStore = context.dataStore
 
     companion object {

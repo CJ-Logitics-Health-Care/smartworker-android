@@ -67,12 +67,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
-        return DataStoreManager(context)
-    }
-
-    @Provides
-    @Singleton
     fun provideMemberRepository(apiService: MemberApiService, dataStoreManager: DataStoreManager): MemberRepository {
         return MemberRepository(apiService, dataStoreManager)
     }

@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devjsg.cj_logistics_future_technology.data.biometric.KeystoreHelper
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import com.devjsg.cj_logistics_future_technology.di.util.decodeJwt
 import com.devjsg.cj_logistics_future_technology.domain.uscase.CheckLoginIdUseCase
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class MemberViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
     private val checkLoginIdUseCase: CheckLoginIdUseCase,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val keystoreHelper: KeystoreHelper
 ) : ViewModel() {
 
     private val _phoneState = MutableStateFlow("")
@@ -113,6 +115,8 @@ class MemberViewModel @Inject constructor(
             try {
                 val response = loginUseCase(id, password)
                 if (response.success) {
+                    val loginData = "$id:$password"
+                    keystoreHelper.saveLoginData(loginData)
                     val decodedSub = decodeJwt(response.data.token)
                     onSuccess(decodedSub)
                 } else {
@@ -122,12 +126,15 @@ class MemberViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.message ?: "Unknown error")
                 onError(e.message ?: "Unknown error")
-                e.printStackTrace()  // 추가하여 예외 로그를 확인
             }
         }
     }
 
-
+    fun autoLogin(onSuccess: (String?) -> Unit) {
+        val loginData = keystoreHelper.getLoginData() ?: return
+        val (id, password) = loginData.split(":")
+        login(id, password, onSuccess, onError = { })
+    }
     sealed class UiState {
         object Idle : UiState()
         object Loading : UiState()
