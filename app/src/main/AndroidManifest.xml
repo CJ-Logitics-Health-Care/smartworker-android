@@ -20,6 +20,10 @@
         android:theme="@style/Theme.CJLogisticsFutureTechnology"
         tools:targetApi="31">
 
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="false" />
+
         <service
             android:name=".presentation.home.DataSyncService"
             android:enabled="true"
@@ -30,6 +34,19 @@
                 <data
                     android:host="*"
                     android:pathPrefix="/heart_rate"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".presentation.service.HeartRateListenerService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/heart_rate_avg"
                     android:scheme="wear" />
             </intent-filter>
         </service>

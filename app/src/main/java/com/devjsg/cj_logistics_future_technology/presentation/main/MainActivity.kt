@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptHelper
 import com.devjsg.cj_logistics_future_technology.presentation.home.DataSyncService
 import com.devjsg.cj_logistics_future_technology.presentation.navigation.Navigation
+import com.devjsg.cj_logistics_future_technology.presentation.service.HeartRateListenerService
 import com.devjsg.cj_logistics_future_technology.presentation.theme.CJLogisticsFutureTechnologyTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,6 +30,9 @@ class MainActivity : FragmentActivity() {
                 Navigation(navController = navController, biometricPromptHelper)
             }
         }
+
+        val intent = Intent(this, HeartRateListenerService::class.java)
+        startService(intent)
 
         startDataSyncService()
     }

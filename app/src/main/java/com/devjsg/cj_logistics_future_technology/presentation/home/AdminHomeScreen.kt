@@ -19,7 +19,7 @@ fun AdminHomeScreen(
     navController: NavController,
     viewModel: WorkerHomeViewModel = hiltViewModel()
 ) {
-    val heartRate by viewModel.heartRate.collectAsState()
+    val heartRate by viewModel.heartRateAvg.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),

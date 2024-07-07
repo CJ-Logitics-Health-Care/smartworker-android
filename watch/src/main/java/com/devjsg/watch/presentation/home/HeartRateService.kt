@@ -113,7 +113,7 @@ class HeartRateService : Service() {
 
         serviceScope.launch {
             while (true) {
-                delay(60 * 1000) // 1분 대기
+                delay(6 * 1000) // 1분 대기
                 val avg = calculateAverageHeartRate()
                 sendHeartRateAvgBroadcast(avg)
                 scheduleHeartRateAvgWork(avg)

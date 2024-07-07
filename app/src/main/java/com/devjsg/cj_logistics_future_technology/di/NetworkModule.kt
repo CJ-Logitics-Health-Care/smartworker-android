@@ -3,6 +3,7 @@ package com.devjsg.cj_logistics_future_technology.di
 import android.content.Context
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
+import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
 import dagger.Module
 import dagger.Provides
@@ -69,5 +70,13 @@ object NetworkModule {
     @Singleton
     fun provideMemberRepository(apiService: MemberApiService, dataStoreManager: DataStoreManager): MemberRepository {
         return MemberRepository(apiService, dataStoreManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHeartRateRepository(
+        @ApplicationContext context: Context
+    ): HeartRateRepository {
+        return HeartRateRepository(context)
     }
 }
