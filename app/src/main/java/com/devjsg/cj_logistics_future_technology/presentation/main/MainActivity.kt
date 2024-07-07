@@ -6,17 +6,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptHelper
-import com.devjsg.cj_logistics_future_technology.presentation.home.DataSyncService
+import com.devjsg.cj_logistics_future_technology.data.source.remote.HeartRateListenerService
 import com.devjsg.cj_logistics_future_technology.presentation.navigation.Navigation
-import com.devjsg.cj_logistics_future_technology.presentation.service.HeartRateListenerService
 import com.devjsg.cj_logistics_future_technology.presentation.theme.CJLogisticsFutureTechnologyTheme
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,8 +48,6 @@ class MainActivity : FragmentActivity() {
 
         val intent = Intent(this, HeartRateListenerService::class.java)
         startService(intent)
-
-        startDataSyncService()
     }
 
     override fun onResume() {
@@ -66,12 +61,6 @@ class MainActivity : FragmentActivity() {
     override fun onPause() {
         super.onPause()
         unregisterReceiver(heartRateReceiver)
-    }
-
-    private fun startDataSyncService() {
-        val intent = Intent(this, DataSyncService::class.java)
-        ContextCompat.startForegroundService(this, intent)
-        Log.d(TAG, "DataSyncService started")
     }
 
     companion object {

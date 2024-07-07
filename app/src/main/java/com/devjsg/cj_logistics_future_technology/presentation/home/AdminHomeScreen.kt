@@ -20,7 +20,6 @@ fun AdminHomeScreen(
     viewModel: WorkerHomeViewModel = hiltViewModel()
 ) {
     val heartRateAvg by viewModel.heartRateAvg.collectAsState()
-    val nodeId by viewModel.nodeId.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -29,13 +28,6 @@ fun AdminHomeScreen(
     ) {
         Text(text = "관리자")
         Text(text = "Heart Rate: $heartRateAvg BPM")
-
-        Text(
-            text = when (nodeId) {
-                null -> "No connected wearable device"
-                else -> "Connected Node ID: $nodeId"
-            }
-        )
 
         Button(onClick = {
             viewModel.logout {

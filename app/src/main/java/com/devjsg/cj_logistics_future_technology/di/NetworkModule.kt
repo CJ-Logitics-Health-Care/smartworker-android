@@ -5,9 +5,6 @@ import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreM
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
 import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
-import com.devjsg.cj_logistics_future_technology.presentation.home.WearableConnectionManager
-import com.google.android.gms.wearable.NodeClient
-import com.google.android.gms.wearable.Wearable
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,17 +78,5 @@ object NetworkModule {
         @ApplicationContext context: Context
     ): HeartRateRepository {
         return HeartRateRepository(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideNodeClient(@ApplicationContext context: Context): NodeClient {
-        return Wearable.getNodeClient(context)
-    }
-
-    @Provides
-    @Singleton
-    fun provideWearableConnectionManager(@ApplicationContext context: Context): WearableConnectionManager {
-        return WearableConnectionManager(context)
     }
 }

@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.service
+package com.devjsg.cj_logistics_future_technology.data.source.remote
 
 import android.content.Intent
 import android.util.Log

@@ -11,7 +11,6 @@
         android:name=".presentation.main.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,21 +24,7 @@
             android:value="false" />
 
         <service
-            android:name=".presentation.home.DataSyncService"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="dataSync">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/heart_rate"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name=".presentation.service.HeartRateListenerService"
+            android:name=".data.source.remote.HeartRateListenerService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
