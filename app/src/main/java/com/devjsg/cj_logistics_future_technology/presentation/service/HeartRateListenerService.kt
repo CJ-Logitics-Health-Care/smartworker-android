@@ -1,14 +1,9 @@
 package com.devjsg.cj_logistics_future_technology.presentation.service
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
-import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
-import com.google.android.gms.wearable.DataEvent
-import com.google.android.gms.wearable.DataEventBuffer
-import com.google.android.gms.wearable.DataMapItem
+import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -24,38 +19,29 @@ class HeartRateListenerService : WearableListenerService() {
         Log.d(TAG, "HeartRateListenerService created")
     }
 
-    @SuppressLint("VisibleForTests")
-    override fun onDataChanged(dataEvents: DataEventBuffer) {
-        Log.d(TAG, "onDataChanged called")
-        for (event in dataEvents) {
-            Log.d(TAG, "Event type: ${event.type}")
-            if (event.type == DataEvent.TYPE_CHANGED) {
-                val dataItem = event.dataItem
-                Log.d(TAG, "DataItem path: ${dataItem.uri.path}")
-                if (dataItem.uri.path == "/heart_rate_avg") {
-                    val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
-                    val heartRateAvg = dataMap.getInt("heartRateAvg")
-                    val timestamp = dataMap.getLong("timestamp")
-                    Log.d(TAG, "Received heart rate avg data: $heartRateAvg at $timestamp")
-                    handleHeartRateAvgData(heartRateAvg, timestamp)
-                }
-            }
+    override fun onMessageReceived(messageEvent: MessageEvent) {
+        Log.d(TAG, "onMessageReceived called with path: ${messageEvent.path}")
+        if (messageEvent.path == "/heart_rate_avg") {
+            val heartRateAvg = String(messageEvent.data).toInt()
+            Log.d(TAG, "Received heart rate avg data: $heartRateAvg")
+            handleHeartRateAvgData(heartRateAvg)
+        } else {
+            Log.d(TAG, "Received unknown path: ${messageEvent.path}")
         }
     }
 
-    private fun handleHeartRateAvgData(heartRateAvg: Int, timestamp: Long) {
-        Log.d(TAG, "Handling heart rate avg data: $heartRateAvg at $timestamp")
-        repository.handleReceivedHeartRateAvg(heartRateAvg)
+    private fun handleHeartRateAvgData(heartRateAvg: Int) {
+        Log.d(TAG, "Handling heart rate avg data: $heartRateAvg")
 
-        val viewModel = ViewModelProvider(
-            this as ViewModelStoreOwner,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        ).get(WorkerHomeViewModel::class.java)
-
-        viewModel.setHeartRateAvg(heartRateAvg)
+        val intent = Intent(ACTION_HEART_RATE_AVG_UPDATE).apply {
+            putExtra(EXTRA_HEART_RATE_AVG, heartRateAvg)
+        }
+        sendBroadcast(intent)
     }
 
     companion object {
         private const val TAG = "HeartRateListenerService"
+        const val ACTION_HEART_RATE_AVG_UPDATE = "com.example.myapp.ACTION_HEART_RATE_AVG_UPDATE"
+        const val EXTRA_HEART_RATE_AVG = "com.example.myapp.EXTRA_HEART_RATE_AVG"
     }
 }

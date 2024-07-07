@@ -1,4 +1,4 @@
-package com.devjsg.watch.complication
+package com.devjsg.cj_logistics_future_technology.complication
 
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType

@@ -10,14 +10,24 @@ import com.devjsg.cj_logistics_future_technology.presentation.home.AdminHomeScre
 import com.devjsg.cj_logistics_future_technology.presentation.home.WorkerHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
 import com.devjsg.cj_logistics_future_technology.presentation.splash.SplashScreen
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 
 @Composable
-fun Navigation(navController: NavHostController, biometricPromptHelper: BiometricPromptHelper) {
+fun Navigation(
+    navController: NavHostController,
+    biometricPromptHelper: BiometricPromptHelper,
+    heartRateViewModel: WorkerHomeViewModel
+) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController = navController) }
         composable("sign_up") { SignUpScreen(navController = navController) }
-        composable("login") { LoginScreen(navController = navController, biometricPromptHelper = biometricPromptHelper) }
-        composable("admin_home") { AdminHomeScreen(navController = navController) }
+        composable("login") {
+            LoginScreen(
+                navController = navController,
+                biometricPromptHelper = biometricPromptHelper
+            )
+        }
+        composable("admin_home") { AdminHomeScreen(navController, heartRateViewModel) }
         composable("worker_home") { WorkerHomeScreen(navController = navController) }
     }
 }

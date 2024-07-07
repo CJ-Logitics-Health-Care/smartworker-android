@@ -1,5 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
@@ -21,28 +22,23 @@ class WorkerHomeViewModel @Inject constructor(
     private val _heartRateAvg = MutableStateFlow<Int>(0)
     val heartRateAvg: StateFlow<Int> = _heartRateAvg
 
-    private val _isConnected = MutableStateFlow<Boolean?>(null)
-    val isConnected: StateFlow<Boolean?> get() = _isConnected
+    private val _nodeId = MutableStateFlow<String?>(null)
+    val nodeId: StateFlow<String?> get() = _nodeId
 
     init {
-        checkConnection()
+        getNodeId()
     }
 
-    private fun checkConnection() {
+    private fun getNodeId() {
         viewModelScope.launch {
-            connectionManager.isAnyDeviceConnected().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _isConnected.value = task.result
-                } else {
-                    _isConnected.value = false
-                }
-            }
+            val nodeId = connectionManager.getWearableNodeId()
+            _nodeId.value = nodeId
         }
     }
 
     fun setHeartRateAvg(heartRateAvg: Int) {
         _heartRateAvg.value = heartRateAvg
-        // 수신된 데이터를 Repository를 통해 처리
+        Log.d("WorkerHomeViewModel", "setHeartRateAvg: ${_heartRateAvg.value}")
         heartRateRepository.handleReceivedHeartRateAvg(heartRateAvg)
     }
 

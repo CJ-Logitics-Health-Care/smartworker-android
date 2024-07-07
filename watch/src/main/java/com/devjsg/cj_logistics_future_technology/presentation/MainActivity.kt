@@ -4,7 +4,7 @@
  * changes to the libraries and their usages.
  */
 
-package com.devjsg.watch.presentation
+package com.devjsg.cj_logistics_future_technology.presentation
 
 import android.Manifest
 import android.content.Context
@@ -19,8 +19,8 @@ import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.devjsg.watch.presentation.home.HeartRateScreen
-import com.devjsg.watch.presentation.theme.CJLogisticsFutureTechnologyTheme
+import com.devjsg.cj_logistics_future_technology.presentation.home.HeartRateScreen
+import com.devjsg.cj_logistics_future_technology.presentation.theme.CJLogisticsFutureTechnologyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.devjsg.watch.presentation.home
+package com.devjsg.cj_logistics_future_technology.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
-import com.devjsg.watch.presentation.viewmodel.HeartRateViewModel
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.HeartRateViewModel
 
 @Composable
 fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {

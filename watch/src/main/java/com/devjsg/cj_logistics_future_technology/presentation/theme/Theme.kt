@@ -1,4 +1,4 @@
-package com.devjsg.watch.presentation.theme
+package com.devjsg.cj_logistics_future_technology.presentation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme

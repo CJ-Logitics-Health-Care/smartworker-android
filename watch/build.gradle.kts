@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.devjsg.watch"
+    namespace = "com.devjsg.cj_logistics_future_technology"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.devjsg.watch"
+        applicationId = "com.devjsg.cj_logistics_future_technology"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

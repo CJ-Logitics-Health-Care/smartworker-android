@@ -1,4 +1,4 @@
-package com.devjsg.watch.data
+package com.devjsg.cj_logistics_future_technology.data
 
 import android.content.ContentValues.TAG
 import android.content.Context

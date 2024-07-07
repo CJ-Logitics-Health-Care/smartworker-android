@@ -1,4 +1,4 @@
-package com.devjsg.watch.tile
+package com.devjsg.cj_logistics_future_technology.tile
 
 import android.content.Context
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package com.devjsg.watch.presentation.home
+package com.devjsg.cj_logistics_future_technology.presentation.home
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -15,10 +15,10 @@ import androidx.core.content.ContextCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.devjsg.watch.R
-import com.devjsg.watch.data.HeartRateRepository
-import com.devjsg.watch.data.MeasureMessage
-import com.devjsg.watch.domain.SendHeartRateAvgWorker
+import com.devjsg.cj_logistics_future_technology.R
+import com.devjsg.cj_logistics_future_technology.data.HeartRateRepository
+import com.devjsg.cj_logistics_future_technology.data.MeasureMessage
+import com.devjsg.cj_logistics_future_technology.domain.SendHeartRateAvgWorker
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.Wearable
 import dagger.hilt.android.AndroidEntryPoint

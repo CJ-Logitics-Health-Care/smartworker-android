@@ -1,8 +1,8 @@
-package com.devjsg.watch.di
+package com.devjsg.cj_logistics_future_technology.di
 
 import android.content.Context
-import com.devjsg.watch.data.HeartRateRepository
-import com.devjsg.watch.domain.GetHeartRateUseCase
+import com.devjsg.cj_logistics_future_technology.data.HeartRateRepository
+import com.devjsg.cj_logistics_future_technology.domain.GetHeartRateUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -19,8 +19,8 @@ fun AdminHomeScreen(
     navController: NavController,
     viewModel: WorkerHomeViewModel = hiltViewModel()
 ) {
-    val heartRate by viewModel.heartRateAvg.collectAsState()
-    val isConnected by viewModel.isConnected.collectAsState()
+    val heartRateAvg by viewModel.heartRateAvg.collectAsState()
+    val nodeId by viewModel.nodeId.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -28,13 +28,12 @@ fun AdminHomeScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "관리자")
-        Text(text = "Heart Rate: $heartRate BPM")
+        Text(text = "Heart Rate: $heartRateAvg BPM")
 
         Text(
-            text = when (isConnected) {
-                true -> "Wear OS device connected"
-                false -> "No Wear OS device connected"
-                else -> "Checking connection..."
+            text = when (nodeId) {
+                null -> "No connected wearable device"
+                else -> "Connected Node ID: $nodeId"
             }
         )
 

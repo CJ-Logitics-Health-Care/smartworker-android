@@ -1,11 +1,11 @@
-package com.devjsg.watch.presentation.viewmodel
+package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.ViewModel
-import com.devjsg.watch.presentation.home.HeartRateService
+import com.devjsg.cj_logistics_future_technology.presentation.home.HeartRateService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
