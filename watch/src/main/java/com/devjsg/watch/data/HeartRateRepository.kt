@@ -11,7 +11,6 @@ import androidx.health.services.client.data.DataType
 import androidx.health.services.client.data.DataTypeAvailability
 import androidx.health.services.client.data.DeltaDataType
 import androidx.health.services.client.data.SampleDataPoint
-import androidx.health.services.client.getCapabilities
 import androidx.health.services.client.unregisterMeasureCallback
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,11 +27,6 @@ class HeartRateRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val measureClient = HealthServices.getClient(context).measureClient
-
-    suspend fun hasHeartRateCapability() = runCatching {
-        val capabilities = measureClient.getCapabilities()
-        (DataType.HEART_RATE_BPM in capabilities.supportedDataTypesMeasure)
-    }.getOrDefault(false)
 
     @ExperimentalCoroutinesApi
     fun heartRateMeasureFlow(): Flow<MeasureMessage> = callbackFlow {

@@ -1,81 +1,61 @@
 package com.devjsg.watch.presentation.viewmodel
 
-import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModel
 import com.devjsg.watch.presentation.home.HeartRateService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HeartRateViewModel @Inject constructor(
-    application: Application
-) : AndroidViewModel(application) {
+    @ApplicationContext private val context: Context
+) : ViewModel() {
+
     private val _heartRate = MutableStateFlow(0)
     val heartRate: StateFlow<Int> = _heartRate
-
-    private val heartRateList = mutableListOf<Int>()
 
     private val _heartRateAvg = MutableStateFlow(0)
     val heartRateAvg: StateFlow<Int> = _heartRateAvg
 
     private val heartRateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val heartRate = intent?.getIntExtra("heartRate", 0) ?: 0
-            if (heartRate != 0) {
-                heartRateList.add(heartRate)
-                _heartRate.value = calculateAverageHeartRate()
+            intent?.let {
+                if (it.action == "com.devjsg.watch.HEART_RATE_UPDATE") {
+                    val heartRate = it.getIntExtra("heartRate", 0)
+                    _heartRate.value = heartRate
+                }
+                if (it.action == "com.devjsg.watch.HEART_RATE_AVG_UPDATE") {
+                    val heartRateAvg = it.getIntExtra("heartRateAvg", 0)
+                    _heartRateAvg.value = heartRateAvg
+                }
             }
         }
     }
 
     init {
-        val intentFilter = IntentFilter("com.devjsg.watch.HEART_RATE_UPDATE")
-        application.registerReceiver(heartRateReceiver, intentFilter)
-        startHeartRateCollection()
+        val intentFilter = IntentFilter().apply {
+            addAction("com.devjsg.watch.HEART_RATE_UPDATE")
+            addAction("com.devjsg.watch.HEART_RATE_AVG_UPDATE")
+        }
+        context.registerReceiver(heartRateReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED)
     }
 
     override fun onCleared() {
         super.onCleared()
-        getApplication<Application>().unregisterReceiver(heartRateReceiver)
+        context.unregisterReceiver(heartRateReceiver)
     }
 
-    private fun startHeartRateCollection() {
-        viewModelScope.launch {
-            while (isActive) {
-                delay(60 * 1000) // 1분 대기
-                _heartRateAvg.value = calculateAverageHeartRate()
-                heartRateList.clear()
-            }
-        }
-    }
-
-    private fun calculateAverageHeartRate(): Int {
-        return if (heartRateList.isNotEmpty()) {
-            heartRateList.sum() / heartRateList.size
-        } else {
-            0
-        }
-    }
-
-    fun startService(context: Context) {
+    fun startService() {
         HeartRateService.startService(context)
     }
 
-    fun stopService(context: Context) {
+    fun stopService() {
         HeartRateService.stopService(context)
-    }
-
-    companion object {
-        private const val TAG = "HeartRateViewModel"
     }
 }

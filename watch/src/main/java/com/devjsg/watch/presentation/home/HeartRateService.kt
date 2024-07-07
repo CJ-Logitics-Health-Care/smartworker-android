@@ -12,11 +12,14 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.devjsg.watch.R
 import com.devjsg.watch.data.HeartRateRepository
 import com.devjsg.watch.data.MeasureMessage
+import com.devjsg.watch.domain.SendHeartRateAvgWorker
 import com.google.android.gms.wearable.DataClient
-import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,6 +43,8 @@ class HeartRateService : Service() {
     private val dataClient: DataClient by lazy {
         Wearable.getDataClient(this)
     }
+
+    private val heartRateList = mutableListOf<Int>()
 
     override fun onCreate() {
         super.onCreate()
@@ -95,14 +101,32 @@ class HeartRateService : Service() {
                     is MeasureMessage.MeasureData -> {
                         val heartRateValue = message.data.first().value.toInt()
                         Log.d(TAG, "💓 Heart Rate: $heartRateValue")
+                        heartRateList.add(heartRateValue)
                         sendHeartRateBroadcast(heartRateValue)
-                        sendHeartRateToPhone(heartRateValue)
                     }
                     is MeasureMessage.MeasureAvailability -> {
                         // Handle availability change if needed
                     }
                 }
             }
+        }
+
+        serviceScope.launch {
+            while (true) {
+                delay(60 * 1000) // 1분 대기
+                val avg = calculateAverageHeartRate()
+                sendHeartRateAvgBroadcast(avg)
+                scheduleHeartRateAvgWork(avg)
+                heartRateList.clear()
+            }
+        }
+    }
+
+    private fun calculateAverageHeartRate(): Int {
+        return if (heartRateList.isNotEmpty()) {
+            heartRateList.sum() / heartRateList.size
+        } else {
+            0
         }
     }
 
@@ -112,19 +136,17 @@ class HeartRateService : Service() {
         sendBroadcast(intent)
     }
 
-    private fun sendHeartRateToPhone(heartRate: Int) {
-        val putDataMapRequest = PutDataMapRequest.create("/heart_rate").apply {
-            dataMap.putInt("heartRate", heartRate)
-            dataMap.putLong("timestamp", System.currentTimeMillis())
-        }
-        val request = putDataMapRequest.asPutDataRequest()
-        dataClient.putDataItem(request)
-            .addOnSuccessListener {
-                Log.d(TAG, "Successfully sent heart rate data to phone: $heartRate")
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Failed to send heart rate data to phone", e)
-            }
+    private fun sendHeartRateAvgBroadcast(heartRateAvg: Int) {
+        val intent = Intent("com.devjsg.watch.HEART_RATE_AVG_UPDATE")
+        intent.putExtra("heartRateAvg", heartRateAvg)
+        sendBroadcast(intent)
+    }
+    private fun scheduleHeartRateAvgWork(heartRateAvg: Int) {
+        val data = workDataOf("heartRateAvg" to heartRateAvg)
+        val workRequest = OneTimeWorkRequestBuilder<SendHeartRateAvgWorker>()
+            .setInputData(data)
+            .build()
+        WorkManager.getInstance(this).enqueue(workRequest)
     }
 
     private fun stopMonitoring() {

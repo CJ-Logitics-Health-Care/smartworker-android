@@ -144,6 +144,7 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.biometric)
 
+    implementation(libs.work.runtime)
     implementation("io.grpc:grpc-okhttp:1.52.1")
     implementation("io.grpc:grpc-stub:1.52.1")
     implementation("io.grpc:grpc-protobuf-lite:1.52.1")

@@ -33,6 +33,7 @@ ktorVersion = "2.3.12"
 concurrent = "1.2.0"
 biometric = "1.1.0"
 securityCryptoKtx = "1.1.0-alpha06"
+work = "2.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,8 @@ paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pag
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore"}
+
+work-runtime = {module = "androidx.work:work-runtime-ktx", version.ref = "work"}
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
 ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorVersion" }

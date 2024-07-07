@@ -76,4 +76,5 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.health.services)
+    implementation(libs.work.runtime)
 }

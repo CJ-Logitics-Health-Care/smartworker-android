@@ -8,7 +8,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
@@ -18,7 +17,6 @@ import com.devjsg.watch.presentation.viewmodel.HeartRateViewModel
 fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
     val heartRate by viewModel.heartRate.collectAsState()
     val heartRateAvg by viewModel.heartRateAvg.collectAsState()
-    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -27,15 +25,15 @@ fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
     ) {
         Text("Heart Rate: $heartRate BPM")
         Button(onClick = {
-            viewModel.startService(context)
+            viewModel.startService()
         }) {
             Text("Start Monitoring")
         }
         Button(onClick = {
-            viewModel.stopService(context)
+            viewModel.stopService()
         }) {
             Text("Stop Monitoring")
         }
-        Text("Heart Rate: $heartRateAvg BPM")
+        Text("Heart Rate Avg: $heartRateAvg BPM")
     }
 }
