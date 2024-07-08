@@ -37,8 +37,18 @@
         </service>
 
         <service
-            android:name=".data.source.remote.MyFirebaseMessagingService"
+            android:name=".data.source.remote.MyWearableListenerService"
+            android:enabled="true"
             android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/notification" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".data.source.remote.MyFirebaseMessagingService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
