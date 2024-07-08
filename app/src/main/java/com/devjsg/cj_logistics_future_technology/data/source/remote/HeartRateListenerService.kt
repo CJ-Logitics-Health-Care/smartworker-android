@@ -35,13 +35,15 @@ class HeartRateListenerService : WearableListenerService() {
 
         val intent = Intent(ACTION_HEART_RATE_AVG_UPDATE).apply {
             putExtra(EXTRA_HEART_RATE_AVG, heartRateAvg)
+            setPackage(packageName)
         }
+        Log.d(TAG, "Sending broadcast with heartRateAvg: $heartRateAvg")
         sendBroadcast(intent)
     }
 
     companion object {
         private const val TAG = "HeartRateListenerService"
-        const val ACTION_HEART_RATE_AVG_UPDATE = "com.example.myapp.ACTION_HEART_RATE_AVG_UPDATE"
-        const val EXTRA_HEART_RATE_AVG = "com.example.myapp.EXTRA_HEART_RATE_AVG"
+        const val ACTION_HEART_RATE_AVG_UPDATE = "com.devjsg.cj_logistics_future_technology.ACTION_HEART_RATE_AVG_UPDATE"
+        const val EXTRA_HEART_RATE_AVG = "com.devjsg.cj_logistics_future_technology.EXTRA_HEART_RATE_AVG"
     }
 }

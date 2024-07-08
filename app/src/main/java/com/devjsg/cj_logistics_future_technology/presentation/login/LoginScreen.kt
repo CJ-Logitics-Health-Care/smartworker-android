@@ -131,7 +131,8 @@ fun LoginScreen(
                         onClick = {
                             viewModel.login(id, password, onSuccess = { sub ->
                                 coroutineScope.launch {
-                                    Toast.makeText(context, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "로그인에 성공했습니다.", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                                 if (sub == "1") {
                                     navController.navigate("admin_home") {

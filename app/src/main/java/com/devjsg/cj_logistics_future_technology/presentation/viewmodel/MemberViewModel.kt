@@ -109,7 +109,12 @@ class MemberViewModel @Inject constructor(
         }
     }
 
-    fun login(id: String, password: String, onSuccess: (String?) -> Unit, onError: (String) -> Unit) {
+    fun login(
+        id: String,
+        password: String,
+        onSuccess: (String?) -> Unit,
+        onError: (String) -> Unit
+    ) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
@@ -135,6 +140,7 @@ class MemberViewModel @Inject constructor(
         val (id, password) = loginData.split(":")
         login(id, password, onSuccess, onError = { })
     }
+
     sealed class UiState {
         object Idle : UiState()
         object Loading : UiState()

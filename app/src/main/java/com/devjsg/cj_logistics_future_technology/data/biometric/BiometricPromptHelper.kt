@@ -16,22 +16,23 @@ class BiometricPromptHelper @Inject constructor(
 ) {
 
     private val executor = ContextCompat.getMainExecutor(context)
-    private val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
-        override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-            super.onAuthenticationError(errorCode, errString)
-            onError?.invoke(errString.toString())
-        }
+    private val biometricPrompt =
+        BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                onError?.invoke(errString.toString())
+            }
 
-        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-            super.onAuthenticationSucceeded(result)
-            onSuccess?.invoke()
-        }
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                onSuccess?.invoke()
+            }
 
-        override fun onAuthenticationFailed() {
-            super.onAuthenticationFailed()
-            onError?.invoke("Authentication failed")
-        }
-    })
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                onError?.invoke("Authentication failed")
+            }
+        })
 
     private val promptInfo = BiometricPrompt.PromptInfo.Builder()
         .setTitle("생체 인증")
@@ -50,12 +51,15 @@ class BiometricPromptHelper @Inject constructor(
             BiometricManager.BIOMETRIC_SUCCESS -> {
                 biometricPrompt.authenticate(promptInfo)
             }
+
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
                 onError("No biometric features available on this device.")
             }
+
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
                 onError("Biometric features are currently unavailable.")
             }
+
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 onError("The user hasn't associated any biometric credentials with their account.")
             }

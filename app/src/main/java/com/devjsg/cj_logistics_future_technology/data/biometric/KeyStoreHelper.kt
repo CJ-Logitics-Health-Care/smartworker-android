@@ -36,7 +36,8 @@ class KeystoreHelper(context: Context) {
     private fun createKeyIfNotExists() {
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         if (!keyStore.containsAlias(KEYSTORE_ALIAS)) {
-            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
+            val keyGenerator =
+                KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
             keyGenerator.init(
                 KeyGenParameterSpec.Builder(
                     KEYSTORE_ALIAS,

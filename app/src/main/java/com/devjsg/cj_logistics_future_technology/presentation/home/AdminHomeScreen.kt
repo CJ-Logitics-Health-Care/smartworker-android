@@ -1,5 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +22,8 @@ fun AdminHomeScreen(
     viewModel: WorkerHomeViewModel = hiltViewModel()
 ) {
     val heartRateAvg by viewModel.heartRateAvg.collectAsState()
+
+    Log.d(TAG, "AdminHomeScreen: $heartRateAvg")
 
     Column(
         modifier = Modifier.fillMaxSize(),

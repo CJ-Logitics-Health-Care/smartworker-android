@@ -1,7 +1,5 @@
 package com.devjsg.cj_logistics_future_technology.presentation.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
@@ -27,14 +25,7 @@ class MainActivity : FragmentActivity() {
 
     private val heartRateViewModel: WorkerHomeViewModel by viewModels()
 
-    private val heartRateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == HeartRateListenerService.ACTION_HEART_RATE_AVG_UPDATE) {
-                val heartRateAvg = intent.getIntExtra(HeartRateListenerService.EXTRA_HEART_RATE_AVG, 0)
-                heartRateViewModel.setHeartRateAvg(heartRateAvg)
-            }
-        }
-    }
+    private lateinit var heartRateReceiver: HeartRateBroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,22 +39,22 @@ class MainActivity : FragmentActivity() {
 
         val intent = Intent(this, HeartRateListenerService::class.java)
         startService(intent)
+
+        heartRateReceiver = HeartRateBroadcastReceiver()
     }
 
     override fun onResume() {
         super.onResume()
+        val intentFilter = IntentFilter(HeartRateListenerService.ACTION_HEART_RATE_AVG_UPDATE)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(heartRateReceiver, IntentFilter(HeartRateListenerService.ACTION_HEART_RATE_AVG_UPDATE),
-                RECEIVER_NOT_EXPORTED)
+            registerReceiver(heartRateReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(heartRateReceiver, intentFilter)
         }
     }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(heartRateReceiver)
-    }
-
-    companion object {
-        private const val TAG = "MainActivity"
     }
 }
