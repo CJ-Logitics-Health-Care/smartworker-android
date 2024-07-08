@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.hilt)
     kotlin("plugin.serialization")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 /*protobuf {
@@ -150,4 +152,9 @@ dependencies {
     implementation("io.grpc:grpc-protobuf-lite:1.52.1")
     implementation("io.grpc:grpc-kotlin-stub:1.3.0")
     implementation("com.google.protobuf:protobuf-kotlin-lite:3.21.12")
+
+    api(project.dependencies.platform(libs.firebase.bom))
+    api(libs.firebase.analytics)
+    api(libs.firebase.crashlytics)
+    api(libs.firebase.messaging)
 }

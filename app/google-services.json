@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "885485913837",
+    "project_id": "smartworker-78dd9",
+    "storage_bucket": "smartworker-78dd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885485913837:android:b0e12e34b909df5e8eeee4",
+        "android_client_info": {
+          "package_name": "com.devjsg.cj_logistics_future_technology"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCQuyv71XVjJLvjj1R41g1Rznug_W8Ey8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
