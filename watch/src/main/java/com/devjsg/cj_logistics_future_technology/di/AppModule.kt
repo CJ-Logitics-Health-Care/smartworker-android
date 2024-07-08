@@ -1,8 +1,8 @@
 package com.devjsg.cj_logistics_future_technology.di
 
 import android.content.Context
-import com.devjsg.cj_logistics_future_technology.data.HeartRateRepository
-import com.devjsg.cj_logistics_future_technology.domain.GetHeartRateUseCase
+import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
+import com.devjsg.cj_logistics_future_technology.domain.usecase.GetHeartRateUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

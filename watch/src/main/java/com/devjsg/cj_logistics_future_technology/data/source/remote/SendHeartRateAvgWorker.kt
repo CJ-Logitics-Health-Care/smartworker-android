@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.domain
+package com.devjsg.cj_logistics_future_technology.data.source.remote
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG

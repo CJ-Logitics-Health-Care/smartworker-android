@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.home
+package com.devjsg.cj_logistics_future_technology.data.source.remote
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -16,11 +16,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.devjsg.cj_logistics_future_technology.R
-import com.devjsg.cj_logistics_future_technology.data.HeartRateRepository
-import com.devjsg.cj_logistics_future_technology.data.MeasureMessage
-import com.devjsg.cj_logistics_future_technology.domain.SendHeartRateAvgWorker
-import com.google.android.gms.wearable.DataClient
-import com.google.android.gms.wearable.Wearable
+import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
+import com.devjsg.cj_logistics_future_technology.data.repository.MeasureMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +36,6 @@ class HeartRateService : Service() {
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
     private lateinit var wakeLock: PowerManager.WakeLock
-
-    private val dataClient: DataClient by lazy {
-        Wearable.getDataClient(this)
-    }
 
     private val heartRateList = mutableListOf<Int>()
 

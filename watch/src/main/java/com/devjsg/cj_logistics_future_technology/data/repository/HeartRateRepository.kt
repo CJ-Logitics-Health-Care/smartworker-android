@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.data
+package com.devjsg.cj_logistics_future_technology.data.repository
 
 import android.content.ContentValues.TAG
 import android.content.Context

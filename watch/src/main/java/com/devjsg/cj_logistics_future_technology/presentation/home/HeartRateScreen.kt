@@ -24,16 +24,19 @@ fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
         verticalArrangement = Arrangement.Center
     ) {
         Text("Heart Rate: $heartRate BPM")
+
         Button(onClick = {
             viewModel.startService()
         }) {
             Text("Start Monitoring")
         }
+
         Button(onClick = {
             viewModel.stopService()
         }) {
             Text("Stop Monitoring")
         }
+
         Text("Heart Rate Avg: $heartRateAvg BPM")
     }
 }

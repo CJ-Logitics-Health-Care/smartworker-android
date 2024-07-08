@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.ViewModel
-import com.devjsg.cj_logistics_future_technology.presentation.home.HeartRateService
+import com.devjsg.cj_logistics_future_technology.data.source.remote.HeartRateService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
