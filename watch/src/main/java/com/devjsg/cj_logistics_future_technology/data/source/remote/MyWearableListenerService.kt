@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.devjsg.cj_logistics_future_technology.MyApplication
 import com.devjsg.cj_logistics_future_technology.R
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
@@ -27,12 +28,13 @@ class MyWearableListenerService : WearableListenerService() {
     }
 
     private fun showNotification(message: String?) {
+        Log.d(TAG, "showNotification: $message")
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = NotificationCompat.Builder(this, "default")
+        val notification = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
             .setContentTitle("New Notification")
             .setContentText(message)
-            .setSmallIcon(R.drawable.splash_icon)
+            .setSmallIcon(R.drawable.splash_icon)  // 적절한 아이콘 리소스로 변경하세요.
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
         notificationManager.notify(1, notification)

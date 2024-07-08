@@ -1,5 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devjsg.cj_logistics_future_technology.data.biometric.KeystoreHelper
@@ -8,12 +9,16 @@ import com.devjsg.cj_logistics_future_technology.di.util.decodeJwt
 import com.devjsg.cj_logistics_future_technology.domain.uscase.CheckLoginIdUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.LoginUseCase
 import com.devjsg.cj_logistics_future_technology.domain.uscase.SignUpUseCase
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class MemberViewModel @Inject constructor(
@@ -118,6 +123,9 @@ class MemberViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
+                // FCM 토큰 가져오기
+                val fcmToken = getFcmToken()
+                Log.d("MemberViewModel", "FCM Token: $fcmToken")
                 val response = loginUseCase(id, password)
                 if (response.success) {
                     val loginData = "$id:$password"
@@ -131,6 +139,18 @@ class MemberViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.message ?: "Unknown error")
                 onError(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    private suspend fun getFcmToken(): String {
+        return suspendCoroutine { continuation ->
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    continuation.resume(task.result)
+                } else {
+                    continuation.resumeWithException(task.exception ?: Exception("FCM 토큰을 가져오는 데 실패했습니다."))
+                }
             }
         }
     }

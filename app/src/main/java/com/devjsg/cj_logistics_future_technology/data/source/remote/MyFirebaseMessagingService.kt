@@ -17,7 +17,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "From: ${remoteMessage.from}")
 
         // 데이터 페이로드가 있는 경우
-        remoteMessage.data.isNotEmpty().let {
+        if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
             sendNotificationToWearable(remoteMessage.data)
         }
