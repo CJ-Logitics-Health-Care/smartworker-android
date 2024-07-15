@@ -4,7 +4,11 @@ import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.devjsg.cj_logistics_future_technology.R
+import com.devjsg.cj_logistics_future_technology.data.work.ReportLocationWorker
 import com.devjsg.cj_logistics_future_technology.presentation.main.MyApplication
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
@@ -30,6 +34,17 @@ class MyWearableListenerService : WearableListenerService() {
                         val y = dataMap.getFloat("y")
                         Log.d(TAG, "Received report location on phone: x=$x, y=$y")
                         showReportNotification(x, y)
+
+                        val inputData = Data.Builder()
+                            .putFloat("x", x)
+                            .putFloat("y", y)
+                            .build()
+
+                        val workRequest = OneTimeWorkRequestBuilder<ReportLocationWorker>()
+                            .setInputData(inputData)
+                            .build()
+
+                        WorkManager.getInstance(applicationContext).enqueue(workRequest)
                     }
                 }
             }
