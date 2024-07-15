@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
-import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.HeartRateViewModel
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.HomeViewModel
 
 @Composable
-fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val heartRate by viewModel.heartRate.collectAsState()
     val heartRateAvg by viewModel.heartRateAvg.collectAsState()
 
@@ -35,6 +35,12 @@ fun HeartRateScreen(viewModel: HeartRateViewModel = hiltViewModel()) {
             viewModel.stopService()
         }) {
             Text("Stop Monitoring")
+        }
+
+        Button(onClick = {
+            viewModel.report()
+        }) {
+            Text("신고")
         }
 
         Text("Heart Rate Avg: $heartRateAvg BPM")

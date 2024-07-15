@@ -23,7 +23,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.devjsg.cj_logistics_future_technology.presentation.home.HeartRateScreen
+import com.devjsg.cj_logistics_future_technology.presentation.home.HomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.theme.CJLogisticsFutureTechnologyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CJLogisticsFutureTechnologyTheme {
-                HeartRateScreen()
+                HomeScreen()
             }
         }
 

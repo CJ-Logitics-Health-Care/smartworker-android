@@ -53,6 +53,7 @@ android {
 dependencies {
 
     implementation(libs.play.services.wearable)
+    implementation(libs.play.services.location)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
@@ -71,6 +72,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.concurrent)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.coroutines.android)
+    implementation(libs.coroutines.play.services)
 
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)

@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.devjsg.cj_logistics_future_technology.R
+import com.devjsg.cj_logistics_future_technology.presentation.main.MyApplication
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
@@ -16,11 +17,20 @@ class MyWearableListenerService : WearableListenerService() {
         for (event in dataEvents) {
             if (event.type == DataEvent.TYPE_CHANGED) {
                 val dataItem = event.dataItem
-                if (dataItem.uri.path == "/notification") {
-                    val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
-                    val message = dataMap.getString("message")
-                    Log.d(TAG, "Received notification on wearable: $message")
-                    showNotification(message)
+                when (dataItem.uri.path) {
+                    "/notification" -> {
+                        val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
+                        val message = dataMap.getString("message")
+                        Log.d(TAG, "Received notification on wearable: $message")
+                        showNotification(message)
+                    }
+                    "/report_location" -> {
+                        val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
+                        val x = dataMap.getFloat("x")
+                        val y = dataMap.getFloat("y")
+                        Log.d(TAG, "Received report location on phone: x=$x, y=$y")
+                        showReportNotification(x, y)
+                    }
                 }
             }
         }
@@ -35,6 +45,18 @@ class MyWearableListenerService : WearableListenerService() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
         notificationManager.notify(1, notification)
+    }
+
+    private fun showReportNotification(x: Float, y: Float) {
+        val message = "Report location: x=$x, y=$y"
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notification = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
+            .setContentTitle("Report Location")
+            .setContentText(message)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+        notificationManager.notify(2, notification)
     }
 
     companion object {

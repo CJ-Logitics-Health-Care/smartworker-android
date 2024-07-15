@@ -10,6 +10,7 @@ lifecycleRuntimeKtx = "2.8.2"
 activityCompose = "1.9.0"
 composeBom = "2024.02.00"
 playServicesWearable = "18.2.0"
+playServicesLocation = "21.3.0"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
 coreSplashscreen = "1.0.1"
@@ -37,6 +38,7 @@ work = "2.7.1"
 firebaseBom = "33.1.1"
 googleServices="4.4.2"
 firebaseCrashlytics = "3.0.1"
+coroutines = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +60,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-concurrent = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "concurrent"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+
 
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
@@ -75,6 +79,9 @@ paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pag
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore"}
+
+coroutines-play-services = { module =  "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines"}
+coroutines-android = { module =  "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
 
 work-runtime = {module = "androidx.work:work-runtime-ktx", version.ref = "work"}
 

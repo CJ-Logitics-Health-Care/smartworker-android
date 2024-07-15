@@ -17,11 +17,20 @@ class MyWearableListenerService : WearableListenerService() {
         for (event in dataEvents) {
             if (event.type == DataEvent.TYPE_CHANGED) {
                 val dataItem = event.dataItem
-                if (dataItem.uri.path == "/notification") {
-                    val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
-                    val message = dataMap.getString("message")
-                    Log.d(TAG, "Received notification on wearable: $message")
-                    showNotification(message)
+                when (dataItem.uri.path) {
+                    "/notification" -> {
+                        val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
+                        val message = dataMap.getString("message")
+                        Log.d(TAG, "Received notification on wearable: $message")
+                        showNotification(message)
+                    }
+                    "/report_location" -> {
+                        val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
+                        val x = dataMap.getFloat("x")
+                        val y = dataMap.getFloat("y")
+                        Log.d(TAG, "Received report location on wearable: x=$x, y=$y")
+                        showReportNotification(x, y)
+                    }
                 }
             }
         }
@@ -38,6 +47,19 @@ class MyWearableListenerService : WearableListenerService() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
         notificationManager.notify(1, notification)
+    }
+
+    private fun showReportNotification(x: Float, y: Float) {
+        val message = "Report location: x=$x, y=$y"
+        Log.d(TAG, "showReportNotification: $message")
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notification = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
+            .setContentTitle("Report Location")
+            .setContentText(message)
+            .setSmallIcon(R.drawable.splash_icon)  // 적절한 아이콘 리소스로 변경하세요.
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+        notificationManager.notify(2, notification)
     }
 
     companion object {
