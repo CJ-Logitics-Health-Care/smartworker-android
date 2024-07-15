@@ -126,7 +126,7 @@ class MemberViewModel @Inject constructor(
                 // FCM 토큰 가져오기
                 val fcmToken = getFcmToken()
                 Log.d("MemberViewModel", "FCM Token: $fcmToken")
-                val response = loginUseCase(id, password)
+                val response = loginUseCase(id, password, fcmToken)
                 if (response.success) {
                     val loginData = "$id:$password"
                     keystoreHelper.saveLoginData(loginData)

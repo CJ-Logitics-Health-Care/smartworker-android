@@ -39,13 +39,13 @@ class MemberApiService(private val client: HttpClient) {
         }.body()
     }
 
-    suspend fun login(loginId: String, password: String): LoginResponse {
+    suspend fun login(loginId: String, password: String, fcmToken: String): LoginResponse {
         val response: HttpResponse = client.post(NetworkConstants.BASE_URL + "member/login") {
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Accept, "application/json;charset=UTF-8")
             }
-            setBody(LoginRequest(loginId, password))
+            setBody(LoginRequest(loginId, password, fcmToken))
         }
         val responseBody = response.bodyAsText()
         return Json.decodeFromString(responseBody)

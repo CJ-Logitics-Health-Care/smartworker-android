@@ -13,8 +13,8 @@ class MemberRepository @Inject constructor(
     suspend fun signUp(signUpRequest: SignUpRequest) = apiService.signUp(signUpRequest)
     suspend fun checkLoginId(loginId: String) = apiService.checkLoginId(loginId)
 
-    suspend fun login(loginId: String, password: String): LoginResponse {
-        val response = apiService.login(loginId, password)
+    suspend fun login(loginId: String, password: String, fcmToken: String): LoginResponse {
+        val response = apiService.login(loginId, password, fcmToken)
         if (response.success) {
             dataStoreManager.saveToken(response.data.token, response.data.refreshToken)
         }

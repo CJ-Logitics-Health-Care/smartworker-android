@@ -19,5 +19,6 @@ data class LoginData(
 @Serializable
 data class LoginRequest(
     val loginId: String,
-    val password: String
+    val password: String,
+    val token: String
 )

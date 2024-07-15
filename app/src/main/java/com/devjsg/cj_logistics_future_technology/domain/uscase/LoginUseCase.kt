@@ -4,5 +4,5 @@ import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepositor
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(private val repository: MemberRepository) {
-    suspend operator fun invoke(id: String, password: String) = repository.login(id, password)
+    suspend operator fun invoke(id: String, password: String, fcmToken: String) = repository.login(id, password, fcmToken)
 }
