@@ -129,6 +129,7 @@ dependencies {
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.hilt:hilt-work:1.2.0")
 
     //pagination
     implementation(libs.paging.runtime)
