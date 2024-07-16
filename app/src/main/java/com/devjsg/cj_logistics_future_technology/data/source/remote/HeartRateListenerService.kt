@@ -2,18 +2,16 @@ package com.devjsg.cj_logistics_future_technology.data.source.remote
 
 import android.content.Intent
 import android.util.Log
-import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.devjsg.cj_logistics_future_technology.data.work.HeartRateWorker
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HeartRateListenerService : WearableListenerService() {
-
-    @Inject
-    lateinit var repository: HeartRateRepository
-
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "HeartRateListenerService created")
@@ -32,6 +30,16 @@ class HeartRateListenerService : WearableListenerService() {
 
     private fun handleHeartRateAvgData(heartRateAvg: Int) {
         Log.d(TAG, "Handling heart rate avg data: $heartRateAvg")
+
+        val inputData = Data.Builder()
+            .putInt(EXTRA_HEART_RATE_AVG, heartRateAvg)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<HeartRateWorker>()
+            .setInputData(inputData)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueue(workRequest)
 
         val intent = Intent(ACTION_HEART_RATE_AVG_UPDATE).apply {
             putExtra(EXTRA_HEART_RATE_AVG, heartRateAvg)

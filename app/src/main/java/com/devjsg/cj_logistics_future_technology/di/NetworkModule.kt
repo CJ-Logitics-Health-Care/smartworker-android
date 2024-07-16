@@ -2,7 +2,6 @@ package com.devjsg.cj_logistics_future_technology.di
 
 import android.content.Context
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
-import com.devjsg.cj_logistics_future_technology.data.network.HeartRateApiService
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
 import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
@@ -78,16 +77,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHeartRateApiService(httpClient: HttpClient): HeartRateApiService {
-        return HeartRateApiService(httpClient)
-    }
-
-    @Provides
-    @Singleton
     fun provideHeartRateRepository(
-        @ApplicationContext context: Context,
-        heartRateApiService: HeartRateApiService
+        @ApplicationContext context: Context
     ): HeartRateRepository {
-        return HeartRateRepository(context, heartRateApiService)
+        return HeartRateRepository(context)
     }
 }

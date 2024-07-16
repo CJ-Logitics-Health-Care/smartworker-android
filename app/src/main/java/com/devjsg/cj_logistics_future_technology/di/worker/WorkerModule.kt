@@ -1,5 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.di.worker
 
+import com.devjsg.cj_logistics_future_technology.data.work.HeartRateWorker
 import com.devjsg.cj_logistics_future_technology.data.work.ReportLocationWorker
 import dagger.Binds
 import dagger.Module
@@ -16,4 +17,9 @@ abstract class WorkerModule {
     @IntoMap
     @StringKey("com.devjsg.cj_logistics_future_technology.data.work.ReportLocationWorker")
     abstract fun bindReportLocationWorker(factory: ReportLocationWorker.Factory): ChildWorkerFactory
+
+    @Binds
+    @IntoMap
+    @StringKey("com.devjsg.cj_logistics_future_technology.data.work.HeartRateWorker")
+    abstract fun bindHeartRateWorker(factory: HeartRateWorker.Factory): ChildWorkerFactory
 }
