@@ -33,7 +33,6 @@ class MyWearableListenerService : WearableListenerService() {
                         val x = dataMap.getFloat("x")
                         val y = dataMap.getFloat("y")
                         Log.d(TAG, "Received report location on phone: x=$x, y=$y")
-                        showReportNotification(x, y)
 
                         val inputData = Data.Builder()
                             .putFloat("x", x)
