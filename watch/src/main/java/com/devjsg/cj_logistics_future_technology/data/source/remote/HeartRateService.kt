@@ -106,18 +106,21 @@ class HeartRateService : Service() {
 
         serviceScope.launch {
             while (true) {
-                delay(6 * 1000) // 1분 대기
+                delay(60 * 1000)
                 val avg = calculateAverageHeartRate()
-                sendHeartRateAvgBroadcast(avg)
-                scheduleHeartRateAvgWork(avg)
+                if(avg != 0){
+                    sendHeartRateAvgBroadcast(avg)
+                    scheduleHeartRateAvgWork(avg)
+                }
                 heartRateList.clear()
             }
         }
     }
 
     private fun calculateAverageHeartRate(): Int {
-        return if (heartRateList.isNotEmpty()) {
-            heartRateList.sum() / heartRateList.size
+        val validHeartRates = heartRateList.filter { it != 0 }
+        return if (validHeartRates.isNotEmpty()) {
+            validHeartRates.sum() / validHeartRates.size
         } else {
             0
         }
