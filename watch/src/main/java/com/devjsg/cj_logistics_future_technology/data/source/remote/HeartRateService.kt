@@ -153,10 +153,10 @@ class HeartRateService : Service() {
     private fun acquireWakeLock() {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(
-            PowerManager.SCREEN_DIM_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+            PowerManager.PARTIAL_WAKE_LOCK,
             "HeartRateService::WakeLock"
         )
-        wakeLock.acquire()
+        wakeLock.acquire(10 * 60 * 1000L )
         Log.d(TAG, "WakeLock acquired")
     }
 
