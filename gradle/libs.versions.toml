@@ -10,6 +10,7 @@ lifecycleRuntimeKtx = "2.8.2"
 activityCompose = "1.9.0"
 composeBom = "2024.02.00"
 playServicesWearable = "18.2.0"
+playServicesMaps = "18.2.0"
 playServicesLocation = "21.3.0"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
@@ -36,9 +37,10 @@ biometric = "1.1.0"
 securityCryptoKtx = "1.1.0-alpha06"
 work = "2.7.1"
 firebaseBom = "33.1.1"
-googleServices="4.4.2"
+googleServices = "4.4.2"
 firebaseCrashlytics = "3.0.1"
 coroutines = "1.7.3"
+googleMaps = "4.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,11 +59,11 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-concurrent = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "concurrent"}
+androidx-concurrent = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "concurrent" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
-
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
@@ -78,12 +80,12 @@ hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.re
 paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore"}
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
 
-coroutines-play-services = { module =  "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines"}
-coroutines-android = { module =  "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}
+coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
-work-runtime = {module = "androidx.work:work-runtime-ktx", version.ref = "work"}
+work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
 ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorVersion" }
@@ -91,16 +93,18 @@ ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negoti
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorVersion" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 
-auth0-android = { module = "com.auth0.android:auth0", version.ref = "auth0"}
-auth0-decode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtDecode"}
+auth0-android = { module = "com.auth0.android:auth0", version.ref = "auth0" }
+auth0-decode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtDecode" }
 
-biometric = {module = "androidx.biometric:biometric", version.ref = "biometric"}
+biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+
+google-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googleMaps" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

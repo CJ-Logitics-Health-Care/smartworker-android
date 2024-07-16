@@ -1,5 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.presentation.main
 
+import android.Manifest
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
@@ -10,7 +11,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptHelper
 import com.devjsg.cj_logistics_future_technology.data.source.remote.HeartRateListenerService
@@ -37,11 +44,15 @@ class MainActivity : FragmentActivity() {
             CJLogisticsFutureTechnologyTheme {
                 val navController = rememberNavController()
                 Navigation(navController = navController, biometricPromptHelper, heartRateViewModel)
+
+                HandleIntent(navController)
             }
         }
 
         val intent = Intent(this, HeartRateListenerService::class.java)
         startService(intent)
+
+        requestLocationPermission()
 
         heartRateReceiver = HeartRateBroadcastReceiver()
 
@@ -59,6 +70,26 @@ class MainActivity : FragmentActivity() {
             Toast.makeText(this, "알림 권한이 거부되었습니다. \n설정 화면에서 권한을 허용해 주세요.", Toast.LENGTH_SHORT)
                 .show()
         }
+    }
+
+    private fun requestLocationPermission() {
+        val requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            ) {
+                Toast.makeText(this, "위치 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        requestPermissionLauncher.launch(permissions)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -93,5 +124,19 @@ class MainActivity : FragmentActivity() {
     override fun onPause() {
         super.onPause()
         unregisterReceiver(heartRateReceiver)
+    }
+}
+
+@Composable
+fun HandleIntent(navController: NavHostController) {
+    val context = LocalContext.current as MainActivity
+    val currentIntent by rememberUpdatedState(newValue = context.intent)
+
+    LaunchedEffect(currentIntent) {
+        currentIntent?.getStringExtra("navigateTo")?.let { navigateTo ->
+            if (navigateTo == "maps") {
+                navController.navigate("maps")
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ import com.devjsg.cj_logistics_future_technology.presentation.auth.SignUpScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.AdminHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.WorkerHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
+import com.devjsg.cj_logistics_future_technology.presentation.map.MapsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.splash.SplashScreen
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 
@@ -29,5 +30,6 @@ fun Navigation(
         }
         composable("admin_home") { AdminHomeScreen(navController, heartRateViewModel) }
         composable("worker_home") { WorkerHomeScreen(navController = navController) }
+        composable("maps") { MapsScreen() }
     }
 }

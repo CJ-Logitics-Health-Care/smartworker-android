@@ -8,7 +8,10 @@ plugins {
     kotlin("plugin.serialization")
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
+
+
 
 /*protobuf {
     protoc {
@@ -47,6 +50,21 @@ plugins {
         }
     }
 }*/
+
+secrets {
+    // Optionally specify a different file name containing your secrets.
+    // The plugin defaults to "local.properties"
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+
+    // Configure which keys should be ignored by the plugin by providing regular expressions.
+    // "sdk.dir" is ignored by default.
+    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+}
+
 
 android {
     namespace = "com.devjsg.cj_logistics_future_technology"
@@ -99,6 +117,8 @@ android {
         }
     }
 }
+
+
 
 fun getApiKey(propertyKey: String): String {
     return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
@@ -159,4 +179,8 @@ dependencies {
     api(libs.firebase.analytics)
     api(libs.firebase.crashlytics)
     api(libs.firebase.messaging)
+
+    implementation(libs.google.maps.compose)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
 }
