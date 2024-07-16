@@ -38,6 +38,9 @@ class HomeViewModel @Inject constructor(
     private val _heartRateAvg = MutableStateFlow(0)
     val heartRateAvg: StateFlow<Int> = _heartRateAvg
 
+    private val _isMonitoring = MutableStateFlow(false)
+    val isMonitoring: StateFlow<Boolean> = _isMonitoring
+
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
@@ -120,11 +123,13 @@ class HomeViewModel @Inject constructor(
 
     fun startService() {
         HeartRateService.startService(context)
+        _isMonitoring.value = true
         Log.d(TAG, "Heart rate monitoring service started")
     }
 
     fun stopService() {
         HeartRateService.stopService(context)
+        _isMonitoring.value = false
         Log.d(TAG, "Heart rate monitoring service stopped")
     }
 

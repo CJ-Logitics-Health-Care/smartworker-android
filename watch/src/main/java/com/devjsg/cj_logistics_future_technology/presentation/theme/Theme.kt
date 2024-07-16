@@ -12,6 +12,7 @@ fun CJLogisticsFutureTechnologyTheme(
      * See: https://developer.android.com/jetpack/compose/designsystems/custom
      */
     MaterialTheme(
+        typography = CustomTypography,
         content = content
     )
 }

@@ -106,7 +106,7 @@ class HeartRateService : Service() {
 
         serviceScope.launch {
             while (true) {
-                delay(60 * 1000)
+                delay(6 * 1000)
                 val avg = calculateAverageHeartRate()
                 if(avg != 0){
                     sendHeartRateAvgBroadcast(avg)

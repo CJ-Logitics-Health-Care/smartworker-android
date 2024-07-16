@@ -1,11 +1,11 @@
 package com.devjsg.cj_logistics_future_technology.presentation.theme
 
-import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Typography
 import com.devjsg.cj_logistics_future_technology.R
 
 val Pretendard = FontFamily(
@@ -20,22 +20,22 @@ val Pretendard = FontFamily(
     Font(R.font.pretendard_thin, FontWeight.Thin)
 )
 
-val Typography = Typography(
-    bodyLarge = TextStyle(
+val CustomTypography = Typography(
+    body1 = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-    titleLarge = TextStyle(
+    title1 = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
+    body2 = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
