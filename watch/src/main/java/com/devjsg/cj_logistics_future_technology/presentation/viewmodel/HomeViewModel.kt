@@ -108,6 +108,18 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /*private suspend fun getLastLocation(): Location? {
+        // 가상의 위치를 생성합니다.
+        val location = Location("mockProvider").apply {
+            latitude = 37.4219983 // 예: Googleplex 위치의 위도
+            longitude = -122.084 // 예: Googleplex 위치의 경도
+            time = System.currentTimeMillis()
+            accuracy = 1.0f
+        }
+        Log.d(TAG, "Returning mock location: (${location.latitude}, ${location.longitude})")
+        return location
+    }*/
+
     init {
         val intentFilter = IntentFilter().apply {
             addAction("com.devjsg.watch.HEART_RATE_UPDATE")
