@@ -23,19 +23,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d(TAG, "From: ${remoteMessage.from}")
-
-        // 데이터 페이로드가 있는 경우
-        if (remoteMessage.data.isNotEmpty()) {
-            Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-            sendNotificationToWearable(remoteMessage.data)
-            sendNotification(remoteMessage.data)
-        }
+        val data = remoteMessage.data.toMutableMap()
 
         // 알림 페이로드가 있는 경우
         remoteMessage.notification?.body?.let { body ->
             Log.d(TAG, "Message Notification Body: $body")
-            sendNotificationToWearable(mapOf("body" to body))
-            sendNotification(mapOf("body" to body))
+            data["body"] = body
+        }
+
+        if (data.isNotEmpty()) {
+            Log.d(TAG, "Message data payload: $data")
+            sendNotificationToWearable(data)
+            sendNotification(data)
         }
     }
 
@@ -46,11 +45,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendNotification(data: Map<String, String>) {
+        val latitude = data["x"]?.toFloatOrNull() ?: 0f
+        val longitude = data["y"]?.toFloatOrNull() ?: 0f
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("navigateTo", "maps")
+            putExtra("latitude", latitude)
+            putExtra("longitude", longitude)
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+        Log.d(TAG, "latitude: $latitude, longitude: $longitude")
 
         val notificationBuilder = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -59,7 +64,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0, notificationBuilder.build())
     }
 

@@ -95,18 +95,18 @@ class MainActivity : FragmentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission() {
         when {
-            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED -> {
+            checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED -> {
                 // 권한이 이미 허용된 경우
             }
 
-            shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS) -> {
+            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
                 // 권한 설명이 필요한 경우
                 Toast.makeText(this, "이 앱은 알림 권한이 필요합니다.", Toast.LENGTH_LONG).show()
             }
 
             else -> {
                 // 권한 요청
-                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
@@ -125,17 +125,19 @@ class MainActivity : FragmentActivity() {
         super.onPause()
         unregisterReceiver(heartRateReceiver)
     }
-}
 
-@Composable
-fun HandleIntent(navController: NavHostController) {
-    val context = LocalContext.current as MainActivity
-    val currentIntent by rememberUpdatedState(newValue = context.intent)
+    @Composable
+    fun HandleIntent(navController: NavHostController) {
+        val context = LocalContext.current as MainActivity
+        val currentIntent by rememberUpdatedState(newValue = context.intent)
 
-    LaunchedEffect(currentIntent) {
-        currentIntent?.getStringExtra("navigateTo")?.let { navigateTo ->
-            if (navigateTo == "maps") {
-                navController.navigate("maps")
+        LaunchedEffect(currentIntent) {
+            currentIntent?.getStringExtra("navigateTo")?.let { navigateTo ->
+                if (navigateTo == "maps") {
+                    val latitude = currentIntent.getFloatExtra("latitude", 0f)
+                    val longitude = currentIntent.getFloatExtra("longitude", 0f)
+                    navController.navigate("maps/$latitude/$longitude")
+                }
             }
         }
     }
