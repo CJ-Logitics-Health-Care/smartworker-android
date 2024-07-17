@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptHelper
 import com.devjsg.cj_logistics_future_technology.presentation.auth.SignUpScreen
-import com.devjsg.cj_logistics_future_technology.presentation.home.AdminHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.WorkerHomeScreen
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.AdminHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
 import com.devjsg.cj_logistics_future_technology.presentation.map.MapsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.splash.SplashScreen
@@ -20,7 +20,7 @@ import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHo
 fun Navigation(
     navController: NavHostController,
     biometricPromptHelper: BiometricPromptHelper,
-    heartRateViewModel: WorkerHomeViewModel
+    workerRateViewModel: WorkerHomeViewModel
 ) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController = navController) }
@@ -31,7 +31,7 @@ fun Navigation(
                 biometricPromptHelper = biometricPromptHelper
             )
         }
-        composable("admin_home") { AdminHomeScreen(navController, heartRateViewModel) }
+        composable("admin_home") { AdminHomeScreen(navController = navController) }
         composable("worker_home") { WorkerHomeScreen(navController = navController) }
         composable(
             route = "maps/{latitude}/{longitude}",

@@ -3,10 +3,12 @@ package com.devjsg.cj_logistics_future_technology.data.network
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
+import com.devjsg.cj_logistics_future_technology.data.model.MemberResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -49,5 +51,16 @@ class MemberApiService(private val client: HttpClient) {
         }
         val responseBody = response.bodyAsText()
         return Json.decodeFromString(responseBody)
+    }
+
+    suspend fun getMembers(token: String, lastIndex: Int? = null): MemberResponse {
+        return client.get(NetworkConstants.BASE_URL + "member/cursor-paging") {
+            header(HttpHeaders.Authorization, token)
+            if (lastIndex != null) {
+                url {
+                    parameters.append("lastIndex", lastIndex.toString())
+                }
+            }
+        }.body()
     }
 }

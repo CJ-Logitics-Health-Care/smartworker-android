@@ -3,6 +3,7 @@ package com.devjsg.cj_logistics_future_technology.di
 import android.content.Context
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
+import com.devjsg.cj_logistics_future_technology.data.repository.FindAllMemberRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
 import dagger.Module
@@ -81,5 +82,14 @@ object NetworkModule {
         @ApplicationContext context: Context
     ): HeartRateRepository {
         return HeartRateRepository(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFindAllMemberRepository(
+        apiService: MemberApiService,
+        dataStoreManager: DataStoreManager
+    ): FindAllMemberRepository {
+        return FindAllMemberRepository(apiService, dataStoreManager)
     }
 }
