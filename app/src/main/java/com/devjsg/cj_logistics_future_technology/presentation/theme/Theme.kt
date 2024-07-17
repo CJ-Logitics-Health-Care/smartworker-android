@@ -9,7 +9,11 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -48,6 +52,15 @@ fun CJLogisticsFutureTechnologyTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val context = LocalContext.current
+    SideEffect {
+        val window = (context as? Activity)?.window
+        window?.statusBarColor = Color(0xFFF7F7F7).toArgb()
+        val insetsController =
+            window?.let { WindowCompat.getInsetsController(it, window.decorView) }
+        insetsController?.isAppearanceLightStatusBars = true
     }
 
     MaterialTheme(
