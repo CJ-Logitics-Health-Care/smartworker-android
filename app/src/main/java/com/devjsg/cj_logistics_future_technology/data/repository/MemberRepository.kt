@@ -4,6 +4,7 @@ import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreM
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
+import com.devjsg.cj_logistics_future_technology.di.util.decodeJwt
 import com.devjsg.cj_logistics_future_technology.di.util.decodeJwtHeader
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class MemberRepository @Inject constructor(
         if (response.success) {
             dataStoreManager.saveToken(response.data.token, response.data.refreshToken)
         }
+        val decodedJwt = decodeJwt(response.data.token)
         val decodedHeader = decodeJwtHeader(response.data.token)
 
         if (decodedHeader != null) {

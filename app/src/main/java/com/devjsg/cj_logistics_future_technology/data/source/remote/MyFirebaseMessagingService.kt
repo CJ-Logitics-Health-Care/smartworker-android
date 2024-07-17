@@ -58,8 +58,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "latitude: $latitude, longitude: $longitude")
 
         val notificationBuilder = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("FCM Message")
+            .setSmallIcon(R.drawable.cj_logo)
+            .setContentTitle(data["title"])
             .setContentText(data["body"])
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
