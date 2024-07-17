@@ -10,6 +10,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.headers
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
@@ -53,14 +54,15 @@ class MemberApiService(private val client: HttpClient) {
         return Json.decodeFromString(responseBody)
     }
 
-    suspend fun getMembers(token: String, lastIndex: Int? = null): MemberResponse {
-        return client.get(NetworkConstants.BASE_URL + "member/cursor-paging") {
-            header(HttpHeaders.Authorization, token)
-            if (lastIndex != null) {
-                url {
-                    parameters.append("lastIndex", lastIndex.toString())
-                }
-            }
-        }.body()
+    suspend fun getMembers(token: String, page: Int, size: Int): MemberResponse {
+        val response: HttpResponse = client.get("${NetworkConstants.BASE_URL}member/cursor-paging") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            parameter("page", page)
+            parameter("size", size)
+        }
+
+        val responseBody = response.bodyAsText()
+        println("Response Body: $responseBody") // 디버깅을 위해 응답 로깅
+        return response.body()
     }
 }

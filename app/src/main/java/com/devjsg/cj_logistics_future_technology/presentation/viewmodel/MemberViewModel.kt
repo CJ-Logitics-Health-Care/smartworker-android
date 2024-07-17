@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.devjsg.cj_logistics_future_technology.data.biometric.KeystoreHelper
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import com.devjsg.cj_logistics_future_technology.di.util.decodeJwt
-import com.devjsg.cj_logistics_future_technology.domain.uscase.CheckLoginIdUseCase
-import com.devjsg.cj_logistics_future_technology.domain.uscase.LoginUseCase
-import com.devjsg.cj_logistics_future_technology.domain.uscase.SignUpUseCase
+import com.devjsg.cj_logistics_future_technology.domain.usecase.CheckLoginIdUseCase
+import com.devjsg.cj_logistics_future_technology.domain.usecase.LoginUseCase
+import com.devjsg.cj_logistics_future_technology.domain.usecase.SignUpUseCase
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.http.isSuccess

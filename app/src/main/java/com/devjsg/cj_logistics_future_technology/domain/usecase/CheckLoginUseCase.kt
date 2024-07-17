@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.domain.uscase
+package com.devjsg.cj_logistics_future_technology.domain.usecase
 
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
 import javax.inject.Inject

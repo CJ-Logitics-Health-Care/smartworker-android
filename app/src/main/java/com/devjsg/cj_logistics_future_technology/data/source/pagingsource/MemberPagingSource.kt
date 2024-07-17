@@ -12,14 +12,12 @@ class MemberPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Member> {
         return try {
-            val currentIndex = params.key ?: 0
-            val response = apiService.getMembers("Bearer $token", currentIndex)
-            val members = response.data.value
-            val nextKey = if (response.data.hasNext) response.data.lastIndex else null
+            val nextPage = params.key ?: 0
+            val response = apiService.getMembers(token, nextPage, 10)
             LoadResult.Page(
-                data = members,
+                data = response.data.value,
                 prevKey = null,
-                nextKey = nextKey
+                nextKey = if (response.data.hasNext) response.data.lastIndex + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
