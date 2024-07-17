@@ -56,7 +56,7 @@ fun DatePickerIcon(
             .padding(start = 16.dp, end = 8.dp)
     ) {
         Text(
-            text = date.ifEmpty { "XXXX.XX.XX" },
+            text = date.ifEmpty { "생년월일" },
             color = Color.Gray,
             modifier = Modifier.weight(1f)
         )

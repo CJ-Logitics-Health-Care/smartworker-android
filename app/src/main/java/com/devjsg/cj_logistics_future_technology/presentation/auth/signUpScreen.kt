@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.auth
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
@@ -60,6 +62,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MemberViewModel
@@ -96,6 +99,11 @@ fun SignUpScreen(
                 doPasswordsMatch && isLoginIdValid
     }
     val context = LocalContext.current
+
+    val window = (context as? Activity)?.window
+    window?.statusBarColor = Color(0xFFF7F7F7).toArgb()
+    val insetsController = window?.let { WindowCompat.getInsetsController(it, window.decorView) }
+    insetsController?.isAppearanceLightStatusBars = true
 
     Scaffold(
         topBar = {
@@ -263,7 +271,7 @@ fun SignUpScreen(
                     unfocusedContainerColor = Color.White
                 )
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             DatePickerIcon(
                 date = birthDate,
@@ -314,7 +322,7 @@ fun SignUpScreen(
             HorizontalDivider(
                 color = Color(0xFFDFDFDF),
                 thickness = 1.dp,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             )
 
             Button(
