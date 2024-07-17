@@ -11,46 +11,6 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
-
-
-/*protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.21.12"
-    }
-    plugins {
-        id("java") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.52.1"
-        }
-        id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.52.1"
-        }
-        id("grpckt") {
-            artifact = "io.grpc:protoc-gen-grpc-kotlin:1.3.0:jdk8@jar"
-        }
-    }
-
-    generateProtoTasks {
-        all().forEach {
-            it.plugins {
-                id("java") {
-                    option("lite")
-                }
-                id("grpc") {
-                    option("lite")
-                }
-                id("grpckt") {
-                    option("lite")
-                }
-            }
-            it.builtins {
-                id("kotlin") {
-                    option("lite")
-                }
-            }
-        }
-    }
-}*/
-
 secrets {
     // Optionally specify a different file name containing your secrets.
     // The plugin defaults to "local.properties"
@@ -169,11 +129,6 @@ dependencies {
     implementation(libs.biometric)
 
     implementation(libs.work.runtime)
-    implementation("io.grpc:grpc-okhttp:1.52.1")
-    implementation("io.grpc:grpc-stub:1.52.1")
-    implementation("io.grpc:grpc-protobuf-lite:1.52.1")
-    implementation("io.grpc:grpc-kotlin-stub:1.3.0")
-    implementation("com.google.protobuf:protobuf-kotlin-lite:3.21.12")
 
     api(project.dependencies.platform(libs.firebase.bom))
     api(libs.firebase.analytics)

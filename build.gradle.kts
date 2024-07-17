@@ -1,6 +1,5 @@
 buildscript {
     dependencies {
-        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.18")
         classpath((kotlin("serialization", version = "1.8.20")))
         classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
     }
