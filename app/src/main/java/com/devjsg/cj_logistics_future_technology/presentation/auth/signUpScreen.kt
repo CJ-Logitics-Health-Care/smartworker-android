@@ -14,7 +14,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -25,11 +30,15 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -49,10 +58,12 @@ fun SignUpScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
-    val phoneNumber by viewModel.phoneState.collectAsState()
+    var phoneNumber by remember { mutableStateOf(TextFieldValue("")) }
     var gender by remember { mutableStateOf("Male") }
     val loginIdMessage by viewModel.loginIdMessage.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
 
     val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
     val isPasswordValid by derivedStateOf { Pattern.matches(passwordRegex, password) }
@@ -60,7 +71,7 @@ fun SignUpScreen(
     val isFormValid by derivedStateOf {
         username.isNotEmpty() && employeeName.isNotEmpty() && password.isNotEmpty() &&
                 confirmPassword.isNotEmpty() && email.isNotEmpty() && birthDate.isNotEmpty() &&
-                phoneNumber.isNotEmpty() && isPasswordValid &&
+                phoneNumber.text.isNotEmpty() && isPasswordValid &&
                 doPasswordsMatch && isLoginIdValid
     }
     val context = LocalContext.current
@@ -111,7 +122,18 @@ fun SignUpScreen(
             label = { Text("비밀번호") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    Icons.Filled.Visibility
+                else Icons.Filled.VisibilityOff
+
+                val description = if (passwordVisible) "Hide password" else "Show password"
+
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, description)
+                }
+            }
         )
         if (password.isNotEmpty() && !isPasswordValid) {
             Text(
@@ -126,7 +148,18 @@ fun SignUpScreen(
             label = { Text("비밀번호 확인") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    Icons.Filled.Visibility
+                else Icons.Filled.VisibilityOff
+
+                val description = if (passwordVisible) "Hide password" else "Show password"
+
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, description)
+                }
+            }
         )
         if (confirmPassword.isNotEmpty() && !doPasswordsMatch) {
             Text(
@@ -148,7 +181,15 @@ fun SignUpScreen(
         )
         OutlinedTextField(
             value = phoneNumber,
-            onValueChange = viewModel::onPhoneChange,
+            onValueChange = { newValue ->
+                val filteredValue = newValue.text.filter { it.isDigit() }
+                val formattedValue = formatPhoneNumber(filteredValue)
+                phoneNumber = newValue.copy(
+                    text = formattedValue,
+                    selection = TextRange(formattedValue.length)
+                )
+                viewModel.onPhoneChange(filteredValue)
+            },
             label = { Text("전화번호") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
@@ -184,7 +225,7 @@ fun SignUpScreen(
                     viewModel.signUp(
                         loginId = username,
                         password = password,
-                        phone = phoneNumber,
+                        phone = phoneNumber.text,
                         gender = if (gender == "Male") "MALE" else "FEMALE",
                         email = email,
                         employeeName = employeeName,
@@ -209,5 +250,25 @@ fun SignUpScreen(
         ) {
             Text("회원가입")
         }
+    }
+}
+
+fun formatPhoneNumber(phoneNumber: String): String {
+    return when {
+        phoneNumber.length <= 3 -> phoneNumber
+        phoneNumber.length <= 7 -> "${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3)}"
+        phoneNumber.length <= 11 -> "${phoneNumber.substring(0, 3)}-${
+            phoneNumber.substring(
+                3,
+                7
+            )
+        }-${phoneNumber.substring(7)}"
+
+        else -> "${phoneNumber.substring(0, 3)}-${
+            phoneNumber.substring(
+                3,
+                7
+            )
+        }-${phoneNumber.substring(7, 11)}"
     }
 }

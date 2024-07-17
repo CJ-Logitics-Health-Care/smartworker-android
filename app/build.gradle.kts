@@ -105,6 +105,7 @@ dependencies {
     implementation (libs.kotlinx.serialization.json)
     implementation (libs.androidx.security.crypto)
     implementation(libs.play.services.wearable)
+    implementation(libs.androidx.compose.material.icons)
 
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
