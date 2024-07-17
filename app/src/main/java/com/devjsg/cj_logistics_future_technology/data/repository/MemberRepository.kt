@@ -4,6 +4,7 @@ import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreM
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
+import com.devjsg.cj_logistics_future_technology.di.util.decodeJwtHeader
 import javax.inject.Inject
 
 class MemberRepository @Inject constructor(
@@ -17,6 +18,13 @@ class MemberRepository @Inject constructor(
         val response = apiService.login(loginId, password, fcmToken)
         if (response.success) {
             dataStoreManager.saveToken(response.data.token, response.data.refreshToken)
+        }
+        val decodedHeader = decodeJwtHeader(response.data.token)
+
+        if (decodedHeader != null) {
+            val name = decodedHeader.optString("Name")
+            val heartRateThreshold = decodedHeader.optInt("heartRateThreshold")
+            dataStoreManager.saveUserInfo(name, heartRateThreshold)
         }
         return response
     }

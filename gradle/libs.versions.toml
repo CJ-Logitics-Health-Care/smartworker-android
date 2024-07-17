@@ -27,6 +27,7 @@ paging = "3.3.0"
 dataStore = "1.1.1"
 auth0 = "2.11.0"
 jwtDecode = "2.0.2"
+jwtJava = "3.18.1"
 health-services = "1.0.0-rc02"
 ktorVersion = "2.3.12"
 concurrent = "1.2.0"
@@ -94,6 +95,7 @@ ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", versi
 
 auth0-android = { module = "com.auth0.android:auth0", version.ref = "auth0" }
 auth0-decode = { module = "com.auth0.android:jwtdecode", version.ref = "jwtDecode" }
+auth0-java = {module = "com.auth0:java-jwt", version.ref = "jwtJava"}
 
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }

@@ -125,6 +125,7 @@ dependencies {
 
     //implementation(libs.auth0.android)
     implementation(libs.auth0.decode)
+    implementation(libs.auth0.java)
 
     implementation(libs.datastore.preferences)
     implementation(libs.biometric)

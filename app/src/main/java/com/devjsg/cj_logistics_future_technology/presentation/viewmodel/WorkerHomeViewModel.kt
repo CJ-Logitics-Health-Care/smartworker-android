@@ -29,6 +29,7 @@ class WorkerHomeViewModel @Inject constructor(
     fun logout(onLogoutComplete: () -> Unit) {
         viewModelScope.launch {
             dataStoreManager.clearTokens()
+            dataStoreManager.clearHeaderData()
             onLogoutComplete()
         }
     }
