@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.auth
 
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
+import android.view.ContextThemeWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,7 +40,8 @@ fun DatePickerIcon(
     var showDialog by remember { mutableStateOf(false) }
 
     if (showDialog) {
-        DatePickerDialog(context, { _, selectedYear, selectedMonth, selectedDay ->
+        val dialogContext = ContextThemeWrapper(context, R.style.CustomDatePickerDialog)
+        DatePickerDialog(dialogContext, { _, selectedYear, selectedMonth, selectedDay ->
             onDateSelected("$selectedYear-${selectedMonth + 1}-$selectedDay")
             showDialog = false
         }, year, month, day).show()
