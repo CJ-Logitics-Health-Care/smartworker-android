@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptHelper
 import com.devjsg.cj_logistics_future_technology.presentation.auth.SignUpScreen
+import com.devjsg.cj_logistics_future_technology.presentation.auth.TermsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.detail.DetailMemberScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.AdminHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.worker.WorkerHomeScreen
@@ -23,6 +24,7 @@ fun Navigation(
 ) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController = navController) }
+        composable("terms") { TermsScreen(navController = navController) }
         composable("sign_up") { SignUpScreen(navController = navController) }
         composable("login") {
             LoginScreen(

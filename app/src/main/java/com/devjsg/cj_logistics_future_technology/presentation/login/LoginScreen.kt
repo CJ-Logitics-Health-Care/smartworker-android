@@ -160,7 +160,7 @@ fun LoginScreen(
                     Text(text = "회원이 아니신가요?", style = TextStyle(fontSize = 16.sp))
 
                     TextButton(
-                        onClick = { navController.navigate("sign_up") },
+                        onClick = { navController.navigate("terms") },
                         colors = ButtonDefaults.textButtonColors(contentColor = Color(0xFF006ECD))
                     ) {
                         Text("회원가입")
