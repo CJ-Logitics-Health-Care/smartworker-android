@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +22,6 @@ import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptH
 import com.devjsg.cj_logistics_future_technology.data.source.remote.HeartRateListenerService
 import com.devjsg.cj_logistics_future_technology.presentation.navigation.Navigation
 import com.devjsg.cj_logistics_future_technology.presentation.theme.CJLogisticsFutureTechnologyTheme
-import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,8 +31,6 @@ class MainActivity : FragmentActivity() {
     @Inject
     lateinit var biometricPromptHelper: BiometricPromptHelper
 
-    private val heartRateViewModel: WorkerHomeViewModel by viewModels()
-
     private lateinit var heartRateReceiver: HeartRateBroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +39,7 @@ class MainActivity : FragmentActivity() {
         setContent {
             CJLogisticsFutureTechnologyTheme {
                 val navController = rememberNavController()
-                Navigation(navController = navController, biometricPromptHelper, heartRateViewModel)
+                Navigation(navController = navController, biometricPromptHelper)
 
                 HandleIntent(navController)
             }

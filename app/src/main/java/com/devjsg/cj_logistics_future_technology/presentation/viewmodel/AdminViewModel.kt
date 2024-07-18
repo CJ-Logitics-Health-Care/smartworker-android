@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.devjsg.cj_logistics_future_technology.data.biometric.KeystoreHelper
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.Member
@@ -23,7 +24,8 @@ class AdminViewModel @Inject constructor(
     private val getMembersUseCase: GetAllMembersUseCase,
     private val getMemberInfoUseCase: GetMemberInfoUseCase,
     private val updateMemberUseCase: UpdateMemberUseCase,
-    private val dataStoreManager: DataStoreManager
+    private val dataStoreManager: DataStoreManager,
+    private val keystoreHelper: KeystoreHelper
 ) : ViewModel() {
 
     val members: Flow<PagingData<Member>> = getMembersUseCase()
@@ -54,6 +56,7 @@ class AdminViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreManager.clearTokens()
             dataStoreManager.clearHeaderData()
+            keystoreHelper.clearLoginData()
             onLogoutComplete()
         }
     }

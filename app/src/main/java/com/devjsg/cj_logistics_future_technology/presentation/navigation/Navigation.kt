@@ -15,13 +15,11 @@ import com.devjsg.cj_logistics_future_technology.presentation.home.worker.Worker
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
 import com.devjsg.cj_logistics_future_technology.presentation.map.MapsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.splash.SplashScreen
-import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 
 @Composable
 fun Navigation(
     navController: NavHostController,
-    biometricPromptHelper: BiometricPromptHelper,
-    workerRateViewModel: WorkerHomeViewModel
+    biometricPromptHelper: BiometricPromptHelper
 ) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController = navController) }

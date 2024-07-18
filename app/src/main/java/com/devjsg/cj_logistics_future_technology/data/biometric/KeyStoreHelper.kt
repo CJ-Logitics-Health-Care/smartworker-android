@@ -84,4 +84,8 @@ class KeystoreHelper(context: Context) {
         val encryptedData = sharedPreferences.getString(SHARED_PREFS_KEY, null) ?: return null
         return decryptData(encryptedData)
     }
+
+    fun clearLoginData() {
+        sharedPreferences.edit().remove(SHARED_PREFS_KEY).apply()
+    }
 }
