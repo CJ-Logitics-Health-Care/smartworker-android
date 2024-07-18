@@ -6,6 +6,7 @@ import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberResponse
+import com.devjsg.cj_logistics_future_technology.data.model.MyEmergencyReportResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -82,5 +83,12 @@ class MemberApiService(private val client: HttpClient) {
             contentType(ContentType.Application.Json)
             setBody(member)
         }
+    }
+
+    suspend fun getEmergencyReports(token: String): MyEmergencyReportResponse {
+        return client.get("${NetworkConstants.BASE_URL}fcm/employee/emergency-report") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            contentType(ContentType.Application.Json)
+        }.body()
     }
 }

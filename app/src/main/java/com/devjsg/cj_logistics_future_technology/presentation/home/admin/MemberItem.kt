@@ -31,7 +31,7 @@ import com.devjsg.cj_logistics_future_technology.data.model.Member
 fun MemberItem(member: Member, onEditClick: () -> Unit, onItemClick: () -> Unit) {
     val iconRes = when (member.gender) {
         "MALE" -> R.drawable.ic_man_face
-        "FEMALE" -> R.drawable.ic_man_face
+        "FEMALE" -> R.drawable.ic_woman_face
         else -> R.drawable.ic_man_face
     }
 
