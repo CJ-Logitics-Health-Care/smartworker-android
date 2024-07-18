@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
@@ -110,16 +111,16 @@ fun LoginScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 108.dp, bottom = 16.dp)
+                    .padding(top = 88.dp, bottom = 16.dp)
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.cj_logo),
+                    painter = painterResource(id = R.drawable.ic_smartworker_main_logo),
                     contentDescription = "CJ Logo",
                     modifier = Modifier
-                        .width(150.dp)
-                        .height(150.dp)
+                        .width(180.dp)
+                        .height(180.dp)
                 )
             }
         },
@@ -209,7 +210,15 @@ fun LoginScreen(
                         })
                     }
                 ) {
-                    Text("로그인")
+                    Text(
+                        "로그인",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 22.sp,
+                            fontWeight = FontWeight(700),
+                            color = Color.White,
+                        )
+                    )
                 }
             }
         }

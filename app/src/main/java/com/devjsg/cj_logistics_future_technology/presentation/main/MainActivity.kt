@@ -71,15 +71,7 @@ class MainActivity : FragmentActivity() {
     private fun requestLocationPermission() {
         val requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-            ) {
-                Toast.makeText(this, "위치 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "위치 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
+        ){}
 
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
