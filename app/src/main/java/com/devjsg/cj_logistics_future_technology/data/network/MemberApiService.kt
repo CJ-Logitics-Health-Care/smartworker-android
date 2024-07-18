@@ -1,8 +1,10 @@
 package com.devjsg.cj_logistics_future_technology.data.network
 
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
+import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
+import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
 import io.ktor.client.HttpClient
@@ -12,6 +14,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -62,7 +65,22 @@ class MemberApiService(private val client: HttpClient) {
         }
 
         val responseBody = response.bodyAsText()
-        println("Response Body: $responseBody") // 디버깅을 위해 응답 로깅
+        println("Response Body: $responseBody")
         return response.body()
+    }
+
+    suspend fun getMemberInfo(token: String, loginId: String): MemberInfoResponse {
+        return client.get("${NetworkConstants.BASE_URL}member/search") {
+            header("Authorization", "Bearer $token")
+            parameter("loginId", "qwer123")
+        }.body()
+    }
+
+    suspend fun updateMember(token: String, member: EditableMember) {
+        client.put("${NetworkConstants.BASE_URL}member/manage") {
+            header("Authorization", "Bearer $token")
+            contentType(ContentType.Application.Json)
+            setBody(member)
+        }
     }
 }

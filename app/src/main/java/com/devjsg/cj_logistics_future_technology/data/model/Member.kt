@@ -21,9 +21,8 @@ data class MemberData(
 data class Member(
     val memberId: Int,
     val gender: String,
-    val authorities: List<String>,
-    val year: Int,
-    val month: Int,
-    val day: Int,
-    val createdAt: String
+    val loginId: String,
+    val createdAt: String,
+    val phone: String,
+    val employeeName: String
 )

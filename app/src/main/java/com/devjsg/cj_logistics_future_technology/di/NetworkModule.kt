@@ -5,6 +5,7 @@ import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreM
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
 import com.devjsg.cj_logistics_future_technology.data.repository.FindAllMemberRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
+import com.devjsg.cj_logistics_future_technology.data.repository.ManageMemberRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.MemberRepository
 import dagger.Module
 import dagger.Provides
@@ -91,5 +92,14 @@ object NetworkModule {
         dataStoreManager: DataStoreManager
     ): FindAllMemberRepository {
         return FindAllMemberRepository(apiService, dataStoreManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideManageMemberRepository(
+        apiService: MemberApiService,
+        dataStoreManager: DataStoreManager
+    ): ManageMemberRepository {
+        return ManageMemberRepository(apiService, dataStoreManager)
     }
 }
