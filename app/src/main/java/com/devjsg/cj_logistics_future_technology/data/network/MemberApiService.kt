@@ -90,4 +90,11 @@ class MemberApiService(private val client: HttpClient) {
             contentType(ContentType.Application.Json)
         }.body()
     }
+
+    suspend fun searchMember(token: String, loginId: String): MemberResponse {
+        return client.get("${NetworkConstants.BASE_URL}member/search") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            parameter("loginId", loginId)
+        }.body()
+    }
 }

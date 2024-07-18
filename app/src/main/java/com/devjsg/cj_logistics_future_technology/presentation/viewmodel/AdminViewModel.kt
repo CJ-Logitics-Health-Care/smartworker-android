@@ -11,6 +11,7 @@ import com.devjsg.cj_logistics_future_technology.data.model.Member
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
 import com.devjsg.cj_logistics_future_technology.domain.usecase.GetAllMembersUseCase
 import com.devjsg.cj_logistics_future_technology.domain.usecase.GetMemberInfoUseCase
+import com.devjsg.cj_logistics_future_technology.domain.usecase.SearchMemberUseCase
 import com.devjsg.cj_logistics_future_technology.domain.usecase.UpdateMemberUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +25,7 @@ class AdminViewModel @Inject constructor(
     private val getMembersUseCase: GetAllMembersUseCase,
     private val getMemberInfoUseCase: GetMemberInfoUseCase,
     private val updateMemberUseCase: UpdateMemberUseCase,
+    private val searchMemberUseCase: SearchMemberUseCase,
     private val dataStoreManager: DataStoreManager,
     private val keystoreHelper: KeystoreHelper
 ) : ViewModel() {
@@ -34,10 +36,27 @@ class AdminViewModel @Inject constructor(
     private val _selectedMember = MutableStateFlow<EditableMember?>(null)
     val selectedMember: StateFlow<EditableMember?> = _selectedMember
 
+    private val _searchResult = MutableStateFlow<List<Member>?>(null)
+    val searchResult: StateFlow<List<Member>?> = _searchResult
+
+    private var _snackBarMessage = MutableStateFlow<String?>(null)
+    val snackBarMessage: StateFlow<String?> = _snackBarMessage
+
     fun getMemberInfo(memberId: String) {
         viewModelScope.launch {
             val response = getMemberInfoUseCase(memberId)
             _selectedMember.value = response.data.toEditableMember()
+        }
+    }
+
+    fun searchMembers(loginId: String) {
+        viewModelScope.launch {
+            try {
+                val response = searchMemberUseCase(loginId)
+                _searchResult.value = response.data.value
+            } catch (e: Exception) {
+                _snackBarMessage.value = "검색에 실패했습니다. 아이디를 확인해주세요."
+            }
         }
     }
 
