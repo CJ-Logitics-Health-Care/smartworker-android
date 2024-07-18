@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -127,7 +128,12 @@ fun TermsScreen(navController: NavController) {
                 ) {
                     Checkbox(
                         checked = isTermsChecked,
-                        onCheckedChange = { isChecked -> isTermsChecked = isChecked }
+                        onCheckedChange = { isChecked -> isTermsChecked = isChecked },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color.Red,
+                            uncheckedColor = Color.Gray,
+                            checkmarkColor = Color.White
+                        )
                     )
                     Text(text = "필수 이용 약관에 동의합니다.")
                 }
@@ -173,7 +179,12 @@ fun TermsScreen(navController: NavController) {
                 ) {
                     Checkbox(
                         checked = isPrivacyChecked,
-                        onCheckedChange = { isChecked -> isPrivacyChecked = isChecked }
+                        onCheckedChange = { isChecked -> isPrivacyChecked = isChecked },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color.Red,
+                            uncheckedColor = Color.Gray,
+                            checkmarkColor = Color.White
+                        )
                     )
                     Text(text = "개인 정보 수집에 동의합니다.")
                 }
