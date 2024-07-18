@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.CJLogisticsFutureTechnology" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowSplashScreenBackground" tools:targetApi="S">@color/cj_red</item>
+        <!--Splash 화면의 중앙에 위치할 아이콘 Drawable 지정 -->
+        <!--<item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@drawable/icon</item>-->
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="S">@color/cj_red</item>
 
-    <style name="Theme.CJLogisticsFutureTechnology" parent="android:Theme.Material.Light.NoActionBar" />
+    </style>
+
 </resources>
