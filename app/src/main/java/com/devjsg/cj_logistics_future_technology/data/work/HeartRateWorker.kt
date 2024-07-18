@@ -42,14 +42,6 @@ class HeartRateWorker @AssistedInject constructor(
 
         val requestBody = HeartRateRequest(heartRateAvg)
 
-        val response = httpClient.post(NetworkConstants.BASE_URL + "heart-rate") {
-            headers {
-                append("Authorization", "Bearer $token")
-                append("Content-Type", "application/json")
-            }
-            setBody(requestBody)
-        }
-
         if (heartRateAvg > heartRateThreshold) {
             val location = getCurrentLocation() ?: return Result.failure()
 
