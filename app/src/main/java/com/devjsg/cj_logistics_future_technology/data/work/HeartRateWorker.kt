@@ -1,7 +1,10 @@
 package com.devjsg.cj_logistics_future_technology.data.work
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
+import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -39,6 +42,14 @@ class HeartRateWorker @AssistedInject constructor(
 
         val requestBody = HeartRateRequest(heartRateAvg)
 
+        val response = httpClient.post(NetworkConstants.BASE_URL + "heart-rate") {
+            headers {
+                append("Authorization", "Bearer $token")
+                append("Content-Type", "application/json")
+            }
+            setBody(requestBody)
+        }
+
         if (heartRateAvg > heartRateThreshold) {
             val location = getCurrentLocation() ?: return Result.failure()
 
@@ -74,7 +85,16 @@ class HeartRateWorker @AssistedInject constructor(
     data class HeartRateRequest(val heartRateAvg: Int)
 
     private suspend fun getCurrentLocation(): Location? {
-        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
+        if (ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return null
+        }
+
+        val fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(applicationContext)
         return suspendCoroutine { continuation ->
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                 continuation.resume(location)
@@ -84,7 +104,11 @@ class HeartRateWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun sendEmergencyAlarm(token: String, latitude: Double, longitude: Double): Boolean {
+    private suspend fun sendEmergencyAlarm(
+        token: String,
+        latitude: Double,
+        longitude: Double
+    ): Boolean {
         return try {
             val response = httpClient.post(NetworkConstants.BASE_URL + "fcm/emergency-alarm") {
                 headers {
