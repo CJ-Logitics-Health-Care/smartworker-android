@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.data.work
 
 import android.content.Context
+import android.location.Location
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -9,6 +10,7 @@ import androidx.work.workDataOf
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.network.NetworkConstants
 import com.devjsg.cj_logistics_future_technology.di.worker.ChildWorkerFactory
+import com.google.android.gms.location.LocationServices
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -18,6 +20,9 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.Serializable
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class HeartRateWorker @AssistedInject constructor(
     @Assisted context: Context,
@@ -30,8 +35,21 @@ class HeartRateWorker @AssistedInject constructor(
         val heartRateAvg = inputData.getInt(EXTRA_HEART_RATE_AVG, 0)
 
         val token = dataStoreManager.token.first()
+        val heartRateThreshold = dataStoreManager.heartRateThreshold.first() ?: Int.MAX_VALUE
 
         val requestBody = HeartRateRequest(heartRateAvg)
+
+        if (heartRateAvg > heartRateThreshold) {
+            val location = getCurrentLocation() ?: return Result.failure()
+
+            val response = sendEmergencyAlarm(token!!, location.latitude, location.longitude)
+
+            return if (response) {
+                Result.success()
+            } else {
+                Result.failure()
+            }
+        }
 
         return try {
             val response = httpClient.post(NetworkConstants.BASE_URL + "heart-rate") {
@@ -54,6 +72,37 @@ class HeartRateWorker @AssistedInject constructor(
 
     @Serializable
     data class HeartRateRequest(val heartRateAvg: Int)
+
+    private suspend fun getCurrentLocation(): Location? {
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
+        return suspendCoroutine { continuation ->
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                continuation.resume(location)
+            }.addOnFailureListener { e ->
+                continuation.resumeWithException(e)
+            }
+        }
+    }
+
+    private suspend fun sendEmergencyAlarm(token: String, latitude: Double, longitude: Double): Boolean {
+        return try {
+            val response = httpClient.post(NetworkConstants.BASE_URL + "fcm/emergency-alarm") {
+                headers {
+                    append("Authorization", "Bearer $token")
+                    append("Content-Type", "application/json")
+                }
+                url {
+                    parameters.append("x", latitude.toString())
+                    parameters.append("y", longitude.toString())
+                    parameters.append("emergency", "HEART_RATE")
+                }
+            }
+
+            response.status.value in 200..299
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     @AssistedFactory
     interface Factory : ChildWorkerFactory {
