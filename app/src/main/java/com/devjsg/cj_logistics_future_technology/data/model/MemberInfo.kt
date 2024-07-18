@@ -5,14 +5,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MemberInfo(
     val memberId: Int,
-    var name: String,
+    var employeeName: String,
     var phone: String,
     var gender: String,
     var email: String,
     var authorities: List<String>,
     var year: Int,
     var month: Int,
-    var day: Int
+    var day: Int,
+    var createdAt: String
 )
 
 @Serializable

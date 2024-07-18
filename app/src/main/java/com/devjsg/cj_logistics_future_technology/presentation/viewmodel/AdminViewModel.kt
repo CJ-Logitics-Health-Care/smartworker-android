@@ -34,9 +34,9 @@ class AdminViewModel @Inject constructor(
     private val _selectedMember = MutableStateFlow<EditableMember?>(null)
     val selectedMember: StateFlow<EditableMember?> = _selectedMember
 
-    fun getMemberInfo(loginId: String) {
+    fun getMemberInfo(memberId: String) {
         viewModelScope.launch {
-            val response = getMemberInfoUseCase(loginId)
+            val response = getMemberInfoUseCase(memberId)
             _selectedMember.value = response.data.toEditableMember()
         }
     }
@@ -65,7 +65,7 @@ class AdminViewModel @Inject constructor(
 fun MemberInfo.toEditableMember(): EditableMember {
     return EditableMember(
         memberId = this.memberId,
-        employeeName = this.name,
+        employeeName = this.employeeName,
         phone = this.phone,
         gender = this.gender,
         email = this.email,

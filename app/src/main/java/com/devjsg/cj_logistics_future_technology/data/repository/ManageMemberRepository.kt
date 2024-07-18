@@ -13,9 +13,9 @@ class ManageMemberRepository @Inject constructor(
     private val apiService: MemberApiService,
     private val dataStoreManager: DataStoreManager
 ) {
-    suspend fun getMemberInfo(loginId: String): MemberInfoResponse {
+    suspend fun getMemberInfo(memberId: String): MemberInfoResponse {
         val token = dataStoreManager.token.first() ?: ""
-        return apiService.getMemberInfo(token, loginId)
+        return apiService.getMemberInfo(token, memberId)
     }
 
     suspend fun updateMember(member: EditableMember) {

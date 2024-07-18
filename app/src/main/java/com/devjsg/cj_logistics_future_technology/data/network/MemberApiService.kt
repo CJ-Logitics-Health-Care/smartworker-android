@@ -70,10 +70,9 @@ class MemberApiService(private val client: HttpClient) {
         return response.body()
     }
 
-    suspend fun getMemberInfo(token: String, loginId: String): MemberInfoResponse {
-        return client.get("${NetworkConstants.BASE_URL}member/search") {
+    suspend fun getMemberInfo(token: String, memberId: String): MemberInfoResponse {
+        return client.get("${NetworkConstants.BASE_URL}member/$memberId") {
             header("Authorization", "Bearer $token")
-            parameter("loginId", "qwer123")
         }.body()
     }
 

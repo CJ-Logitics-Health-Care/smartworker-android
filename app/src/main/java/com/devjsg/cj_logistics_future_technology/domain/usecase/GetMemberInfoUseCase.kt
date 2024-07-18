@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetMemberInfoUseCase @Inject constructor(
     private val repository: ManageMemberRepository
 ) {
-    suspend operator fun invoke(loginId: String): MemberInfoResponse {
-        return repository.getMemberInfo(loginId)
+    suspend operator fun invoke(memberId: String): MemberInfoResponse {
+        return repository.getMemberInfo(memberId)
     }
 }
