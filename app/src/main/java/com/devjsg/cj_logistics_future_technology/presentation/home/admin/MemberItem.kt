@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +28,7 @@ import com.devjsg.cj_logistics_future_technology.R
 import com.devjsg.cj_logistics_future_technology.data.model.Member
 
 @Composable
-fun MemberItem(member: Member, onEditClick: () -> Unit) {
+fun MemberItem(member: Member, onEditClick: () -> Unit, onItemClick: () -> Unit) {
     val iconRes = when (member.gender) {
         "MALE" -> R.drawable.ic_man_face
         "FEMALE" -> R.drawable.ic_man_face
@@ -41,6 +42,7 @@ fun MemberItem(member: Member, onEditClick: () -> Unit) {
             .fillMaxWidth()
             .background(color = Color(0xFFF7F7F7), shape = RoundedCornerShape(size = 16.dp))
             .padding(horizontal = 16.dp, vertical = 24.dp)
+            .clickable { onItemClick() }
     ) {
         Icon(
             painter = painterResource(id = iconRes),

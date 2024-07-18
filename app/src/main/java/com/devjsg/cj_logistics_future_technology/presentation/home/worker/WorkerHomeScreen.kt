@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.home
+package com.devjsg.cj_logistics_future_technology.presentation.home.worker
 
 import android.content.ContentValues.TAG
 import android.util.Log

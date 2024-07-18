@@ -9,8 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptHelper
 import com.devjsg.cj_logistics_future_technology.presentation.auth.SignUpScreen
-import com.devjsg.cj_logistics_future_technology.presentation.home.WorkerHomeScreen
+import com.devjsg.cj_logistics_future_technology.presentation.detail.DetailMemberScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.AdminHomeScreen
+import com.devjsg.cj_logistics_future_technology.presentation.home.worker.WorkerHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
 import com.devjsg.cj_logistics_future_technology.presentation.map.MapsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.splash.SplashScreen
@@ -44,6 +45,13 @@ fun Navigation(
             val longitude = backStackEntry.arguments?.getFloat("longitude")?.toDouble() ?: 0.0
             Log.d("MapsScreen", "Latitude: $latitude, Longitude: $longitude")
             MapsScreen(latitude = latitude, longitude = longitude)
+        }
+        composable(
+            route = "detail_member/{memberId}",
+            arguments = listOf(navArgument("memberId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val memberId = backStackEntry.arguments?.getInt("memberId") ?: 0
+            DetailMemberScreen(memberId = memberId)
         }
     }
 }

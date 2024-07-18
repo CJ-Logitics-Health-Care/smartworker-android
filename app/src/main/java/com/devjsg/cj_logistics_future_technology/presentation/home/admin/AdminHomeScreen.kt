@@ -85,6 +85,9 @@ fun AdminHomeScreen(
                             onEditClick = {
                                 viewModel.getMemberInfo(it.memberId.toString())
                                 scope.launch { sheetState.bottomSheetState.expand() }
+                            },
+                            onItemClick = {
+                                navController.navigate("detail_member/${it.memberId}")
                             }
                         )
                     }
