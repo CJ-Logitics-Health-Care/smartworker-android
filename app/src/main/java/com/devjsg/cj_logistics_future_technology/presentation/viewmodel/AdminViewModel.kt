@@ -45,12 +45,14 @@ class AdminViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updateMemberUseCase(member)
+                getMembersUseCase()
                 onSuccess()
             } catch (e: Exception) {
                 onError(e)
             }
         }
     }
+
 
     fun logout(onLogoutComplete: () -> Unit) {
         viewModelScope.launch {

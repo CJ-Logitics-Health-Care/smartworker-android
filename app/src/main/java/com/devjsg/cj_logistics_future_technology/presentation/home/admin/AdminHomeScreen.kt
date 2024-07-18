@@ -57,6 +57,7 @@ fun AdminHomeScreen(
                     onDismiss = { scope.launch { sheetState.bottomSheetState.hide() } },
                     onSave = { updatedMember ->
                         viewModel.updateMember(updatedMember, {
+                            members.refresh()
                             scope.launch { sheetState.bottomSheetState.hide() }
                         }, {
                             // Handle error
