@@ -7,7 +7,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.devjsg.cj_logistics_future_technology.data.source.remote.HeartRateListenerService
-import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MyHeartRateViewModel
 
 class HeartRateBroadcastReceiver : BroadcastReceiver() {
 
@@ -15,7 +15,7 @@ class HeartRateBroadcastReceiver : BroadcastReceiver() {
         if (intent.action == HeartRateListenerService.ACTION_HEART_RATE_AVG_UPDATE) {
             val heartRateAvg = intent.getIntExtra(HeartRateListenerService.EXTRA_HEART_RATE_AVG, 0)
             Log.d(TAG, "Received heartRateAvg in BroadcastReceiver: $heartRateAvg")
-            val viewModel = ViewModelProvider(context as ViewModelStoreOwner)[WorkerHomeViewModel::class.java]
+            val viewModel = ViewModelProvider(context as ViewModelStoreOwner)[MyHeartRateViewModel::class.java]
             viewModel.setHeartRateAvg(heartRateAvg)
         }
     }

@@ -1,6 +1,8 @@
 package com.devjsg.cj_logistics_future_technology.presentation.main
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
@@ -10,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +26,7 @@ import com.devjsg.cj_logistics_future_technology.data.biometric.BiometricPromptH
 import com.devjsg.cj_logistics_future_technology.data.source.remote.HeartRateListenerService
 import com.devjsg.cj_logistics_future_technology.presentation.navigation.Navigation
 import com.devjsg.cj_logistics_future_technology.presentation.theme.CJLogisticsFutureTechnologyTheme
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MyHeartRateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,7 +36,17 @@ class MainActivity : FragmentActivity() {
     @Inject
     lateinit var biometricPromptHelper: BiometricPromptHelper
 
-    private lateinit var heartRateReceiver: HeartRateBroadcastReceiver
+    private val heartRateViewModel: MyHeartRateViewModel by viewModels()
+
+    private val heartRateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == HeartRateListenerService.ACTION_HEART_RATE_AVG_UPDATE) {
+                val heartRateAvg =
+                    intent.getIntExtra(HeartRateListenerService.EXTRA_HEART_RATE_AVG, 0)
+                heartRateViewModel.setHeartRateAvg(heartRateAvg)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +54,7 @@ class MainActivity : FragmentActivity() {
         setContent {
             CJLogisticsFutureTechnologyTheme {
                 val navController = rememberNavController()
-                Navigation(navController = navController, biometricPromptHelper)
+                Navigation(navController = navController, biometricPromptHelper, heartRateViewModel)
 
                 HandleIntent(navController)
             }
@@ -51,10 +65,13 @@ class MainActivity : FragmentActivity() {
 
         requestLocationPermission()
 
-        heartRateReceiver = HeartRateBroadcastReceiver()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermission()
+            registerReceiver(
+                heartRateReceiver,
+                IntentFilter(HeartRateListenerService.ACTION_HEART_RATE_AVG_UPDATE),
+                RECEIVER_NOT_EXPORTED
+            )
         }
     }
 
@@ -72,7 +89,7 @@ class MainActivity : FragmentActivity() {
     private fun requestLocationPermission() {
         val requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
-        ){}
+        ) {}
 
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -108,6 +125,8 @@ class MainActivity : FragmentActivity() {
         } else {
             registerReceiver(heartRateReceiver, intentFilter)
         }
+
+        Log.d("MainActivity", "onResume: ${heartRateViewModel.heartRateAvg.value}")
     }
 
     override fun onPause() {
@@ -129,7 +148,10 @@ class MainActivity : FragmentActivity() {
                     val age = currentIntent.getIntExtra("age", 0)
                     val phone = currentIntent.getStringExtra("phone")
                     val createdAt = currentIntent.getStringExtra("createdAt")
-                    Log.d("MainActivity", "employeeName: $employeeName, latitude: $latitude, longitude: $longitude, age: $age, phone: $phone, createdAt: $createdAt")
+                    Log.d(
+                        "MainActivity",
+                        "employeeName: $employeeName, latitude: $latitude, longitude: $longitude, age: $age, phone: $phone, createdAt: $createdAt"
+                    )
                     navController.navigate("maps/$employeeName/$latitude/$longitude/$age/$phone/$createdAt")
                 }
             }

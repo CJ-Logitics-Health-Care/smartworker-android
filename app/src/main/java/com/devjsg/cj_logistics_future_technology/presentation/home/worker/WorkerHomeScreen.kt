@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.R
 import com.devjsg.cj_logistics_future_technology.presentation.detail.HeartRateChart
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MyHeartRateViewModel
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 import java.util.Calendar
 import java.util.Date
@@ -49,7 +50,8 @@ import java.util.Locale
 @Composable
 fun WorkerHomeScreen(
     navController: NavController,
-    viewModel: WorkerHomeViewModel = hiltViewModel()
+    viewModel: WorkerHomeViewModel = hiltViewModel(),
+    myHeartRateViewModel: MyHeartRateViewModel
 ) {
     val heartRateData by viewModel.heartRateData.collectAsState()
     var selectedOption by remember { mutableStateOf("전체") }
@@ -67,7 +69,7 @@ fun WorkerHomeScreen(
         viewModel.loadEmergencyReports(start, end)
     }
 
-    val heartRate by viewModel.heartRateAvg.collectAsState()
+    val heartRate by myHeartRateViewModel.heartRateAvg.collectAsState()
     val myEmergencyReports by viewModel.myEmergencyReports.collectAsState()
 
     Scaffold(

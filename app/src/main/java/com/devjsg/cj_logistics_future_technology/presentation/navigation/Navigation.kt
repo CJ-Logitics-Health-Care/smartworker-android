@@ -15,11 +15,13 @@ import com.devjsg.cj_logistics_future_technology.presentation.home.worker.Worker
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
 import com.devjsg.cj_logistics_future_technology.presentation.map.MapsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.splash.SplashScreen
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MyHeartRateViewModel
 
 @Composable
 fun Navigation(
     navController: NavHostController,
-    biometricPromptHelper: BiometricPromptHelper
+    biometricPromptHelper: BiometricPromptHelper,
+    myHeartRateViewModel: MyHeartRateViewModel
 ) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController = navController) }
@@ -32,7 +34,12 @@ fun Navigation(
             )
         }
         composable("admin_home") { AdminHomeScreen(navController = navController) }
-        composable("worker_home") { WorkerHomeScreen(navController = navController) }
+        composable("worker_home") {
+            WorkerHomeScreen(
+                navController = navController,
+                myHeartRateViewModel = myHeartRateViewModel
+            )
+        }
         composable(
             route = "maps/{employeeName}/{latitude}/{longitude}/{age}/{phone}/{createdAt}",
             arguments = listOf(
