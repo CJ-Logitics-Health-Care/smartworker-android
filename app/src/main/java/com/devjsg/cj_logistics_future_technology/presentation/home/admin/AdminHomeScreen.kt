@@ -1,25 +1,18 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
@@ -36,12 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.IncidentHistoryScreen
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.MemberListScreen
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun AdminHomeScreen(
     navController: NavController,
@@ -66,6 +63,8 @@ fun AdminHomeScreen(
             snackBarHostState.showSnackbar(it)
         }
     }
+
+    val pagerState = rememberPagerState(pageCount = { 2 })
 
     BottomSheetScaffold(
         scaffoldState = sheetState,
@@ -94,93 +93,43 @@ fun AdminHomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(16.dp)
         ) {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                label = { Text("회원 아이디로 검색") },
-                trailingIcon = {
-                    IconButton(onClick = {
-                        viewModel.searchMembers(searchQuery)
-                    }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
-                    }
-                },
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
                 modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            searchResult?.let { searchResults ->
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    itemsIndexed(searchResults) { _, member ->
-                        MemberItem(
-                            member = member,
-                            onEditClick = {
-                                viewModel.getMemberInfo(member.memberId.toString())
-                                scope.launch { sheetState.bottomSheetState.expand() }
-                            },
-                            onItemClick = {
-                                navController.navigate("detail_member/${member.memberId}")
-                            }
-                        )
-                    }
-                }
-            }  ?: LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(members.itemCount) { index ->
-                    val member = members[index]
-                    member?.let {
-                        MemberItem(
-                            member = it,
-                            onEditClick = {
-                                viewModel.getMemberInfo(it.memberId.toString())
-                                scope.launch { sheetState.bottomSheetState.expand() }
-                            },
-                            onItemClick = {
-                                navController.navigate("detail_member/${it.memberId}")
-                            }
-                        )
-                    }
-                }
-
-                members.apply {
-                    when {
-                        loadState.refresh is LoadState.Loading -> {
-                            item { CircularProgressIndicator() }
-                        }
-                        loadState.append is LoadState.Loading -> {
-                            item { CircularProgressIndicator() }
-                        }
-                        loadState.refresh is LoadState.Error -> {
-                            val e = members.loadState.refresh as LoadState.Error
-                            item { Text("Error: ${e.error.localizedMessage}") }
-                        }
-                        loadState.append is LoadState.Error -> {
-                            val e = members.loadState.append as LoadState.Error
-                            item { Text("Error: ${e.error.localizedMessage}") }
-                        }
-                    }
-                }
+                Tab(
+                    text = { Text("회원 리스트") },
+                    selected = pagerState.currentPage == 0,
+                    onClick = { scope.launch { pagerState.animateScrollToPage(0) } }
+                )
+                Tab(
+                    text = { Text("신고 이력 조회") },
+                    selected = pagerState.currentPage == 1,
+                    onClick = { scope.launch { pagerState.animateScrollToPage(1) } }
+                )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    viewModel.logout {
-                        navController.navigate("login") {
-                            popUpTo("worker_home") { inclusive = true }
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.weight(1f)
+            ) { page ->
+                when (page) {
+                    0 -> MemberListScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        members = members,
+                        selectedMember = selectedMember,
+                        searchResult = searchResult,
+                        searchQuery = searchQuery,
+                        onSearchQueryChange = { searchQuery = it },
+                        onSearch = { viewModel.searchMembers(searchQuery) },
+                        onEditClick = {
+                            viewModel.getMemberInfo(it)
+                            scope.launch { sheetState.bottomSheetState.expand() }
                         }
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "로그아웃")
+                    )
+                    1 -> IncidentHistoryScreen()
+                }
             }
         }
     }
