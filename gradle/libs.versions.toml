@@ -39,7 +39,7 @@ googleServices = "4.4.2"
 firebaseCrashlytics = "3.0.1"
 coroutines = "1.7.3"
 googleMaps = "4.4.1"
-vico = "2.0.0-alpha.23"
+mpAndroidChart = "v3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -108,10 +108,7 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 
 google-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googleMaps" }
 
-vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
-vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
-vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
-vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpAndroidChart"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

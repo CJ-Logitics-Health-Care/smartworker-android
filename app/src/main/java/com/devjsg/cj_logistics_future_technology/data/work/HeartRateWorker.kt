@@ -74,7 +74,7 @@ class HeartRateWorker @AssistedInject constructor(
     }
 
     @Serializable
-    data class HeartRateRequest(val heartRateAvg: Int)
+    data class HeartRateRequest(val heartRate: Int)
 
     private suspend fun getCurrentLocation(): Location? {
         if (ContextCompat.checkSelfPermission(

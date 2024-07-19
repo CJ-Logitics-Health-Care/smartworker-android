@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.data.network
 
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
+import com.devjsg.cj_logistics_future_technology.data.model.HeartRateResponse
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
@@ -95,6 +96,14 @@ class MemberApiService(private val client: HttpClient) {
         return client.get("${NetworkConstants.BASE_URL}member/search") {
             header(HttpHeaders.Authorization, "Bearer $token")
             parameter("loginId", loginId)
+        }.body()
+    }
+
+    suspend fun getHeartRateData(token: String, memberId: Int, start: String, end: String): HeartRateResponse {
+        return client.get("${NetworkConstants.BASE_URL}heart-rate/aggregate/$memberId") {
+            header("Authorization", "Bearer $token")
+            parameter("start", start)
+            parameter("end", end)
         }.body()
     }
 }
