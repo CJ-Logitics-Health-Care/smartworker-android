@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.IncidentHistoryScreen
-import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.MemberListScreen
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 import kotlinx.coroutines.launch
 
@@ -128,7 +126,7 @@ fun AdminHomeScreen(
                             scope.launch { sheetState.bottomSheetState.expand() }
                         }
                     )
-                    1 -> IncidentHistoryScreen(viewModel = viewModel)
+                    1 -> IncidentHistoryScreen(viewModel = viewModel, navController = navController)
                 }
             }
         }

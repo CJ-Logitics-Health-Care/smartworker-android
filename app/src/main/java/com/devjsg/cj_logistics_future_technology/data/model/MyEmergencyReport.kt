@@ -9,7 +9,9 @@ data class MyEmergencyReport(
     val reporter: String,
     val x: Double,
     val y: Double,
-    val emergency: String
+    val emergency: String,
+    val loginId: String,
+    val phone: String
 )
 
 @Serializable

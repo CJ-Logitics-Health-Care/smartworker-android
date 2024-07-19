@@ -85,10 +85,11 @@ class MemberApiService(private val client: HttpClient) {
         }
     }
 
-    suspend fun getEmergencyReports(token: String): MyEmergencyReportResponse {
+    suspend fun getEmergencyReports(token: String, start: String, end: String): MyEmergencyReportResponse {
         return client.get("${NetworkConstants.BASE_URL}fcm/employee/emergency-report") {
             header(HttpHeaders.Authorization, "Bearer $token")
-            contentType(ContentType.Application.Json)
+            parameter("start", start)
+            parameter("end", end)
         }.body()
     }
 
@@ -101,6 +102,14 @@ class MemberApiService(private val client: HttpClient) {
 
     suspend fun getHeartRateData(token: String, memberId: Int, start: String, end: String): HeartRateResponse {
         return client.get("${NetworkConstants.BASE_URL}heart-rate/aggregate/$memberId") {
+            header("Authorization", "Bearer $token")
+            parameter("start", start)
+            parameter("end", end)
+        }.body()
+    }
+
+    suspend fun getMyHeartRateData(token: String, start: String, end: String): HeartRateResponse {
+        return client.get("${NetworkConstants.BASE_URL}heart-rate/aggregate") {
             header("Authorization", "Bearer $token")
             parameter("start", start)
             parameter("end", end)

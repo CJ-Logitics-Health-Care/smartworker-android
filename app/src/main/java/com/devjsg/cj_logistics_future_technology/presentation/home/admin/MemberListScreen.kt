@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.home.admin.component
+package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.Member
-import com.devjsg.cj_logistics_future_technology.presentation.home.admin.MemberItem
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.MemberItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 
 @Composable

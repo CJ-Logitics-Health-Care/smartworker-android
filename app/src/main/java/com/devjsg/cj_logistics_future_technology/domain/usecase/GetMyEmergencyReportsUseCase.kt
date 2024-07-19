@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetMyEmergencyReportsUseCase @Inject constructor(
     private val repository: MyEmergencyReportRepository
 ) {
-    suspend operator fun invoke(): List<MyEmergencyReport> {
-        return repository.getEmergencyReports()
+    suspend operator fun invoke(start: String, end: String): List<MyEmergencyReport> {
+        return repository.getEmergencyReports(start, end)
     }
 }

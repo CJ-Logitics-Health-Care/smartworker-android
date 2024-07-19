@@ -1,5 +1,6 @@
-package com.devjsg.cj_logistics_future_technology.presentation.home.admin.component
+package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -31,11 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.EmergencyReportItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("DefaultLocale")
 @Composable
-fun IncidentHistoryScreen(viewModel: AdminViewModel) {
+fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavController) {
     var loginId by remember { mutableStateOf("") }
     var startDate by remember { mutableStateOf("") }
     var endDate by remember { mutableStateOf("") }
@@ -145,7 +147,12 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel) {
         ) {
             emergencyReports?.let { reports ->
                 items(reports) { report ->
-                    EmergencyReportItem(report)
+                    EmergencyReportItem(
+                        report = report,
+                        onClick = {
+                            navController.navigate("detail_member/${report.loginId}")
+                        }
+                    )
                 }
             }
         }

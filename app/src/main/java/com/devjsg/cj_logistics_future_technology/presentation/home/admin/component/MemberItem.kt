@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.home.admin
+package com.devjsg.cj_logistics_future_technology.presentation.home.admin.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

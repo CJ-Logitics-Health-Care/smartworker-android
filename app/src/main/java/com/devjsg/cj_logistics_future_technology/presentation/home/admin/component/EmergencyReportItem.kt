@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,12 +15,13 @@ import androidx.compose.ui.unit.dp
 import com.devjsg.cj_logistics_future_technology.data.model.EmergencyReport
 
 @Composable
-fun EmergencyReportItem(report: EmergencyReport) {
+fun EmergencyReportItem(report: EmergencyReport, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .background(color = Color(0xFFF7F7F7), shape = RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
         Text(text = "신고자: ${report.reporter}", style = MaterialTheme.typography.bodyLarge)
