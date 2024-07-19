@@ -28,10 +28,6 @@ class WorkerHomeViewModel @Inject constructor(
     private val _myEmergencyReports = MutableStateFlow<List<MyEmergencyReport>>(emptyList())
     val myEmergencyReports: StateFlow<List<MyEmergencyReport>> = _myEmergencyReports
 
-    init {
-        loadEmergencyReports()
-    }
-
     fun setHeartRateAvg(heartRateAvg: Int) {
         _heartRateAvg.value = heartRateAvg
         Log.d("WorkerHomeViewModel", "setHeartRateAvg: ${_heartRateAvg.value}")

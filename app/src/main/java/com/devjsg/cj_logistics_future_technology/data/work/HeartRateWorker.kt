@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
@@ -39,6 +40,7 @@ class HeartRateWorker @AssistedInject constructor(
 
         val token = dataStoreManager.token.first()
         val heartRateThreshold = dataStoreManager.heartRateThreshold.first() ?: Int.MAX_VALUE
+        Log.d("HeartRateWorker", "heartRateAvg: $heartRateAvg, heartRateThreshold: $heartRateThreshold")
 
         val requestBody = HeartRateRequest(heartRateAvg)
 

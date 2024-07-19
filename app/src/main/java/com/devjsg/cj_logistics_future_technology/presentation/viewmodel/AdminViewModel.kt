@@ -64,6 +64,7 @@ class AdminViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 updateMemberUseCase(member)
+                dataStoreManager.saveHeartRateThreshold(member.heartRateThreshold)
                 getMembersUseCase()
                 onSuccess()
             } catch (e: Exception) {
@@ -81,18 +82,19 @@ class AdminViewModel @Inject constructor(
             onLogoutComplete()
         }
     }
-}
 
-fun MemberInfo.toEditableMember(): EditableMember {
-    return EditableMember(
-        memberId = this.memberId,
-        employeeName = this.employeeName,
-        phone = this.phone,
-        gender = this.gender,
-        email = this.email,
-        authority = this.authorities.firstOrNull() ?: "",
-        year = this.year,
-        month = this.month,
-        day = this.day
-    )
+    private fun MemberInfo.toEditableMember(): EditableMember {
+        return EditableMember(
+            memberId = this.memberId,
+            employeeName = this.employeeName,
+            phone = this.phone,
+            gender = this.gender,
+            email = this.email,
+            authority = this.authorities.firstOrNull() ?: "",
+            year = this.year,
+            month = this.month,
+            day = this.day,
+            heartRateThreshold = this.heartRateThreshold
+        )
+    }
 }

@@ -51,6 +51,12 @@ class DataStoreManager @Inject constructor(context: Context) {
         }
     }
 
+    suspend fun saveHeartRateThreshold(heartRateThreshold: Int) {
+        dataStore.edit { preferences ->
+            preferences[HEART_RATE_THRESHOLD_KEY] = heartRateThreshold
+        }
+    }
+
     suspend fun clearTokens() {
         dataStore.edit { preferences ->
             preferences.remove(TOKEN_KEY)

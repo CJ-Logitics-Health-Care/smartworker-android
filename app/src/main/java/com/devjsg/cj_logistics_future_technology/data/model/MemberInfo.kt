@@ -13,7 +13,8 @@ data class MemberInfo(
     var year: Int,
     var month: Int,
     var day: Int,
-    var createdAt: String
+    var createdAt: String,
+    var heartRateThreshold: Int
 )
 
 @Serializable
@@ -42,5 +43,6 @@ data class EditableMember(
     var authority: String,
     var year: Int,
     var month: Int,
-    var day: Int
+    var day: Int,
+    var heartRateThreshold: Int
 )

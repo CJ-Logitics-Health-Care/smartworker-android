@@ -45,6 +45,7 @@ fun EditMemberBottomSheet(
     var gender by remember { mutableStateOf(member.gender) }
     var email by remember { mutableStateOf(member.email) }
     var authority by remember { mutableStateOf(member.authority) }
+    var heartRateThreshold by remember { mutableStateOf(member.heartRateThreshold.toString()) }
 
     var date by remember {
         mutableStateOf("${member.year}-${member.month}-${member.day}")
@@ -89,6 +90,14 @@ fun EditMemberBottomSheet(
             onDateSelected = { selectedDate ->
                 date = selectedDate
             }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = heartRateThreshold,
+            onValueChange = { heartRateThreshold = it },
+            label = { Text("heartRateThreshold") }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -160,7 +169,8 @@ fun EditMemberBottomSheet(
                         year = selectedYear,
                         month = selectedMonth,
                         day = selectedDay,
-                        authority = authority
+                        authority = authority,
+                        heartRateThreshold = heartRateThreshold.toInt()
                     )
                     onSave(updatedMember)
                 },
