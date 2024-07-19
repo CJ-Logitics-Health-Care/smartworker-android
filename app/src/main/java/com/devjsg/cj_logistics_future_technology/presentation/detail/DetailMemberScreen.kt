@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.presentation.detail.component.MemberEmergencyReportItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MemberDetailViewModel
 import java.util.Calendar
@@ -50,6 +51,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailMemberScreen(
+    navController: NavController,
     memberId: Int,
     viewModel: MemberDetailViewModel = hiltViewModel()
 ) {
@@ -76,7 +78,7 @@ fun DetailMemberScreen(
             CenterAlignedTopAppBar(
                 title = { Text("회원 상세 정보") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Navigate back */ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }

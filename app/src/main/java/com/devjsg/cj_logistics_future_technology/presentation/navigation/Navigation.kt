@@ -71,7 +71,7 @@ fun Navigation(
             arguments = listOf(navArgument("memberId") { type = NavType.IntType })
         ) { backStackEntry ->
             val memberId = backStackEntry.arguments?.getInt("memberId") ?: 0
-            DetailMemberScreen(memberId = memberId)
+            DetailMemberScreen(navController= navController,memberId = memberId)
         }
     }
 }
