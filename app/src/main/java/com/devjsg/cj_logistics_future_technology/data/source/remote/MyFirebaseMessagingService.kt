@@ -45,20 +45,29 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendNotification(data: Map<String, String>) {
+        val employeeName = data["employeeName"] ?: ""
         val latitude = data["x"]?.toFloatOrNull() ?: 0f
         val longitude = data["y"]?.toFloatOrNull() ?: 0f
+        val age = data["age"]?.toIntOrNull() ?: 0
+        val phone = data["phone"] ?: ""
+        val createdAt = data["createdAt"] ?: ""
+
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("navigateTo", "maps")
+            putExtra("employeeName", employeeName)
             putExtra("latitude", latitude)
             putExtra("longitude", longitude)
+            putExtra("age", age)
+            putExtra("phone", phone)
+            putExtra("createdAt", createdAt)
         }
+
         val pendingIntent: PendingIntent =
             PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
-        Log.d(TAG, "latitude: $latitude, longitude: $longitude")
 
         val notificationBuilder = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
-            .setSmallIcon(R.drawable.cj_logo)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(data["title"])
             .setContentText(data["body"])
             .setAutoCancel(true)

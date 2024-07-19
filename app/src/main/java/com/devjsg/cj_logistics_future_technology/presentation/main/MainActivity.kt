@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -122,9 +123,14 @@ class MainActivity : FragmentActivity() {
         LaunchedEffect(currentIntent) {
             currentIntent?.getStringExtra("navigateTo")?.let { navigateTo ->
                 if (navigateTo == "maps") {
+                    val employeeName = currentIntent.getStringExtra("employeeName")
                     val latitude = currentIntent.getFloatExtra("latitude", 0f)
                     val longitude = currentIntent.getFloatExtra("longitude", 0f)
-                    navController.navigate("maps/$latitude/$longitude")
+                    val age = currentIntent.getIntExtra("age", 0)
+                    val phone = currentIntent.getStringExtra("phone")
+                    val createdAt = currentIntent.getStringExtra("createdAt")
+                    Log.d("MainActivity", "employeeName: $employeeName, latitude: $latitude, longitude: $longitude, age: $age, phone: $phone, createdAt: $createdAt")
+                    navController.navigate("maps/$employeeName/$latitude/$longitude/$age/$phone/$createdAt")
                 }
             }
         }
