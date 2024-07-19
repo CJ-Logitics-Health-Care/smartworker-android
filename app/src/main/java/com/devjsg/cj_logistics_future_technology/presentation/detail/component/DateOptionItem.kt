@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.detail
+package com.devjsg.cj_logistics_future_technology.presentation.detail.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

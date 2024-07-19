@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.R
-import com.devjsg.cj_logistics_future_technology.presentation.detail.HeartRateChart
+import com.devjsg.cj_logistics_future_technology.presentation.detail.component.HeartRateChart
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MyHeartRateViewModel
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.WorkerHomeViewModel
 import java.util.Calendar
@@ -114,6 +116,20 @@ fun WorkerHomeScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(options.size) { index ->
+                        val option = options[index]
+                        Button(onClick = { selectedOption = option }) {
+                            Text(option)
+                        }
+                    }
+                }
+
                 Text(
                     text = "평균 심박수",
                     modifier = Modifier.padding(horizontal = 16.dp),

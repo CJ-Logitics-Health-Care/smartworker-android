@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.presentation.detail
+package com.devjsg.cj_logistics_future_technology.presentation.detail.component
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,6 +9,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.devjsg.cj_logistics_future_technology.R
 import com.devjsg.cj_logistics_future_technology.data.model.HeartRateData
+import com.devjsg.cj_logistics_future_technology.presentation.detail.RoundedBarChartRenderer
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData

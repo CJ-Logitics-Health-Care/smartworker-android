@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.devjsg.cj_logistics_future_technology.presentation.detail.component.HeartRateChart
 import com.devjsg.cj_logistics_future_technology.presentation.detail.component.MemberEmergencyReportItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MemberDetailViewModel
 import java.util.Calendar
