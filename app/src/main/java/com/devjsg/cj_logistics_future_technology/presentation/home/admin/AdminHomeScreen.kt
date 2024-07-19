@@ -128,7 +128,7 @@ fun AdminHomeScreen(
                             scope.launch { sheetState.bottomSheetState.expand() }
                         }
                     )
-                    1 -> IncidentHistoryScreen()
+                    1 -> IncidentHistoryScreen(viewModel = viewModel)
                 }
             }
         }

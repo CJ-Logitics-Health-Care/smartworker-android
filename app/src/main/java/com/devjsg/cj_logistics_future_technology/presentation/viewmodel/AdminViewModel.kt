@@ -7,8 +7,10 @@ import androidx.paging.cachedIn
 import com.devjsg.cj_logistics_future_technology.data.biometric.KeystoreHelper
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
+import com.devjsg.cj_logistics_future_technology.data.model.EmergencyReport
 import com.devjsg.cj_logistics_future_technology.data.model.Member
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
+import com.devjsg.cj_logistics_future_technology.domain.usecase.EmergencyReportUseCase
 import com.devjsg.cj_logistics_future_technology.domain.usecase.GetAllMembersUseCase
 import com.devjsg.cj_logistics_future_technology.domain.usecase.GetMemberInfoUseCase
 import com.devjsg.cj_logistics_future_technology.domain.usecase.SearchMemberUseCase
@@ -27,7 +29,8 @@ class AdminViewModel @Inject constructor(
     private val updateMemberUseCase: UpdateMemberUseCase,
     private val searchMemberUseCase: SearchMemberUseCase,
     private val dataStoreManager: DataStoreManager,
-    private val keystoreHelper: KeystoreHelper
+    private val keystoreHelper: KeystoreHelper,
+    private val emergencyReportUseCase: EmergencyReportUseCase
 ) : ViewModel() {
 
     val members: Flow<PagingData<Member>> = getMembersUseCase()
@@ -41,6 +44,9 @@ class AdminViewModel @Inject constructor(
 
     private var _snackBarMessage = MutableStateFlow<String?>(null)
     val snackBarMessage: StateFlow<String?> = _snackBarMessage
+
+    private val _emergencyReports = MutableStateFlow<List<EmergencyReport>?>(null)
+    val emergencyReports: StateFlow<List<EmergencyReport>?> = _emergencyReports
 
     fun getMemberInfo(memberId: String) {
         viewModelScope.launch {
@@ -69,6 +75,39 @@ class AdminViewModel @Inject constructor(
                 onSuccess()
             } catch (e: Exception) {
                 onError(e)
+            }
+        }
+    }
+
+    fun searchEmergencyReports(loginId: String, start: String, end: String) {
+        viewModelScope.launch {
+            try {
+                val response = emergencyReportUseCase.searchReportsWithDate(loginId, start, end)
+                _emergencyReports.value = response.data
+            } catch (e: Exception) {
+                _snackBarMessage.value = "신고 이력 조회에 실패했습니다."
+            }
+        }
+    }
+
+    fun getEmergencyReportsWithDate(start: String, end: String) {
+        viewModelScope.launch {
+            try {
+                val response = emergencyReportUseCase.getReportsWithDate(start, end)
+                _emergencyReports.value = response.data
+            } catch (e: Exception) {
+                _snackBarMessage.value = "신고 이력 조회에 실패했습니다."
+            }
+        }
+    }
+
+    fun searchEmergencyReports(loginId: String) {
+        viewModelScope.launch {
+            try {
+                val response = emergencyReportUseCase.searchReports(loginId)
+                _emergencyReports.value = response.data
+            } catch (e: Exception) {
+                _snackBarMessage.value = "신고 이력 조회에 실패했습니다."
             }
         }
     }

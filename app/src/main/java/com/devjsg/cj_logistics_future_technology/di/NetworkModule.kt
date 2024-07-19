@@ -2,7 +2,10 @@ package com.devjsg.cj_logistics_future_technology.di
 
 import android.content.Context
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
+import com.devjsg.cj_logistics_future_technology.data.network.EmergencyReportApiService
+import com.devjsg.cj_logistics_future_technology.data.network.EmergencyReportApiServiceImpl
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
+import com.devjsg.cj_logistics_future_technology.data.repository.EmergencyReportRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.FindAllMemberRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.HeartRateRepository
 import com.devjsg.cj_logistics_future_technology.data.repository.ManageMemberRepository
@@ -70,11 +73,26 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideEmergencyReportApiService(httpClient: HttpClient): EmergencyReportApiService {
+        return EmergencyReportApiServiceImpl(httpClient)
+    }
+
+    @Provides
+    @Singleton
     fun provideMemberRepository(
         apiService: MemberApiService,
         dataStoreManager: DataStoreManager
     ): MemberRepository {
         return MemberRepository(apiService, dataStoreManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEmergencyReportRepository(
+        apiService: EmergencyReportApiService,
+        dataStoreManager: DataStoreManager
+    ): EmergencyReportRepository {
+        return EmergencyReportRepository(apiService, dataStoreManager)
     }
 
     @Provides
