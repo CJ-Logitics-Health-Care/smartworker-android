@@ -13,6 +13,8 @@ interface EmergencyReportApiService {
     suspend fun searchReportsWithDate(loginId: String, start: String, end: String, token: String): ApiResponse<List<EmergencyReport>>
     suspend fun getReportsWithDate(start: String, end: String, token: String): ApiResponse<List<EmergencyReport>>
     suspend fun searchReports(loginId: String, token: String): ApiResponse<List<EmergencyReport>>
+
+    suspend fun memberEmergencyReports(memberId: Int, start: String, end: String, token: String): ApiResponse<List<EmergencyReport>>
 }
 
 class EmergencyReportApiServiceImpl(private val httpClient: HttpClient) : EmergencyReportApiService {
@@ -39,6 +41,20 @@ class EmergencyReportApiServiceImpl(private val httpClient: HttpClient) : Emerge
         return httpClient.get {
             url("${NetworkConstants.BASE_URL}fcm/admin/emergency-report/search")
             parameter("loginId", loginId)
+            header("Authorization", "Bearer $token")
+        }.body()
+    }
+
+    override suspend fun memberEmergencyReports(
+        memberId: Int,
+        start: String,
+        end: String,
+        token: String
+    ): ApiResponse<List<EmergencyReport>> {
+        return httpClient.get {
+            url("${NetworkConstants.BASE_URL}fcm/admin/emergency-report/$memberId")
+            parameter("start", start)
+            parameter("end", end)
             header("Authorization", "Bearer $token")
         }.body()
     }

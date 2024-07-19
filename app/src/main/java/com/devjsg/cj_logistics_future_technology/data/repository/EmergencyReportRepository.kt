@@ -24,4 +24,9 @@ class EmergencyReportRepository(
         val token = dataStoreManager.token.first() ?: ""
         return apiService.searchReports(loginId, token)
     }
+
+    suspend fun getEmergencyReports(memberId: Int, start: String, end: String): ApiResponse<List<EmergencyReport>> {
+        val token = dataStoreManager.token.first() ?: ""
+        return apiService.memberEmergencyReports(memberId, start, end, token)
+    }
 }
