@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,9 +48,9 @@ fun DetailMemberScreen(
     viewModel: MemberDetailViewModel = hiltViewModel()
 ) {
     val heartRateData by viewModel.heartRateData.collectAsState()
-    var selectedOption by remember { mutableStateOf("어제") }
+    var selectedOption by remember { mutableStateOf("전체") }
 
-    val options = listOf("전체", "어제", "7일", "30일", "60일", "90일")
+    val options = listOf("전체", "하루", "7일", "30일", "60일", "90일")
     val context = LocalContext.current
 
     LaunchedEffect(selectedOption) {
@@ -90,7 +91,7 @@ fun DetailMemberScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .height(168.dp)
                         .padding(13.dp)
                         .background(Color.White, shape = RoundedCornerShape(16.dp))
                         .border(BorderStroke(1.dp, Color.Gray), shape = RoundedCornerShape(16.dp))
@@ -108,13 +109,12 @@ private fun getDatesForOption(option: String): Pair<String, String> {
     val startDate = Calendar.getInstance()
 
     when (option) {
-        "어제" -> startDate.add(Calendar.DAY_OF_YEAR, -1)
+        "하루" -> startDate.add(Calendar.DAY_OF_YEAR, -1)
         "7일" -> startDate.add(Calendar.DAY_OF_YEAR, -7)
         "30일" -> startDate.add(Calendar.DAY_OF_YEAR, -30)
         "60일" -> startDate.add(Calendar.DAY_OF_YEAR, -60)
         "90일" -> startDate.add(Calendar.DAY_OF_YEAR, -90)
         "전체" -> {
-            // Set startDate to some very old date to get all data
             startDate.set(1900, Calendar.JANUARY, 1)
         }
     }
