@@ -165,7 +165,7 @@ private fun getDateForOption(option: String): Pair<String, String> {
     return dateFormat.format(startDate.time) to dateFormat.format(endDate)
 }
 private fun getDateTimeForOption(option: String): Pair<String, String> {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:00:ss", Locale.getDefault())
     val endDate = Date()
     val startDate = Calendar.getInstance()
 

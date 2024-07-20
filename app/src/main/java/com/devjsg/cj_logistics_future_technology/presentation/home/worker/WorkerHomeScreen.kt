@@ -194,7 +194,7 @@ fun WorkerHomeScreen(
 }
 
 private fun getHeartRateDatesForOption(option: String): Pair<String, String> {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:00:ss", Locale.getDefault())
     val endDate = Date()
     val startDate = Calendar.getInstance()
 
