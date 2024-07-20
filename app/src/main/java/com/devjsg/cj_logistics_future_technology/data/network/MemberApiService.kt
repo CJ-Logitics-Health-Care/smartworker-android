@@ -1,10 +1,10 @@
 package com.devjsg.cj_logistics_future_technology.data.network
 
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
-import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.HeartRateResponse
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
 import com.devjsg.cj_logistics_future_technology.data.model.LoginResponse
+import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MyEmergencyReportResponse
@@ -77,7 +77,7 @@ class MemberApiService(private val client: HttpClient) {
         }.body()
     }
 
-    suspend fun updateMember(token: String, member: EditableMember): HttpResponse {
+    suspend fun updateMember(token: String, member: MemberInfo): HttpResponse {
         return client.put("${NetworkConstants.BASE_URL}member/manage") {
             header("Authorization", "Bearer $token")
             contentType(ContentType.Application.Json)

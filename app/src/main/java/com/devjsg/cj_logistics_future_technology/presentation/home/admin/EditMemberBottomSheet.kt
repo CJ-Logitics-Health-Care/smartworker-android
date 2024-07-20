@@ -1,9 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,14 +11,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,23 +33,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
+import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
 import com.devjsg.cj_logistics_future_technology.presentation.auth.DatePickerIcon
+import com.devjsg.cj_logistics_future_technology.presentation.auth.GenderOption
 
 @Composable
 fun EditMemberBottomSheet(
-    member: EditableMember,
+    member: MemberInfo,
     onDismiss: () -> Unit,
-    onSave: (EditableMember) -> Unit
+    onSave: (MemberInfo) -> Unit
 ) {
     var name by remember { mutableStateOf(member.employeeName) }
-    var phone by remember { mutableStateOf(member.phone) }
+    var phone by remember { mutableStateOf(TextFieldValue(member.phone)) }
     var gender by remember { mutableStateOf(member.gender) }
     var email by remember { mutableStateOf(member.email) }
-    var authority by remember { mutableStateOf(member.authority) }
+    var authority by remember { mutableStateOf(member.authorities[0]) }
     var heartRateThreshold by remember { mutableStateOf(member.heartRateThreshold.toString()) }
 
     var date by remember {
@@ -53,6 +62,19 @@ fun EditMemberBottomSheet(
 
     var expanded by remember { mutableStateOf(false) }
     val authorityOptions = listOf("ADMIN", "EMPLOYEE")
+
+    val isSaveEnabled = name.isNotBlank() && phone.text.isNotEmpty() && email.isNotBlank() &&
+            authority.isNotBlank() && heartRateThreshold.isNotBlank() && date.isNotBlank()
+
+    LaunchedEffect(member) {
+        name = member.employeeName
+        phone = TextFieldValue(member.phone)
+        gender = member.gender
+        email = member.email
+        authority = member.authorities[0]
+        heartRateThreshold = member.heartRateThreshold.toString()
+        date = "${member.year}-${member.month}-${member.day}"
+    }
 
     Column(
         modifier = Modifier
@@ -72,8 +94,23 @@ fun EditMemberBottomSheet(
 
         OutlinedTextField(
             value = phone,
-            onValueChange = { phone = it },
-            label = { Text("Phone") }
+            onValueChange = { newValue ->
+                val filteredValue = newValue.text.filter { it.isDigit() }
+                val formattedValue = formatPhoneNumber(
+                    filteredValue
+                )
+                phone = newValue.copy(
+                    text = formattedValue,
+                    selection = TextRange(formattedValue.length)
+                )
+            },
+            label = { Text("전화번호") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
+            )
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -84,7 +121,6 @@ fun EditMemberBottomSheet(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Date of Birth")
         DatePickerIcon(
             date = date,
             onDateSelected = { selectedDate ->
@@ -102,21 +138,24 @@ fun EditMemberBottomSheet(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Authority")
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = true }
-                .border(
-                    BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                    shape = MaterialTheme.shapes.medium
-                )
-                .padding(16.dp)
-        ) {
-            Text(text = authority)
+        Box {
+            OutlinedTextField(
+                value = TextFieldValue(authority),
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Authority") },
+                trailingIcon = {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
             DropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth()
             ) {
                 authorityOptions.forEach { option ->
                     DropdownMenuItem(
@@ -130,6 +169,22 @@ fun EditMemberBottomSheet(
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            GenderOption(
+                text = "남성",
+                isSelected = gender == "Male",
+                onClick = { gender = "Male" }
+            )
+            GenderOption(
+                text = "여성",
+                isSelected = gender == "Female",
+                onClick = { gender = "Female" }
+            )
+        }
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
@@ -163,13 +218,13 @@ fun EditMemberBottomSheet(
                         .map { it.toInt() }
                     val updatedMember = member.copy(
                         employeeName = name,
-                        phone = phone,
+                        phone = phone.text,
                         gender = gender,
                         email = email,
                         year = selectedYear,
                         month = selectedMonth,
                         day = selectedDay,
-                        authority = authority,
+                        authorities = listOf(authority),
                         heartRateThreshold = heartRateThreshold.toInt()
                     )
                     onSave(updatedMember)
@@ -177,8 +232,14 @@ fun EditMemberBottomSheet(
                 modifier = Modifier
                     .weight(3f)
                     .height(62.dp)
-                    .background(color = Color(0xFFEF151E), shape = RoundedCornerShape(size = 8.dp)),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF151E))
+                    .background(
+                        color = if (isSaveEnabled) Color(0xFFEF151E) else Color.Gray,
+                        shape = RoundedCornerShape(size = 8.dp)
+                    ),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isSaveEnabled) Color(0xFFEF151E) else Color.Gray
+                ),
+                enabled = isSaveEnabled
             ) {
                 Text(
                     "저장하기",
@@ -188,5 +249,25 @@ fun EditMemberBottomSheet(
                 )
             }
         }
+    }
+}
+
+fun formatPhoneNumber(phoneNumber: String): String {
+    return when {
+        phoneNumber.length <= 3 -> phoneNumber
+        phoneNumber.length <= 7 -> "${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3)}"
+        phoneNumber.length <= 11 -> "${phoneNumber.substring(0, 3)}-${
+            phoneNumber.substring(
+                3,
+                7
+            )
+        }-${phoneNumber.substring(7)}"
+
+        else -> "${phoneNumber.substring(0, 3)}-${
+            phoneNumber.substring(
+                3,
+                7
+            )
+        }-${phoneNumber.substring(7, 11)}"
     }
 }

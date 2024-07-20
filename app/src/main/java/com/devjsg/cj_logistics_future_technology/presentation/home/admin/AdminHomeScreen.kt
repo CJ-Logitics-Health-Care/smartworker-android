@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,6 +60,7 @@ fun AdminHomeScreen(
 ) {
     val members = viewModel.members.collectAsLazyPagingItems()
     val selectedMember by viewModel.selectedMember.collectAsState()
+    Log.d("selectedMember", selectedMember.toString())
     val searchResult by viewModel.searchResult.collectAsState()
     val snackBarMessage by viewModel.snackBarMessage.collectAsState()
     val sheetState = rememberBottomSheetScaffoldState(

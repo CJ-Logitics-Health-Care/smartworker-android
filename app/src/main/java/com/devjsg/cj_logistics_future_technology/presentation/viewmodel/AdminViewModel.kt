@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.devjsg.cj_logistics_future_technology.data.biometric.KeystoreHelper
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
-import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.EmergencyReport
 import com.devjsg.cj_logistics_future_technology.data.model.Member
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
@@ -36,8 +35,8 @@ class AdminViewModel @Inject constructor(
     val members: Flow<PagingData<Member>> = getMembersUseCase()
         .cachedIn(viewModelScope)
 
-    private val _selectedMember = MutableStateFlow<EditableMember?>(null)
-    val selectedMember: StateFlow<EditableMember?> = _selectedMember
+    private val _selectedMember = MutableStateFlow<MemberInfo?>(null)
+    val selectedMember: StateFlow<MemberInfo?> = _selectedMember
 
     private val _searchResult = MutableStateFlow<List<Member>?>(null)
     val searchResult: StateFlow<List<Member>?> = _searchResult
@@ -51,7 +50,7 @@ class AdminViewModel @Inject constructor(
     fun getMemberInfo(memberId: String) {
         viewModelScope.launch {
             val response = getMemberInfoUseCase(memberId)
-            _selectedMember.value = response.data.toEditableMember()
+            _selectedMember.value = response.data
         }
     }
 
@@ -66,7 +65,7 @@ class AdminViewModel @Inject constructor(
         }
     }
 
-    fun updateMember(member: EditableMember, onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
+    fun updateMember(member: MemberInfo, onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
         viewModelScope.launch {
             try {
                 val response = updateMemberUseCase(member)
@@ -125,20 +124,5 @@ class AdminViewModel @Inject constructor(
             keystoreHelper.clearLoginData()
             onLogoutComplete()
         }
-    }
-
-    private fun MemberInfo.toEditableMember(): EditableMember {
-        return EditableMember(
-            memberId = this.memberId,
-            employeeName = this.employeeName,
-            phone = this.phone,
-            gender = this.gender,
-            email = this.email,
-            authority = this.authorities.firstOrNull() ?: "",
-            year = this.year,
-            month = this.month,
-            day = this.day,
-            heartRateThreshold = this.heartRateThreshold
-        )
     }
 }

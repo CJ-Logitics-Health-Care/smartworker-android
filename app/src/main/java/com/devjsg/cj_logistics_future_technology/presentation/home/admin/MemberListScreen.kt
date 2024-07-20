@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.Member
+import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.MemberItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 
@@ -43,7 +43,7 @@ fun MemberListScreen(
     navController: NavController,
     viewModel: AdminViewModel,
     members: LazyPagingItems<Member>,
-    selectedMember: EditableMember?,
+    selectedMember: MemberInfo?,
     searchResult: List<Member>?,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
