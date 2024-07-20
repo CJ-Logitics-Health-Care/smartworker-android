@@ -24,8 +24,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -55,7 +58,17 @@ fun MemberListScreen(
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
-            label = { Text("회원 아이디로 검색") },
+            label = {
+                Text(
+                    "회원 아이디로 검색",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFFA5A5A5),
+                    )
+                )
+            },
             trailingIcon = {
                 IconButton(onClick = onSearch) {
                     Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
@@ -112,13 +125,16 @@ fun MemberListScreen(
                     loadState.refresh is LoadState.Loading -> {
                         item { CircularProgressIndicator() }
                     }
+
                     loadState.append is LoadState.Loading -> {
                         item { CircularProgressIndicator() }
                     }
+
                     loadState.refresh is LoadState.Error -> {
                         val e = members.loadState.refresh as LoadState.Error
                         item { Text("Error: ${e.error.localizedMessage}") }
                     }
+
                     loadState.append is LoadState.Error -> {
                         val e = members.loadState.append as LoadState.Error
                         item { Text("Error: ${e.error.localizedMessage}") }

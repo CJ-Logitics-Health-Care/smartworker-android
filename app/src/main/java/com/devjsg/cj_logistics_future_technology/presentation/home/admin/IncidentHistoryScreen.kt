@@ -35,7 +35,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.EmergencyReportItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
@@ -79,7 +82,17 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
             OutlinedTextField(
                 value = startDate,
                 onValueChange = { startDate = it },
-                label = { Text("시작 날짜") },
+                label = {
+                    Text(
+                        "시작 날짜",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 28.sp,
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFFA5A5A5),
+                        )
+                    )
+                },
                 readOnly = true,
                 trailingIcon = {
                     IconButton(onClick = { startDatePickerDialog.show() }) {
@@ -103,7 +116,17 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
             OutlinedTextField(
                 value = endDate,
                 onValueChange = { endDate = it },
-                label = { Text("종료 날짜") },
+                label = {
+                    Text(
+                        "종료 날짜",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 28.sp,
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFFA5A5A5),
+                        )
+                    )
+                },
                 readOnly = true,
                 trailingIcon = {
                     IconButton(onClick = { endDatePickerDialog.show() }) {
@@ -131,7 +154,17 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
             OutlinedTextField(
                 value = loginId,
                 onValueChange = { loginId = it },
-                label = { Text("회원 아이디로 검색") },
+                label = {
+                    Text(
+                        "회원 아이디로 검색",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 28.sp,
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFFA5A5A5),
+                        )
+                    )
+                },
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(

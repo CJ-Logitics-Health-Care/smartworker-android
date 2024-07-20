@@ -156,7 +156,7 @@ fun AdminHomeScreen(
                     SecondaryIndicator(
                         Modifier
                             .tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                        color = Color(0xFF242424)
+                        color = Color(0xFFEF151E)
                     )
                 }
             ) {
