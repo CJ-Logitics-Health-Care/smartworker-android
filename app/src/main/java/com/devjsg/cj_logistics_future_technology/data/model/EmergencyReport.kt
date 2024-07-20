@@ -15,6 +15,7 @@ data class EmergencyReport(
     val id: Int,
     val createdAt: String,
     val reporter: String,
+    val reporterId: Int,
     val x: Double,
     val y: Double,
     val emergency: String,

@@ -225,8 +225,7 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
                     EmergencyReportItem(
                         report = report,
                         onClick = {
-                            navController.navigate("detail_member/${report.loginId}")
-                            /* TODO memberId로 바꾸기 */
+                            navController.navigate("detail_member/${report.reporterId}")
                         }
                     )
                 }

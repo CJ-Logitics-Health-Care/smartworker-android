@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.home.admin.compon
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ fun EmergencyReportItem(report: EmergencyReport, onClick: () -> Unit) {
             )
             .background(color = Color.White, shape = RoundedCornerShape(size = 16.dp))
             .padding(horizontal = 16.dp, vertical = 24.dp)
+            .clickable { onClick() }
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
