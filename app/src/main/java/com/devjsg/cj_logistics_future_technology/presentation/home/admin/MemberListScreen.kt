@@ -9,17 +9,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,6 +34,7 @@ import com.devjsg.cj_logistics_future_technology.data.model.Member
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.MemberItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemberListScreen(
     navController: NavController,
@@ -64,7 +69,14 @@ fun MemberListScreen(
                     onSearch()
                 }
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFFEF151E),
+                unfocusedBorderColor = Color(0xFFEF151E),
+                focusedLabelColor = Color.Black,
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
