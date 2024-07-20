@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.presentation.detail
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -9,6 +10,8 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,14 +40,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.devjsg.cj_logistics_future_technology.R
 import com.devjsg.cj_logistics_future_technology.presentation.detail.component.HeartRateChart
 import com.devjsg.cj_logistics_future_technology.presentation.detail.component.MemberEmergencyReportItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.MemberDetailViewModel
@@ -66,6 +73,10 @@ fun DetailMemberScreen(
     val options = listOf("전체", "하루", "7일", "30일", "60일", "90일")
     val context = LocalContext.current
 
+    LaunchedEffect(memberId) {
+        viewModel.getMemberInfo(memberId.toString())
+    }
+
     LaunchedEffect(selectedOption) {
         val (start, end) = getDateTimeForOption(selectedOption)
         viewModel.getHeartRateData(memberId, start, end)
@@ -77,6 +88,18 @@ fun DetailMemberScreen(
     }
 
     val memberEmergencyReports by viewModel.memberEmergencyReports.collectAsState()
+    val selectedMember by viewModel.selectedMember.collectAsState()
+
+    val iconRes = when (selectedMember?.gender) {
+        "MALE" -> R.drawable.ic_man_face
+        "FEMALE" -> R.drawable.ic_woman_face
+        else -> R.drawable.ic_man_face
+    }
+
+    val window = (context as? Activity)?.window
+    window?.statusBarColor = Color(0xFFF7F7F7).toArgb()
+    val insetsController = window?.let { WindowCompat.getInsetsController(it, window.decorView) }
+    insetsController?.isAppearanceLightStatusBars = true
 
     Scaffold(
         topBar = {
@@ -88,11 +111,11 @@ fun DetailMemberScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White
-                )
+                    containerColor = Color(0xFFF7F7F7)
+                ),
             )
         },
-        containerColor = Color.White,
+        containerColor = Color(0xFFF7F7F7),
         content = {
             Column(
                 modifier = Modifier
@@ -113,11 +136,15 @@ fun DetailMemberScreen(
                                 .height(40.dp)
                                 .border(
                                     width = 1.dp,
-                                    color = if (selectedOption == option) Color.Black else Color(0xFFDFDFDF),
+                                    color = if (selectedOption == option) Color.Black else Color(
+                                        0xFFDFDFDF
+                                    ),
                                     shape = RoundedCornerShape(size = 8.dp)
                                 )
                                 .background(
-                                    color = if (selectedOption == option) Color.Black else Color.White,
+                                    color = if (selectedOption == option) Color.Black else Color(
+                                        0xFFF7F7F7
+                                    ),
                                     shape = RoundedCornerShape(size = 8.dp)
                                 )
                                 .pointerInput(Unit) {
@@ -135,6 +162,85 @@ fun DetailMemberScreen(
                         }
                     }
                 }
+
+                selectedMember?.let { member ->
+                    val roleText = when (member.authorities[0]) {
+                        "ADMIN" -> "관리자"
+                        "EMPLOYEE" -> "근로자"
+                        else -> "알 수 없음"
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            painter = painterResource(id = iconRes),
+                            contentDescription = "Member Icon",
+                            tint = Color.Unspecified
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = member.employeeName,
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .width(1.dp)
+                                    .height(8.dp)
+                                    .background(Color(0xFFDFDFDF))
+                            )
+
+                            Text(
+                                /* TODO 아이디 작성해야 함 */
+                                text = "아이디 작성해야함",
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = member.phone)
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .width(1.dp)
+                                    .height(8.dp)
+                                    .background(Color(0xFFDFDFDF))
+                            )
+                            Text(text = "${member.year}년 ${member.month}월 ${member.day}일")
+                            Box(
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .width(1.dp)
+                                    .height(8.dp)
+                                    .background(Color(0xFFDFDFDF))
+                            )
+                            Text(text = roleText)
+                        }
+                    }
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
