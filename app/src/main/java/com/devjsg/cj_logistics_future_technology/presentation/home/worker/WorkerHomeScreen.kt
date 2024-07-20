@@ -1,5 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.worker
 
+import android.app.Activity
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.R
@@ -76,6 +79,11 @@ fun WorkerHomeScreen(
 
     val heartRate by myHeartRateViewModel.heartRateAvg.collectAsState()
     val myEmergencyReports by viewModel.myEmergencyReports.collectAsState()
+
+    val window = (context as? Activity)?.window
+    window?.statusBarColor = Color(0xFFF7F7F7).toArgb()
+    val insetsController = window?.let { WindowCompat.getInsetsController(it, window.decorView) }
+    insetsController?.isAppearanceLightStatusBars = true
 
     Scaffold(
         topBar = {
