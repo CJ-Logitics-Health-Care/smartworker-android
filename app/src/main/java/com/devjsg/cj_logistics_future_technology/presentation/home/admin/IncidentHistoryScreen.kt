@@ -102,7 +102,8 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
                     IconButton(onClick = { startDatePickerDialog.show() }) {
                         Icon(
                             imageVector = Icons.Default.DateRange,
-                            contentDescription = "Start Date"
+                            contentDescription = "Start Date",
+                            tint = Color(0xFF191919)
                         )
                     }
                 },
@@ -111,8 +112,8 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
                     .clickable { startDatePickerDialog.show() },
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFEF151E),
-                    unfocusedBorderColor = Color(0xFFEF151E),
+                    focusedBorderColor = Color(0xFF191919),
+                    unfocusedBorderColor = Color(0xFFEDEDED),
                     focusedLabelColor = Color.Black,
                 )
             )
@@ -134,7 +135,11 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
                 readOnly = true,
                 trailingIcon = {
                     IconButton(onClick = { endDatePickerDialog.show() }) {
-                        Icon(imageVector = Icons.Default.DateRange, contentDescription = "End Date")
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "End Date",
+                            tint = Color(0xFF191919)
+                        )
                     }
                 },
                 modifier = Modifier
@@ -142,8 +147,8 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
                     .clickable { startDatePickerDialog.show() },
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFFEF151E),
-                    unfocusedBorderColor = Color(0xFFEF151E),
+                    focusedBorderColor = Color(0xFF191919),
+                    unfocusedBorderColor = Color(0xFFEDEDED),
                     focusedLabelColor = Color.Black,
                 )
             )
