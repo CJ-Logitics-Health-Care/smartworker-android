@@ -1,7 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.data.repository
 
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
-import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
+import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
 import io.ktor.client.statement.HttpResponse
@@ -19,7 +19,7 @@ class ManageMemberRepository @Inject constructor(
         return apiService.getMemberInfo(token, memberId)
     }
 
-    suspend fun updateMember(member: MemberInfo): HttpResponse {
+    suspend fun updateMember(member: EditableMember): HttpResponse {
         val token = dataStoreManager.token.first() ?: ""
         return apiService.updateMember(token, member)
     }

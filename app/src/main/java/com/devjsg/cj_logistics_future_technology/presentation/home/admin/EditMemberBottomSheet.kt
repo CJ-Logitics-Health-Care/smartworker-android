@@ -39,21 +39,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.devjsg.cj_logistics_future_technology.data.model.MemberInfo
+import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.presentation.auth.DatePickerIcon
 import com.devjsg.cj_logistics_future_technology.presentation.auth.GenderOption
 
 @Composable
 fun EditMemberBottomSheet(
-    member: MemberInfo,
+    member: EditableMember,
     onDismiss: () -> Unit,
-    onSave: (MemberInfo) -> Unit
+    onSave: (EditableMember) -> Unit
 ) {
     var name by remember { mutableStateOf(member.employeeName) }
     var phone by remember { mutableStateOf(TextFieldValue(member.phone)) }
     var gender by remember { mutableStateOf(member.gender) }
     var email by remember { mutableStateOf(member.email) }
-    var authority by remember { mutableStateOf(member.authorities[0]) }
+    var authority by remember { mutableStateOf(member.authority) }
     var heartRateThreshold by remember { mutableStateOf(member.heartRateThreshold.toString()) }
 
     var date by remember {
@@ -71,7 +71,7 @@ fun EditMemberBottomSheet(
         phone = TextFieldValue(member.phone)
         gender = member.gender
         email = member.email
-        authority = member.authorities[0]
+        authority = member.authority
         heartRateThreshold = member.heartRateThreshold.toString()
         date = "${member.year}-${member.month}-${member.day}"
     }
@@ -176,13 +176,13 @@ fun EditMemberBottomSheet(
         ) {
             GenderOption(
                 text = "남성",
-                isSelected = gender == "Male",
-                onClick = { gender = "Male" }
+                isSelected = gender == "MALE",
+                onClick = { gender = "MALE" }
             )
             GenderOption(
                 text = "여성",
-                isSelected = gender == "Female",
-                onClick = { gender = "Female" }
+                isSelected = gender == "FEMALE",
+                onClick = { gender = "FEMALE" }
             )
         }
 
@@ -224,7 +224,7 @@ fun EditMemberBottomSheet(
                         year = selectedYear,
                         month = selectedMonth,
                         day = selectedDay,
-                        authorities = listOf(authority),
+                        authority = authority,
                         heartRateThreshold = heartRateThreshold.toInt()
                     )
                     onSave(updatedMember)

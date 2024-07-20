@@ -199,7 +199,6 @@ fun AdminHomeScreen(
                         navController = navController,
                         viewModel = viewModel,
                         members = members,
-                        selectedMember = selectedMember,
                         searchResult = searchResult,
                         searchQuery = searchQuery,
                         onSearchQueryChange = { searchQuery = it },
