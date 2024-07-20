@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.view.ContextThemeWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devjsg.cj_logistics_future_technology.R
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.EmergencyReportItem
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.AdminViewModel
 import java.time.LocalDate
@@ -57,14 +59,16 @@ fun IncidentHistoryScreen(viewModel: AdminViewModel, navController: NavControlle
     val currentDay = LocalDate.now().dayOfMonth
 
     val startDatePickerDialog = remember {
-        DatePickerDialog(context, { _, year, month, dayOfMonth ->
+        val dialogContext = ContextThemeWrapper(context, R.style.CustomDatePickerDialog)
+        DatePickerDialog(dialogContext, { _, year, month, dayOfMonth ->
             startDate =
                 "$year-${String.format("%02d", month + 1)}-${String.format("%02d", dayOfMonth)}"
         }, currentYear, currentMonth, currentDay)
     }
 
     val endDatePickerDialog = remember {
-        DatePickerDialog(context, { _, year, month, dayOfMonth ->
+        val dialogContext = ContextThemeWrapper(context, R.style.CustomDatePickerDialog)
+        DatePickerDialog(dialogContext, { _, year, month, dayOfMonth ->
             endDate =
                 "$year-${String.format("%02d", month + 1)}-${String.format("%02d", dayOfMonth)}"
         }, currentYear, currentMonth, currentDay)
