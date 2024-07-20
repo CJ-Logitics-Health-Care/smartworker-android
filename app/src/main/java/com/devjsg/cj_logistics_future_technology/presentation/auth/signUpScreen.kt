@@ -283,7 +283,8 @@ fun SignUpScreen(
 
             DatePickerIcon(
                 date = birthDate,
-                onDateSelected = { birthDate = it }
+                onDateSelected = { birthDate = it },
+                modifier = Modifier
             )
             Spacer(modifier = Modifier.height(8.dp))
 

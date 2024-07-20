@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,7 +24,8 @@ import com.devjsg.cj_logistics_future_technology.R
 @Composable
 fun DatePickerIcon(
     date: String,
-    onDateSelected: (String) -> Unit
+    onDateSelected: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -62,8 +64,12 @@ fun DatePickerIcon(
                 )
             }
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .clickable { showDialog = true }
+            .clickable { showDialog = true },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color.Black,
+            focusedLabelColor = Color(0xFF6F6F6F)
+        )
     )
 }

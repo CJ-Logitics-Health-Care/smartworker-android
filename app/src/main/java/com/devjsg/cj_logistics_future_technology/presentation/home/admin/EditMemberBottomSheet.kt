@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -85,10 +86,85 @@ fun EditMemberBottomSheet(
         Text(text = "프로필 편집", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(16.dp))
 
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("이름") },
+                modifier = Modifier.weight(1f),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color(0xFF6F6F6F)
+                )
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Box(modifier = Modifier.weight(1f)) {
+                OutlinedTextField(
+                    value = TextFieldValue(authority),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("직급") },
+                    trailingIcon = {
+                        IconButton(onClick = { expanded = true }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown"
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color.Black,
+                        focusedLabelColor = Color(0xFF6F6F6F)
+                    )
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .background(Color.White)
+                ) {
+                    authorityOptions.forEach { option ->
+                        DropdownMenuItem(
+                            onClick = {
+                                authority = option
+                                expanded = false
+                            },
+                            text = { Text(option) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.White)
+                        )
+                    }
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        DatePickerIcon(
+            date = date,
+            onDateSelected = { selectedDate ->
+                date = selectedDate
+            },
+            modifier = Modifier.fillMaxWidth(fraction = 2f / 3f)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
         OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Name") }
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("이메일") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Black,
+                focusedLabelColor = Color(0xFF6F6F6F)
+            )
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -108,66 +184,23 @@ fun EditMemberBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+                focusedBorderColor = Color.Black,
+                focusedLabelColor = Color(0xFF6F6F6F)
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        DatePickerIcon(
-            date = date,
-            onDateSelected = { selectedDate ->
-                date = selectedDate
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(0.5f),
             value = heartRateThreshold,
             onValueChange = { heartRateThreshold = it },
-            label = { Text("heartRateThreshold") }
+            label = { Text("임계치 심박수") },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Black,
+                focusedLabelColor = Color(0xFF6F6F6F)
+            )
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Box {
-            OutlinedTextField(
-                value = TextFieldValue(authority),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Authority") },
-                trailingIcon = {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                authorityOptions.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            authority = option
-                            expanded = false
-                        },
-                        text = { Text(option) }
-                    )
-                }
-            }
-        }
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(
@@ -185,6 +218,8 @@ fun EditMemberBottomSheet(
                 onClick = { gender = "FEMALE" }
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
