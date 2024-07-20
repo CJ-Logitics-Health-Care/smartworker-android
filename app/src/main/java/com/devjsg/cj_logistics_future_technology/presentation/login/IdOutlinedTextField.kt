@@ -3,6 +3,7 @@ package com.devjsg.cj_logistics_future_technology.presentation.login
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -34,6 +36,10 @@ fun IdOutlinedTextField(
                     onShowBiometricPrompt()
                 }
             }
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color.Black,
+            focusedLabelColor = Color(0xFF6F6F6F)
+        )
     )
 }

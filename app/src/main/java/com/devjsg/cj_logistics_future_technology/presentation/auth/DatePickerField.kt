@@ -68,6 +68,8 @@ fun DatePickerIcon(
             .fillMaxWidth()
             .clickable { showDialog = true },
         colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
             focusedBorderColor = Color.Black,
             focusedLabelColor = Color(0xFF6F6F6F)
         )

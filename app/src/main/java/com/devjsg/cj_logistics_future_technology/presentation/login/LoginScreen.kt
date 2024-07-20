@@ -147,7 +147,7 @@ fun LoginScreen(
                     password = password,
                     onPasswordChange = { password = it },
                     passwordVisible = passwordVisible,
-                    onPasswordVisibleChange = { passwordVisible = !passwordVisible }
+                    onPasswordVisibleChange = { passwordVisible = !passwordVisible },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

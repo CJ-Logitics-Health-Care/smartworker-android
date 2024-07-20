@@ -144,7 +144,7 @@ fun SignUpScreen(
                     fontWeight = FontWeight(700),
                     color = Color.Black,
                 ),
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
@@ -159,7 +159,9 @@ fun SignUpScreen(
                         .defaultMinSize(minHeight = 56.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
+                        unfocusedContainerColor = Color.White,
+                        focusedBorderColor = Color.Black,
+                        focusedLabelColor = Color(0xFF6F6F6F)
                     )
                 )
                 Button(
@@ -200,7 +202,9 @@ fun SignUpScreen(
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    unfocusedContainerColor = Color.White,
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color(0xFF6F6F6F)
                 )
             )
 
@@ -226,7 +230,9 @@ fun SignUpScreen(
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    unfocusedContainerColor = Color.White,
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color(0xFF6F6F6F)
                 )
             )
             if (password.isNotEmpty() && !isPasswordValid) {
@@ -256,7 +262,9 @@ fun SignUpScreen(
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    unfocusedContainerColor = Color.White,
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color(0xFF6F6F6F)
                 )
             )
             if (confirmPassword.isNotEmpty() && !doPasswordsMatch) {
@@ -276,7 +284,9 @@ fun SignUpScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    unfocusedContainerColor = Color.White,
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color(0xFF6F6F6F)
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -304,7 +314,9 @@ fun SignUpScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    unfocusedContainerColor = Color.White,
+                    focusedBorderColor = Color.Black,
+                    focusedLabelColor = Color(0xFF6F6F6F)
                 )
             )
             Text(
