@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MemberInfo(
     val memberId: Int,
+    val loginId: String,
     var employeeName: String,
     var phone: String,
     var gender: String,

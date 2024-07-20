@@ -205,8 +205,7 @@ fun DetailMemberScreen(
                             )
 
                             Text(
-                                /* TODO 아이디 작성해야 함 */
-                                text = "아이디 작성해야함",
+                                text = member.loginId,
                                 style = TextStyle(
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold
