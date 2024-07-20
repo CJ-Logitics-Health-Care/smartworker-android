@@ -28,8 +28,8 @@ fun SplashScreen(navController: NavController, viewModel: MainViewModel = hiltVi
     LaunchedEffect(isLoggedIn) {
         delay(1000)
         if (isLoggedIn != null) {
-            val decodedSub = decodeJwt(isLoggedIn!!)
-            if (decodedSub == "1") {
+            val (decodedSub, auth) = decodeJwt(isLoggedIn!!)
+            if (decodedSub == "1" || auth == "ROLE_ADMIN") {
                 navController.navigate("admin_home") {
                     popUpTo("splash") { inclusive = true }
                 }

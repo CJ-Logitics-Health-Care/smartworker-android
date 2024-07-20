@@ -82,11 +82,11 @@ fun LoginScreen(
         biometricPromptHelper.authenticate(
             onSuccess = {
                 isBiometricPromptShown = false
-                viewModel.autoLogin { sub ->
+                viewModel.autoLogin { sub, auth ->
                     coroutineScope.launch {
                         Toast.makeText(context, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
                     }
-                    if (sub == "1") {
+                    if (sub == "1" || auth == "ROLE_ADMIN") {
                         navController.navigate("admin_home") {
                             popUpTo("login") { inclusive = true }
                         }
@@ -189,12 +189,12 @@ fun LoginScreen(
                     ),
                     shape = RoundedCornerShape(size = 8.dp),
                     onClick = {
-                        viewModel.login(id, password, onSuccess = { sub ->
+                        viewModel.login(id, password, onSuccess = { sub, auth ->
                             coroutineScope.launch {
                                 Toast.makeText(context, "로그인에 성공했습니다.", Toast.LENGTH_SHORT)
                                     .show()
                             }
-                            if (sub == "1") {
+                            if (sub == "1" || auth == "ROLE_ADMIN") {
                                 navController.navigate("admin_home") {
                                     popUpTo("login") { inclusive = true }
                                 }

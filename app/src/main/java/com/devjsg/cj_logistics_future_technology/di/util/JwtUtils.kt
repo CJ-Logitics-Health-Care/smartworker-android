@@ -4,12 +4,14 @@ import android.util.Base64
 import com.auth0.android.jwt.JWT
 import org.json.JSONObject
 
-fun decodeJwt(token: String): String? {
+fun decodeJwt(token: String): Pair<String?, String?> {
     return try {
         val jwt = JWT(token)
-        jwt.getClaim("sub").asString()
+        val sub = jwt.getClaim("sub").asString()
+        val auth = jwt.getClaim("auth").asString()
+        Pair(sub, auth)
     } catch (e: Exception) {
-        null
+        Pair(null, null)
     }
 }
 

@@ -4,6 +4,7 @@ import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreM
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,8 +19,8 @@ class ManageMemberRepository @Inject constructor(
         return apiService.getMemberInfo(token, memberId)
     }
 
-    suspend fun updateMember(member: EditableMember) {
+    suspend fun updateMember(member: EditableMember): HttpResponse {
         val token = dataStoreManager.token.first() ?: ""
-        apiService.updateMember(token, member)
+        return apiService.updateMember(token, member)
     }
 }

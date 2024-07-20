@@ -69,7 +69,12 @@ class AdminViewModel @Inject constructor(
     fun updateMember(member: EditableMember, onSuccess: () -> Unit, onError: (Throwable) -> Unit) {
         viewModelScope.launch {
             try {
-                updateMemberUseCase(member)
+                val response = updateMemberUseCase(member)
+                response.headers["Authorization"]?.let { token ->
+                    response.headers["Refresh-Token"]?.let { refreshToken ->
+                        dataStoreManager.saveToken(token, refreshToken)
+                    }
+                }
                 dataStoreManager.saveHeartRateThreshold(member.heartRateThreshold)
                 getMembersUseCase()
                 onSuccess()

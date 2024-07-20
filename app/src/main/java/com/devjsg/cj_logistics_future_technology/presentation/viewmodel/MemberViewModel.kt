@@ -117,21 +117,20 @@ class MemberViewModel @Inject constructor(
     fun login(
         id: String,
         password: String,
-        onSuccess: (String?) -> Unit,
+        onSuccess: (String?, String?) -> Unit,
         onError: (String) -> Unit
     ) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
-                // FCM 토큰 가져오기
                 val fcmToken = getFcmToken()
                 Log.d("MemberViewModel", "FCM Token: $fcmToken")
                 val response = loginUseCase(id, password, fcmToken)
                 if (response.success) {
                     val loginData = "$id:$password"
                     keystoreHelper.saveLoginData(loginData)
-                    val decodedSub = decodeJwt(response.data.token)
-                    onSuccess(decodedSub)
+                    val (sub, auth) = decodeJwt(response.data.token)
+                    onSuccess(sub, auth)
                 } else {
                     _uiState.value = UiState.Error("로그인에 실패했습니다. 아이디나 비밀번호를 다시 확인해주세요.")
                     onError("로그인에 실패했습니다. 아이디나 비밀번호를 다시 확인해주세요.")
@@ -155,7 +154,7 @@ class MemberViewModel @Inject constructor(
         }
     }
 
-    fun autoLogin(onSuccess: (String?) -> Unit) {
+    fun autoLogin(onSuccess: (String?, String?) -> Unit) {
         val loginData = keystoreHelper.getLoginData() ?: return
         val (id, password) = loginData.split(":")
         login(id, password, onSuccess, onError = { })

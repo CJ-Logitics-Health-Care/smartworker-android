@@ -77,8 +77,8 @@ class MemberApiService(private val client: HttpClient) {
         }.body()
     }
 
-    suspend fun updateMember(token: String, member: EditableMember) {
-        client.put("${NetworkConstants.BASE_URL}member/manage") {
+    suspend fun updateMember(token: String, member: EditableMember): HttpResponse {
+        return client.put("${NetworkConstants.BASE_URL}member/manage") {
             header("Authorization", "Bearer $token")
             contentType(ContentType.Application.Json)
             setBody(member)
