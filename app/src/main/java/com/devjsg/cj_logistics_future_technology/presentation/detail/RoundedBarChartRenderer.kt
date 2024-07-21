@@ -23,7 +23,6 @@ class RoundedBarChartRenderer(
         val phaseX = mAnimator.phaseX
         val phaseY = mAnimator.phaseY
 
-        // initialize the buffer
         val buffer = mBarBuffers[index]
         buffer.setPhases(phaseX, phaseY)
         buffer.setDataSet(index)
@@ -49,7 +48,6 @@ class RoundedBarChartRenderer(
                 break
 
             if (!isSingleColor) {
-                // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
                 mRenderPaint.color = dataSet.getColor(j / 4)
             }
 

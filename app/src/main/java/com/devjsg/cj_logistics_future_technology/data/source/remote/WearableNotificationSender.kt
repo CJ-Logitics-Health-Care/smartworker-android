@@ -15,7 +15,7 @@ object WearableNotificationSender {
         val dataClient = Wearable.getDataClient(context)
         val putDataMapRequest = PutDataMapRequest.create(WEARABLE_PATH).apply {
             dataMap.putString(NOTIFICATION_KEY, message)
-            dataMap.putLong("timestamp", System.currentTimeMillis()) // to ensure the data is unique
+            dataMap.putLong("timestamp", System.currentTimeMillis())
         }
         val request = putDataMapRequest.asPutDataRequest().setUrgent()
         dataClient.putDataItem(request).addOnSuccessListener {
