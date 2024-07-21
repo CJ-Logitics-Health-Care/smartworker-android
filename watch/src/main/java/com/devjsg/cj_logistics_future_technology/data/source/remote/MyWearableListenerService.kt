@@ -43,7 +43,7 @@ class MyWearableListenerService : WearableListenerService() {
         val notification = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
             .setContentTitle("사용자 신고 알림")
             .setContentText(message)
-            .setSmallIcon(R.drawable.splash_icon)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
         notificationManager.notify(1, notification)
@@ -54,9 +54,9 @@ class MyWearableListenerService : WearableListenerService() {
         Log.d(TAG, "showReportNotification: $message")
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
-            .setContentTitle("Report Location")
+            .setContentTitle("사용자 신고 위치")
             .setContentText(message)
-            .setSmallIcon(R.drawable.splash_icon)  // 적절한 아이콘 리소스로 변경하세요.
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
         notificationManager.notify(2, notification)

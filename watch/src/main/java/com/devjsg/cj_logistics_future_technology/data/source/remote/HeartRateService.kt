@@ -106,7 +106,7 @@ class HeartRateService : Service() {
 
         serviceScope.launch {
             while (true) {
-                delay(6 * 1000)/* TODO 문서 작성시 60초로 변경 */
+                delay(60 * 1000)
                 val avg = calculateAverageHeartRate()
                 if(avg != 0){
                     sendHeartRateAvgBroadcast(avg)

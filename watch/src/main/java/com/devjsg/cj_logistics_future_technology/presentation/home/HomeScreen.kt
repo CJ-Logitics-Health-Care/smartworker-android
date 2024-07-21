@@ -53,26 +53,26 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 style = TextStyle(
                     fontFamily = MaterialTheme.typography.body1.fontFamily,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 19.2.sp,
+                    fontSize = 16.sp,
                     color = Color.Black,
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .border(
-                        width = 1.2.dp,
+                        width = 1.dp,
                         color = Color(0xFFDFDFDF),
-                        shape = RoundedCornerShape(size = 9.6.dp)
+                        shape = RoundedCornerShape(size = 8.dp)
                     )
-                    .width(144.dp)
-                    .height(54.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(size = 9.6.dp))
-                    .padding(vertical = 17.dp)
+                    .width(120.dp)
+                    .height(45.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(size = 8.dp))
+                    .padding(vertical = 14.dp)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(19.2.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
@@ -84,10 +84,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                         }
                     },
                     modifier = Modifier
-                        .width(67.2.dp)
-                        .height(80.4.dp),
+                        .width(56.dp)
+                        .height(67.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF242424)),
-                    shape = RoundedCornerShape(9.6.dp)
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
                         painter = painterResource(
@@ -101,10 +101,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 Button(
                     onClick = { viewModel.report() },
                     modifier = Modifier
-                        .width(67.2.dp)
-                        .height(80.4.dp),
+                        .width(56.dp)
+                        .height(67.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFEF151E)),
-                    shape = RoundedCornerShape(9.6.dp)
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_report),
