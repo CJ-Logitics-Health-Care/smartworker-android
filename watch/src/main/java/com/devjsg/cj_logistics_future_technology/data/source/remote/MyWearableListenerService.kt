@@ -50,7 +50,7 @@ class MyWearableListenerService : WearableListenerService() {
     }
 
     private fun showReportNotification(x: Float, y: Float) {
-        val message = "Report location: x=$x, y=$y"
+        val message = "GPS 좌표 값: x=$x, y=$y"
         Log.d(TAG, "showReportNotification: $message")
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)

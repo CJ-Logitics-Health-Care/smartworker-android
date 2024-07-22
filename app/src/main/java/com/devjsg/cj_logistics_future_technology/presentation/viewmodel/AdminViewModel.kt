@@ -122,7 +122,6 @@ class AdminViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreManager.clearTokens()
             dataStoreManager.clearHeaderData()
-            keystoreHelper.clearLoginData()
             onLogoutComplete()
         }
     }
