@@ -5,13 +5,16 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -39,11 +42,36 @@ class HeartRateService : Service() {
 
     private val heartRateList = mutableListOf<Int>()
 
+    private var stepCount = 0
+    private var isStepCountReceived = false
+    private var isHeartRateCalculated = false
+    private var averageHeartRate = 0
+
+
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Service onCreate")
+        val filter = IntentFilter("com.devjsg.watch.STEP_COUNT_UPDATE")
+        registerReceiver(stepCountReceiver, filter, RECEIVER_NOT_EXPORTED)
         acquireWakeLock()
         startForegroundService()
+
+        serviceScope.launch {
+            startMonitoring()
+        }
+    }
+
+    private val stepCountReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let {
+                if (it.action == "com.devjsg.watch.STEP_COUNT_UPDATE") {
+                    stepCount = it.getIntExtra("stepCount", 0)
+                    isStepCountReceived = true
+                    Log.d(TAG, "Received step count: $stepCount")
+                    tryToSendData()
+                }
+            }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -54,6 +82,7 @@ class HeartRateService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(stepCountReceiver)
         Log.d(TAG, "Service onDestroy")
         stopMonitoring()
         releaseWakeLock()
@@ -87,6 +116,64 @@ class HeartRateService : Service() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun startMonitoring() {
+        serviceScope.launch {
+            heartRateRepository.heartRateMeasureFlow().collect { message ->
+                when (message) {
+                    is MeasureMessage.MeasureData -> {
+                        val heartRateValue = message.data.first().value.toInt()
+                        Log.d(TAG, "Heart Rate Value: $heartRateValue")
+                        heartRateList.add(heartRateValue)
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+
+        serviceScope.launch {
+            while (true) {
+                delay(5 * 1000)
+                averageHeartRate = calculateAverageHeartRate()
+                isHeartRateCalculated = true
+                Log.d(TAG, "Calculated Average Heart Rate: $averageHeartRate")
+                tryToSendData()
+                heartRateList.clear()
+            }
+        }
+    }
+
+    private fun tryToSendData() {
+        if (isStepCountReceived && isHeartRateCalculated) {
+            sendDataToDataLayer(averageHeartRate, stepCount)
+            isStepCountReceived = false
+            isHeartRateCalculated = false
+        }
+    }
+
+    private fun sendDataToDataLayer(heartRateAvg: Int, stepCount: Int) {
+        val data = Data.Builder()
+            .putInt("heartRateAvg", heartRateAvg)
+            .putInt("stepCount", stepCount)
+            .build()
+
+        val sendDataWorkRequest = OneTimeWorkRequestBuilder<SendHeartRateAvgWorker>()
+            .setInputData(data)
+            .build()
+
+        WorkManager.getInstance(this).enqueue(sendDataWorkRequest)
+    }
+
+    private fun calculateAverageHeartRate(): Int {
+        val validHeartRates = heartRateList.filter { it != 0 }
+        return if (validHeartRates.isNotEmpty()) {
+            validHeartRates.sum() / validHeartRates.size
+        } else {
+            0
+        }
+    }
+
+    /*@OptIn(ExperimentalCoroutinesApi::class)
+    private fun startMonitoring() {
         Log.d(TAG, "Starting heart rate monitoring")
         serviceScope.launch {
             heartRateRepository.heartRateMeasureFlow().collect { message ->
@@ -106,7 +193,7 @@ class HeartRateService : Service() {
 
         serviceScope.launch {
             while (true) {
-                delay(60 * 1000)
+                delay(5 * 1000)
                 val avg = calculateAverageHeartRate()
                 if(avg != 0){
                     sendHeartRateAvgBroadcast(avg)
@@ -115,16 +202,16 @@ class HeartRateService : Service() {
                 heartRateList.clear()
             }
         }
-    }
+    }*/
 
-    private fun calculateAverageHeartRate(): Int {
+    /*private fun calculateAverageHeartRate(): Int {
         val validHeartRates = heartRateList.filter { it != 0 }
         return if (validHeartRates.isNotEmpty()) {
             validHeartRates.sum() / validHeartRates.size
         } else {
             0
         }
-    }
+    }*/
 
     private fun sendHeartRateBroadcast(heartRate: Int) {
         val intent = Intent("com.devjsg.watch.HEART_RATE_UPDATE")

@@ -29,6 +29,11 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <service
+            android:name=".presentation.service.StepCounterService"
+            android:enabled="true"
+            android:exported="false" />
+
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />

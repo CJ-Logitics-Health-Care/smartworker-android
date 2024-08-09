@@ -18,11 +18,12 @@ class SendHeartRateAvgWorker(
 
     override suspend fun doWork(): Result {
         val heartRateAvg = inputData.getInt("heartRateAvg", 0)
+        val stepCount = inputData.getInt("stepCount", 0)
 
         val nodeId = getSmartphoneNodeId()
         return if (nodeId != null) {
             Log.d(TAG, "get Node Id : $nodeId")
-            sendHeartRateAvgToPhone(heartRateAvg, nodeId)
+            sendHeartRateAvgToPhone(heartRateAvg, stepCount, nodeId)
             Result.success()
         } else {
             Log.e(TAG, "No connected node found")
@@ -37,13 +38,13 @@ class SendHeartRateAvgWorker(
     }
 
     @SuppressLint("VisibleForTests")
-    private fun sendHeartRateAvgToPhone(heartRateAvg: Int, nodeId: String) {
+    private fun sendHeartRateAvgToPhone(heartRateAvg: Int, stepCount: Int, nodeId: String) {
         val messageClient: MessageClient = Wearable.getMessageClient(applicationContext)
-        val payload = heartRateAvg.toString().toByteArray()
+        val payload = "Heart Rate Avg: $heartRateAvg, Steps: $stepCount".toByteArray()
 
         messageClient.sendMessage(nodeId, "/heart_rate_avg", payload)
             .addOnSuccessListener {
-                Log.d(TAG, "Successfully sent heart rate avg data to phone: $heartRateAvg")
+                Log.d(TAG, "Successfully sent heart rate avg and step count data to phone: $heartRateAvg, $stepCount")
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "Failed to send heart rate avg data to phone", e)
