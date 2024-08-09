@@ -11,6 +11,7 @@ import com.devjsg.cj_logistics_future_technology.presentation.auth.SignUpScreen
 import com.devjsg.cj_logistics_future_technology.presentation.auth.TermsScreen
 import com.devjsg.cj_logistics_future_technology.presentation.detail.DetailMemberScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.AdminHomeScreen
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.ContestHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.home.worker.WorkerHomeScreen
 import com.devjsg.cj_logistics_future_technology.presentation.login.LoginScreen
 import com.devjsg.cj_logistics_future_technology.presentation.map.MapsScreen
@@ -34,6 +35,7 @@ fun Navigation(
             )
         }
         composable("admin_home") { AdminHomeScreen(navController = navController) }
+        composable("contest_home") { ContestHomeScreen(navController = navController) }
         composable("worker_home") {
             WorkerHomeScreen(
                 navController = navController,
