@@ -9,6 +9,7 @@ import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MyEmergencyReportResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
+import com.devjsg.cj_logistics_future_technology.domain.entity.ApiResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -23,6 +24,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
+import io.ktor.serialization.JsonConvertException
 import kotlinx.serialization.json.Json
 
 class MemberApiService(private val client: HttpClient) {
@@ -114,5 +116,27 @@ class MemberApiService(private val client: HttpClient) {
             parameter("start", start)
             parameter("end", end)
         }.body()
+    }
+
+    suspend fun getStaff(
+        token: String,
+        page: Int,
+        offset: Int,
+        sorting: String
+    ): ApiResponse {
+        return try {
+            client.get("https://cj-api.serial-blog.com/api/v1/reporting/day-report/v1") {
+                header(HttpHeaders.Authorization, "Bearer $token")
+                parameter("page", page)
+                parameter("offset", offset)
+                parameter("report-sorting", sorting)
+            }.body()
+        } catch (e: JsonConvertException) {
+            println("Error parsing JSON: ${e.message}")
+            throw e
+        } catch (e: Exception) {
+            println("Error fetching data: ${e.message}")
+            throw e
+        }
     }
 }

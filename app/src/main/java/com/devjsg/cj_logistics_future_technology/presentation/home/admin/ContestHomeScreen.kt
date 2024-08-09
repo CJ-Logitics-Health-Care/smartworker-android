@@ -1,6 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,26 +13,34 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.devjsg.cj_logistics_future_technology.domain.entity.Staff
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.PaginationRow
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.ShowDropdown
+import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.ContestHomeViewModel
 
 @Composable
-fun ContestHomeScreen(navController: NavController) {
+fun ContestHomeScreen(
+    navController: NavController,
+    viewModel: ContestHomeViewModel = hiltViewModel()
+) {
+    var warningText by remember { mutableStateOf("심박수 주의") }
+    var listSize by remember { mutableStateOf(10) } // 기본 리스트 크기를 10으로 설정
+
     Column {
         Text(
             text = "Staff List",
@@ -54,7 +62,6 @@ fun ContestHomeScreen(navController: NavController) {
             }
         )
 
-        // Filter & Sort
         var showFilters by remember { mutableStateOf(false) }
         Button(
             onClick = { showFilters = !showFilters },
@@ -67,92 +74,66 @@ fun ContestHomeScreen(navController: NavController) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Text("정렬 조건")
                 Row {
-                    Button(onClick = { /* Handle sort by steps */ }) { Text("걸음수") }
+                    Button(onClick = { viewModel.sorting.value = "MOVE_DESC"; viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize) }) { Text("걸음수") }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { /* Handle sort by distance */ }) { Text("이동거리") }
+                    Button(onClick = { viewModel.sorting.value = "KM_DESC"; viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize) }) { Text("이동거리") }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { /* Handle sort by heart rate */ }) { Text("심박수") }
+                    Button(onClick = { viewModel.sorting.value = "HEART_RATE_DESC"; viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize) }) { Text("심박수") }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
-
-                Text("심박수 주의")
                 Row {
-                    Button(onClick = { /* Handle filter by heart rate warning */ }) { Text("필터 및 정렬 적용") }
+                    Text(
+                        text = warningText,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .clickable {
+                                warningText = when (warningText) {
+                                    "심박수 주의" -> "걸음수 주의"
+                                    "걸음수 주의" -> "이동거리 주의"
+                                    else -> "심박수 주의"
+                                }
+                            }
+                            .padding(vertical = 8.dp)
+                    )
+                    Button(onClick = { viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize) }) { Text("필터 및 정렬 적용") }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { /* Handle reset filters */ }) { Text("초기화") }
+                    Button(onClick = { viewModel.sorting.value = "MOVE_DESC"; viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize) }) { Text("초기화") }
                 }
             }
         }
 
-        var listSize by remember { mutableStateOf(10) }
-        ShowDropdown(listSize = listSize, onListSizeChange = { listSize = it })
+        ShowDropdown(listSize = listSize, onListSizeChange = { newSize ->
+            listSize = newSize
+            viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize)
+        })
 
-        val staffList = listOf(
-            Staff("John Doe", 80, 12000, 5.2f),
-            Staff("Jane Smith", 75, 15000, 7.0f),
-        )
+        val staffList by viewModel.staffList.collectAsState()
 
-        var currentPage by remember { mutableStateOf(1) }
-        val totalPages = (staffList.size + 4) / 5
-        val pageSize = 5
-        val startPage = ((currentPage - 1) / pageSize) * pageSize + 1
-        val endPage = minOf(startPage + pageSize - 1, totalPages)
-
-        val paginatedList = staffList.drop((currentPage - 1) * 5).take(5)
-
-        LazyColumn {
-            items(paginatedList) { staff ->
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            items(staffList) { staff ->
                 Row(modifier = Modifier.padding(16.dp)) {
-                    Text(staff.name, modifier = Modifier.weight(1f))
+                    Text(staff.memberName, modifier = Modifier.weight(1f))
                     Text("${staff.heartRate} bpm", modifier = Modifier.weight(1f))
-                    Text("${staff.steps} steps", modifier = Modifier.weight(1f))
-                    Text("${staff.distance} km", modifier = Modifier.weight(1f))
+                    Text("${staff.moveWork} steps", modifier = Modifier.weight(1f))
+                    Text("${staff.km} km", modifier = Modifier.weight(1f))
                 }
                 Divider()
             }
         }
 
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(onClick = { currentPage = 1 }) {
-                Text("<<")
-            }
+        PaginationRow(
+            viewModel = viewModel,
+            totalPages = 20,
+            listSize = listSize
+        )
+    }
 
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(onClick = { if (currentPage > 1) currentPage-- }) {
-                Text("<")
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            for (page in startPage..endPage) {
-                Button(
-                    onClick = { currentPage = page },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (page == currentPage) Color.Gray else Color.LightGray
-                    )
-                ) {
-                    Text(page.toString())
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-
-            Button(onClick = { if (currentPage < totalPages) currentPage++ }) {
-                Text(">")
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(onClick = { currentPage = totalPages }) {
-                Text(">>")
-            }
-        }
+    LaunchedEffect(Unit) {
+        viewModel.loadStaff(viewModel.currentPage.value, viewModel.sorting.value, listSize)
     }
 }
