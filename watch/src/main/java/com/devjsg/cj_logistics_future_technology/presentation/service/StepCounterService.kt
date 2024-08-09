@@ -86,9 +86,8 @@ class StepCounterService : Service(), SensorEventListener {
 
     private val stepRunnable = object : Runnable {
         override fun run() {
-            /*stepsIn5Sec = stepCount
-            stepCount = 0*/
-            sendStepCountToDataLayer()
+            stepsIn5Sec = stepCount
+            stepCount = 0
             Log.d("StepCounter", "Steps in last 5 seconds: $stepsIn5Sec")
             handler.postDelayed(this, 5000)
         }
