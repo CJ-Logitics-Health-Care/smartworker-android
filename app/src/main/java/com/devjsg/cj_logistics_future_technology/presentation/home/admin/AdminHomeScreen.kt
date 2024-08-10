@@ -87,7 +87,7 @@ fun AdminHomeScreen(
     val insetsController = window?.let { WindowCompat.getInsetsController(it, window.decorView) }
     insetsController?.isAppearanceLightStatusBars = true
 
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { 3 })
 
     BottomSheetScaffold(
         scaffoldState = sheetState,
@@ -166,8 +166,7 @@ fun AdminHomeScreen(
                 Tab(
                     text = {
                         Text(
-                            "회원 리스트",
-                            style = if (pagerState.currentPage == 0) TextStyle(
+                            "레포트", style = if (pagerState.currentPage == 0) TextStyle(
                                 fontWeight = FontWeight(
                                     700
                                 )
@@ -180,7 +179,8 @@ fun AdminHomeScreen(
                 Tab(
                     text = {
                         Text(
-                            "신고 이력 조회", style = if (pagerState.currentPage == 1) TextStyle(
+                            "회원 리스트",
+                            style = if (pagerState.currentPage == 1) TextStyle(
                                 fontWeight = FontWeight(
                                     700
                                 )
@@ -193,15 +193,15 @@ fun AdminHomeScreen(
                 Tab(
                     text = {
                         Text(
-                            "걸음수 조회", style = if (pagerState.currentPage == 1) TextStyle(
+                            "신고 이력 조회", style = if (pagerState.currentPage == 2) TextStyle(
                                 fontWeight = FontWeight(
                                     700
                                 )
                             ) else TextStyle(fontWeight = FontWeight(400))
                         )
                     },
-                    selected = pagerState.currentPage == 1,
-                    onClick = { scope.launch { pagerState.animateScrollToPage(1) } }
+                    selected = pagerState.currentPage == 2,
+                    onClick = { scope.launch { pagerState.animateScrollToPage(2) } }
                 )
             }
             HorizontalPager(
@@ -209,7 +209,9 @@ fun AdminHomeScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {
-                    0 -> MemberListScreen(
+                    0 -> ContestScreen(navController = navController)
+
+                    1 -> MemberListScreen(
                         navController = navController,
                         viewModel = viewModel,
                         members = members,
@@ -223,7 +225,7 @@ fun AdminHomeScreen(
                         }
                     )
 
-                    1 -> IncidentHistoryScreen(viewModel = viewModel, navController = navController)
+                    2 -> IncidentHistoryScreen(viewModel = viewModel, navController = navController)
                 }
             }
         }

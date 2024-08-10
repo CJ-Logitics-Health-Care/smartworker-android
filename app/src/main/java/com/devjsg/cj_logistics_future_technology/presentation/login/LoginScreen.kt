@@ -87,7 +87,7 @@ fun LoginScreen(
                         Toast.makeText(context, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show()
                     }
                     if (sub == "1" || auth == "ROLE_ADMIN") {
-                        navController.navigate("contest_home") {
+                        navController.navigate("admin_home") {
                             popUpTo("login") { inclusive = true }
                         }
                     } else {
