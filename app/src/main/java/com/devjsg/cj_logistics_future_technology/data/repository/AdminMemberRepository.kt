@@ -1,9 +1,9 @@
 package com.devjsg.cj_logistics_future_technology.data.repository
 
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
+import com.devjsg.cj_logistics_future_technology.data.model.ContestResponse
 import com.devjsg.cj_logistics_future_technology.data.model.HeartRateResponse
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
-import com.devjsg.cj_logistics_future_technology.domain.entity.ApiResponse
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
@@ -20,8 +20,15 @@ class AdminMemberRepository @Inject constructor(
         token: String,
         page: Int,
         offset: Int,
-        sorting: String
-    ): ApiResponse {
-        return apiService.getStaff(token, page, offset, sorting)
+        sortings: List<String>,
+        reportCondition: String
+    ): ContestResponse {
+        return apiService.getStaff(
+            token = token,
+            page = page,
+            offset = offset,
+            sortings = sortings,
+            reportCondition = reportCondition
+        )
     }
 }

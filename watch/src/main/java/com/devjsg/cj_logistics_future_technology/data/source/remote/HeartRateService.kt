@@ -43,7 +43,10 @@ class HeartRateService : Service() {
     private val heartRateList = mutableListOf<Int>()
 
     private var stepCount = 0
-    
+    private var isStepCountReceived = false
+    private var isHeartRateCalculated = false
+    private var averageHeartRate = 0
+
 
     override fun onCreate() {
         super.onCreate()
@@ -62,8 +65,10 @@ class HeartRateService : Service() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
                 if (it.action == "com.devjsg.watch.STEP_COUNT_UPDATE") {
-                    val stepCount = it.getIntExtra("stepCount", 0)
+                    stepCount = it.getIntExtra("stepCount", 0)
+                    isStepCountReceived = true
                     Log.d(TAG, "Received step count: $stepCount")
+                    tryToSendData()
                 }
             }
         }
@@ -118,11 +123,10 @@ class HeartRateService : Service() {
                         val heartRateValue = message.data.first().value.toInt()
                         Log.d(TAG, "Heart Rate Value: $heartRateValue")
                         heartRateList.add(heartRateValue)
+                        sendHeartRateBroadcast(heartRateValue)
                     }
 
-                    is MeasureMessage.MeasureAvailability -> {
-                        //Log.d(TAG, "Heart Rate Sensor Availability: ${message.isAvailable}")
-                    }
+                    else -> {}
                 }
             }
         }
@@ -130,13 +134,20 @@ class HeartRateService : Service() {
         serviceScope.launch {
             while (true) {
                 delay(5 * 1000)
-                val avgHeartRate = calculateAverageHeartRate()
-                if (avgHeartRate != 0) {
-                    Log.d(TAG, "Average Heart Rate: $avgHeartRate, Step Count: $stepCount")
-                    sendDataToDataLayer(avgHeartRate, stepCount)
-                }
+                averageHeartRate = calculateAverageHeartRate()
+                isHeartRateCalculated = true
+                Log.d(TAG, "Calculated Average Heart Rate: $averageHeartRate")
+                tryToSendData()
                 heartRateList.clear()
             }
+        }
+    }
+
+    private fun tryToSendData() {
+        if (isStepCountReceived && isHeartRateCalculated) {
+            sendDataToDataLayer(averageHeartRate, stepCount)
+            isStepCountReceived = false
+            isHeartRateCalculated = false
         }
     }
 

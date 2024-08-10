@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ShowDropdown(listSize: Int, onListSizeChange: (Int) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    val items = listOf(5, 10, 20)
+    val items = listOf(10, 20, 50)
     var selectedItem by remember { mutableStateOf(listSize) }
 
     Box(modifier = Modifier.padding(16.dp)) {

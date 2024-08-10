@@ -1,6 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.data.network
 
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
+import com.devjsg.cj_logistics_future_technology.data.model.ContestResponse
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.HeartRateResponse
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
@@ -9,7 +10,6 @@ import com.devjsg.cj_logistics_future_technology.data.model.MemberInfoResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MemberResponse
 import com.devjsg.cj_logistics_future_technology.data.model.MyEmergencyReportResponse
 import com.devjsg.cj_logistics_future_technology.data.model.SignUpRequest
-import com.devjsg.cj_logistics_future_technology.domain.entity.ApiResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -24,7 +24,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import io.ktor.serialization.JsonConvertException
 import kotlinx.serialization.json.Json
 
 class MemberApiService(private val client: HttpClient) {
@@ -62,11 +61,12 @@ class MemberApiService(private val client: HttpClient) {
     }
 
     suspend fun getMembers(token: String, page: Int, size: Int): MemberResponse {
-        val response: HttpResponse = client.get("${NetworkConstants.BASE_URL}member/cursor-paging") {
-            header(HttpHeaders.Authorization, "Bearer $token")
-            parameter("page", page)
-            parameter("size", size)
-        }
+        val response: HttpResponse =
+            client.get("${NetworkConstants.BASE_URL}member/cursor-paging") {
+                header(HttpHeaders.Authorization, "Bearer $token")
+                parameter("page", page)
+                parameter("size", size)
+            }
 
         val responseBody = response.bodyAsText()
         println("Response Body: $responseBody")
@@ -87,7 +87,11 @@ class MemberApiService(private val client: HttpClient) {
         }
     }
 
-    suspend fun getEmergencyReports(token: String, start: String, end: String): MyEmergencyReportResponse {
+    suspend fun getEmergencyReports(
+        token: String,
+        start: String,
+        end: String
+    ): MyEmergencyReportResponse {
         return client.get("${NetworkConstants.BASE_URL}fcm/employee/emergency-report") {
             header(HttpHeaders.Authorization, "Bearer $token")
             parameter("start", start)
@@ -102,7 +106,12 @@ class MemberApiService(private val client: HttpClient) {
         }.body()
     }
 
-    suspend fun getHeartRateData(token: String, memberId: Int, start: String, end: String): HeartRateResponse {
+    suspend fun getHeartRateData(
+        token: String,
+        memberId: Int,
+        start: String,
+        end: String
+    ): HeartRateResponse {
         return client.get("${NetworkConstants.BASE_URL}heart-rate/aggregate/$memberId") {
             header("Authorization", "Bearer $token")
             parameter("start", start)
@@ -122,21 +131,24 @@ class MemberApiService(private val client: HttpClient) {
         token: String,
         page: Int,
         offset: Int,
-        sorting: String
-    ): ApiResponse {
-        return try {
-            client.get("https://cj-api.serial-blog.com/api/v1/reporting/day-report/v1") {
-                header(HttpHeaders.Authorization, "Bearer $token")
-                parameter("page", page)
-                parameter("offset", offset)
-                parameter("report-sorting", sorting)
-            }.body()
-        } catch (e: JsonConvertException) {
-            println("Error parsing JSON: ${e.message}")
-            throw e
-        } catch (e: Exception) {
-            println("Error fetching data: ${e.message}")
-            throw e
-        }
+        sortings: List<String> = listOf("NONE"),
+        reportCondition: String
+    ): ContestResponse {
+        return client.get("${NetworkConstants.BASE_URL}reporting/day-report") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            header(HttpHeaders.Accept, "application/json;charset=UTF-8")
+            parameter("page", page)
+            parameter("offset", offset)
+
+            if (sortings.isEmpty()) {
+                url.parameters.append("report-sorting", "NONE")
+            } else {
+                sortings.forEach { sorting ->
+                    url.parameters.append("report-sorting", sorting)
+                }
+            }
+
+            parameter("report-condition", reportCondition)
+        }.body()
     }
 }

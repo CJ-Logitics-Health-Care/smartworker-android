@@ -4,8 +4,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
+import com.devjsg.cj_logistics_future_technology.data.model.Staff
 import com.devjsg.cj_logistics_future_technology.data.repository.AdminMemberRepository
-import com.devjsg.cj_logistics_future_technology.domain.entity.Staff
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,13 +23,78 @@ class ContestHomeViewModel @Inject constructor(
     val staffList: StateFlow<List<Staff>> = _staffList
 
     var currentPage = mutableStateOf(1)
-    var sorting = mutableStateOf("MOVE_DESC")
+    var listSize = mutableStateOf(10)
+    var totalPages = mutableStateOf(0)
+    var moveSortOrder = mutableStateOf("NONE")
+    var kmSortOrder = mutableStateOf("NONE")
+    var heartRateSortOrder = mutableStateOf("NONE")
+    var reportCondition = mutableStateOf("NONE")
 
-    fun loadStaff(page: Int, sorting: String, listSize: Int) {
+    fun applySortingAndFiltering() {
+        val sortings = mutableListOf<String>()
+        if (moveSortOrder.value != "NONE") sortings.add(moveSortOrder.value)
+        if (kmSortOrder.value != "NONE") sortings.add(kmSortOrder.value)
+        if (heartRateSortOrder.value != "NONE") sortings.add(heartRateSortOrder.value)
+
         viewModelScope.launch {
             val token = dataStoreManager.token.first()
-            val response = memberRepository.getStaff(token!!, page, listSize, sorting)
-            _staffList.value = response.data.value
+            if (token != null) {
+                val response = memberRepository.getStaff(
+                    token = token,
+                    page = currentPage.value,
+                    offset = listSize.value,
+                    sortings = sortings.ifEmpty { listOf("NONE") },
+                    reportCondition = reportCondition.value
+                )
+                _staffList.value = response.data.value
+
+                totalPages.value = response.data.allPageCount
+
+                if (currentPage.value > totalPages.value) {
+                    currentPage.value = totalPages.value
+                }
+            }
         }
+    }
+
+    fun updateListSize(newSize: Int) {
+        listSize.value = newSize
+        applySortingAndFiltering()
+    }
+
+    fun toggleMoveSortOrder() {
+        moveSortOrder.value = when (moveSortOrder.value) {
+            "NONE" -> "MOVE_DESC"
+            "MOVE_DESC" -> "MOVE_ASC"
+            else -> "NONE"
+        }
+    }
+
+    fun toggleKmSortOrder() {
+        kmSortOrder.value = when (kmSortOrder.value) {
+            "NONE" -> "KM_DESC"
+            "KM_DESC" -> "KM_ASC"
+            else -> "NONE"
+        }
+    }
+
+    fun toggleHeartRateSortOrder() {
+        heartRateSortOrder.value = when (heartRateSortOrder.value) {
+            "NONE" -> "HEART_RATE_DESC"
+            "HEART_RATE_DESC" -> "HEART_RATE_ASC"
+            else -> "NONE"
+        }
+    }
+
+    fun updateReportCondition(condition: String) {
+        reportCondition.value = condition
+    }
+
+    fun resetSortingAndFiltering() {
+        moveSortOrder.value = "NONE"
+        kmSortOrder.value = "NONE"
+        heartRateSortOrder.value = "NONE"
+        reportCondition.value = "NONE"
+        applySortingAndFiltering()
     }
 }

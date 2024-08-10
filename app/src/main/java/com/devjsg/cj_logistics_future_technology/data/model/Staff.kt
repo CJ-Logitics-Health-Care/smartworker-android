@@ -1,4 +1,4 @@
-package com.devjsg.cj_logistics_future_technology.domain.entity
+package com.devjsg.cj_logistics_future_technology.data.model
 
 import kotlinx.serialization.Serializable
 
@@ -9,11 +9,12 @@ data class Staff (
     val moveWork: Int,
     val heartRate:Float,
     val km:Float,
-    val createdAt: String
+    val createdAt: String,
+    val isOverHeartRate: Boolean,
 )
 
 @Serializable
-data class ApiResponse(
+data class ContestResponse(
     val data: Data,
     val statusCode: Int,
     val messages: List<String>,
@@ -24,5 +25,6 @@ data class ApiResponse(
 data class Data(
     val nowPage: Int,
     val allPageCount: Int,
-    val value: List<Staff>
+    val value: List<Staff>,
+    val elementCount: Int
 )

@@ -195,7 +195,7 @@ fun LoginScreen(
                                     .show()
                             }
                             if (sub == "1" || auth == "ROLE_ADMIN") {
-                                navController.navigate("contest_home") {
+                                navController.navigate("admin_home") {
                                     popUpTo("login") { inclusive = true }
                                 }
                             } else {
