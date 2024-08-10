@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ContestHomeViewModel @Inject constructor(
-    private val memberRepository: AdminMemberRepository,
+    private val adminMemberRepository: AdminMemberRepository,
     private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
@@ -30,6 +30,8 @@ class ContestHomeViewModel @Inject constructor(
     var heartRateSortOrder = mutableStateOf("NONE")
     var reportCondition = mutableStateOf("NONE")
 
+    var searchQuery = mutableStateOf("")
+
     fun applySortingAndFiltering() {
         val sortings = mutableListOf<String>()
         if (moveSortOrder.value != "NONE") sortings.add(moveSortOrder.value)
@@ -39,7 +41,7 @@ class ContestHomeViewModel @Inject constructor(
         viewModelScope.launch {
             val token = dataStoreManager.token.first()
             if (token != null) {
-                val response = memberRepository.getStaff(
+                val response = adminMemberRepository.getStaff(
                     token = token,
                     page = currentPage.value,
                     offset = listSize.value,
@@ -53,6 +55,28 @@ class ContestHomeViewModel @Inject constructor(
                 if (currentPage.value > totalPages.value) {
                     currentPage.value = totalPages.value
                 }
+            }
+        }
+    }
+
+    fun searchStaffByName(name: String) {
+        viewModelScope.launch {
+            val token = dataStoreManager.token.first()
+            if (token != null) {
+                val response = adminMemberRepository.searchStaff(token, name)
+                _staffList.value = response.data.map { searchStaff ->
+                    Staff(
+                        id = searchStaff.id,
+                        memberName = searchStaff.memberName,
+                        moveWork = searchStaff.moveWork,
+                        heartRate = searchStaff.heartRate,
+                        km = searchStaff.km,
+                        createdAt = searchStaff.createdAt,
+                        isOverHeartRate = searchStaff.isOverHeartRate
+                    )
+                }
+                totalPages.value = 1
+                currentPage.value = 1
             }
         }
     }

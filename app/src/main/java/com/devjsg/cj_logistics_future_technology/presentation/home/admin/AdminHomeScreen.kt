@@ -190,6 +190,19 @@ fun AdminHomeScreen(
                     selected = pagerState.currentPage == 1,
                     onClick = { scope.launch { pagerState.animateScrollToPage(1) } }
                 )
+                Tab(
+                    text = {
+                        Text(
+                            "걸음수 조회", style = if (pagerState.currentPage == 1) TextStyle(
+                                fontWeight = FontWeight(
+                                    700
+                                )
+                            ) else TextStyle(fontWeight = FontWeight(400))
+                        )
+                    },
+                    selected = pagerState.currentPage == 1,
+                    onClick = { scope.launch { pagerState.animateScrollToPage(1) } }
+                )
             }
             HorizontalPager(
                 state = pagerState,

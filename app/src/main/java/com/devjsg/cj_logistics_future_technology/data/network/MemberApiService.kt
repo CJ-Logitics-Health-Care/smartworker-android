@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.data.network
 
 import com.devjsg.cj_logistics_future_technology.data.model.CheckLoginIdResponse
 import com.devjsg.cj_logistics_future_technology.data.model.ContestResponse
+import com.devjsg.cj_logistics_future_technology.data.model.ContestSearchResponse
 import com.devjsg.cj_logistics_future_technology.data.model.EditableMember
 import com.devjsg.cj_logistics_future_technology.data.model.HeartRateResponse
 import com.devjsg.cj_logistics_future_technology.data.model.LoginRequest
@@ -149,6 +150,14 @@ class MemberApiService(private val client: HttpClient) {
             }
 
             parameter("report-condition", reportCondition)
+        }.body()
+    }
+
+    suspend fun searchStaff(token: String, name: String): ContestSearchResponse {
+        return client.get("${NetworkConstants.BASE_URL}reporting/search") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            header(HttpHeaders.Accept, "application/json;charset=UTF-8")
+            parameter("name", name)
         }.body()
     }
 }

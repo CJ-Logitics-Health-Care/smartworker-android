@@ -2,6 +2,7 @@ package com.devjsg.cj_logistics_future_technology.data.repository
 
 import com.devjsg.cj_logistics_future_technology.data.local.datastore.DataStoreManager
 import com.devjsg.cj_logistics_future_technology.data.model.ContestResponse
+import com.devjsg.cj_logistics_future_technology.data.model.ContestSearchResponse
 import com.devjsg.cj_logistics_future_technology.data.model.HeartRateResponse
 import com.devjsg.cj_logistics_future_technology.data.network.MemberApiService
 import kotlinx.coroutines.flow.first
@@ -30,5 +31,9 @@ class AdminMemberRepository @Inject constructor(
             sortings = sortings,
             reportCondition = reportCondition
         )
+    }
+
+    suspend fun searchStaff(token: String, name: String): ContestSearchResponse {
+        return apiService.searchStaff(token, name)
     }
 }
