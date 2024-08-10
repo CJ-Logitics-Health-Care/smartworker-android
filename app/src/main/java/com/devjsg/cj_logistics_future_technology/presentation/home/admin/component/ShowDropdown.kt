@@ -57,7 +57,7 @@ fun ShowDropdown(listSize: Int, onListSizeChange: (Int) -> Unit) {
                     text = "$selectedItem", color = Color.Black, style = TextStyle(
                         fontSize = 18.sp,
                         lineHeight = 28.sp,
-                        fontWeight = FontWeight(500),
+                        fontWeight = FontWeight(400),
                         color = Color.Black,
                     )
                 )
