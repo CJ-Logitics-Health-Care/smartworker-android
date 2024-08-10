@@ -1,10 +1,8 @@
 package com.devjsg.cj_logistics_future_technology.presentation.home.admin
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,12 +20,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,6 +45,7 @@ import androidx.navigation.NavController
 import com.devjsg.cj_logistics_future_technology.R
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.PaginationRow
 import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.ShowDropdown
+import com.devjsg.cj_logistics_future_technology.presentation.home.admin.component.StaffCard
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.ContestHomeViewModel
 import java.text.DecimalFormat
 
@@ -391,34 +388,13 @@ fun ContestScreen(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
+                .padding(12.dp)
         ) {
             items(staffList) { staff ->
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Max)
-                ) {
-                    VerticalDivider(
-                        color = if (staff.isOverHeartRate) Color.Red else Color.Transparent,
-                        thickness = 4.dp
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(staff.memberName, modifier = Modifier.weight(1f))
-                    Text("${staff.heartRate.toInt()} bpm", modifier = Modifier.weight(1f))
-                    Text(
-                        "${formatter.format(staff.moveWork)} steps",
-                        modifier = Modifier.weight(1f)
-                    )
-                    Text("${staff.km} km", modifier = Modifier.weight(1f))
-                }
-                Divider()
+                StaffCard(staff = staff, formatter = formatter)
             }
         }
 
-        Log.d("totalPages", totalPages.toString())
         PaginationRow(
             viewModel = viewModel,
             totalPages = totalPages

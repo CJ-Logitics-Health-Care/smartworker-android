@@ -25,8 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.devjsg.cj_logistics_future_technology.R
 
 @Composable
@@ -50,7 +53,14 @@ fun ShowDropdown(listSize: Int, onListSizeChange: (Int) -> Unit) {
             shape = RoundedCornerShape(8.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "$selectedItem", color = Color.Black)
+                Text(
+                    text = "$selectedItem", color = Color.Black, style = TextStyle(
+                        fontSize = 18.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight(500),
+                        color = Color.Black,
+                    )
+                )
                 Spacer(modifier = Modifier.width(16.dp))
                 Icon(
                     painter = painterResource(id = R.drawable.ic_dropdown),

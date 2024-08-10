@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.devjsg.cj_logistics_future_technology.presentation.viewmodel.ContestHomeViewModel
 
 @Composable
@@ -27,7 +28,7 @@ fun PaginationRow(
 
     Row(
         modifier = Modifier
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
@@ -39,7 +40,8 @@ fun PaginationRow(
                     currentGroupStart = 1
                     viewModel.currentPage.value = 1
                     viewModel.applySortingAndFiltering()
-                }
+                },
+            fontSize = 18.sp
         )
 
         Text(
@@ -52,7 +54,8 @@ fun PaginationRow(
                         viewModel.currentPage.value = currentGroupStart
                         viewModel.applySortingAndFiltering()
                     }
-                }
+                },
+            fontSize = 18.sp,
         )
 
         val endPage = minOf(currentGroupStart + pagesPerGroup - 1, totalPages)
@@ -66,7 +69,8 @@ fun PaginationRow(
                         viewModel.currentPage.value = page
                         viewModel.applySortingAndFiltering()
                     },
-                color = if (page == viewModel.currentPage.value) Color.Gray else Color.Black
+                fontSize = 18.sp,
+                color = if (page == viewModel.currentPage.value) Color.Black else Color.Gray
             )
         }
 
@@ -80,7 +84,8 @@ fun PaginationRow(
                         viewModel.currentPage.value = currentGroupStart
                         viewModel.applySortingAndFiltering()
                     }
-                }
+                },
+            fontSize = 18.sp,
         )
 
         Text(
@@ -91,7 +96,8 @@ fun PaginationRow(
                     currentGroupStart = (totalPages - 1) / pagesPerGroup * pagesPerGroup + 1
                     viewModel.currentPage.value = totalPages
                     viewModel.applySortingAndFiltering()
-                }
+                },
+            fontSize = 18.sp,
         )
     }
 }
