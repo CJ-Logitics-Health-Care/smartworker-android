@@ -41,11 +41,13 @@ fun SplashScreen(navController: NavController, viewModel: MainViewModel = hiltVi
         if (isLoggedIn != null) {
             val (decodedSub, auth) = decodeJwt(isLoggedIn!!)
             if (decodedSub == "1" || auth == "ROLE_ADMIN") {
-                navController.navigate("admin_home") {
+                //대회 평가를 위해 관리자 홈이 아닌, 로그인 화면으로 초기 세팅
+                navController.navigate("login") {
                     popUpTo("splash") { inclusive = true }
                 }
             } else {
-                navController.navigate("worker_home") {
+                //대회 평가를 위해 근로자 홈이 아닌, 로그인 화면으로 초기 세팅
+                navController.navigate("login") {
                     popUpTo("splash") { inclusive = true }
                 }
             }
