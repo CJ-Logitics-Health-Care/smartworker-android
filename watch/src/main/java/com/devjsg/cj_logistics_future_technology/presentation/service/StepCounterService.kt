@@ -11,102 +11,126 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.devjsg.cj_logistics_future_technology.R
-import com.devjsg.cj_logistics_future_technology.data.source.remote.SendHeartRateAvgWorker
-import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.wearable.MessageClient
+import com.google.android.gms.wearable.NodeClient
+import com.google.android.gms.wearable.Wearable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class StepCounterService : Service(), SensorEventListener {
 
     @Inject
     lateinit var sensorManager: SensorManager
 
-    @Inject
-    lateinit var handler: Handler
-
     private var stepCounterSensor: Sensor? = null
     private var stepCount: Int = 0
-    private var stepsIn5Sec: Int = 0
 
+    companion object {
+        private const val NOTIFICATION_ID = 1
+    }
+
+    @SuppressLint("ForegroundServiceType")
     override fun onCreate() {
         super.onCreate()
 
+        val notification = createNotification()
+        startForeground(NOTIFICATION_ID, notification)
+
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
         stepCounterSensor?.also { stepSensor ->
             sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
 
-        startForegroundService()
         handler.postDelayed(stepRunnable, 5000)
     }
 
-    @SuppressLint("ForegroundServiceType")
-    private fun startForegroundService() {
-        val notificationChannelId = "STEP_COUNTER_CHANNEL"
-        val channel = NotificationChannel(
-            notificationChannelId,
-            "Step Counter Service",
-            NotificationManager.IMPORTANCE_LOW
-        )
-
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.createNotificationChannel(channel)
-
-        val notification: Notification = NotificationCompat.Builder(this, notificationChannelId)
-            .setContentTitle("Step Counter Service")
-            .setContentText("Monitoring steps in the background")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .build()
-
-        startForeground(1, notification) // startForeground 호출
-    }
-
-    private fun sendStepCountToDataLayer() {
-        val randomStepCount = (1..10).random() // 1~10 사이의 난수 생성
-        val data = Data.Builder()
-            .putInt("stepCount", randomStepCount)
-            .build()
-
-        val sendStepCountWorkRequest = OneTimeWorkRequestBuilder<SendHeartRateAvgWorker>()
-            .setInputData(data)
-            .build()
-
-        WorkManager.getInstance(this).enqueue(sendStepCountWorkRequest)
-    }
-
-
+    private val handler = Handler(Looper.getMainLooper())
     private val stepRunnable = object : Runnable {
         override fun run() {
-            stepsIn5Sec = stepCount
+            sendStepCountToPhone(stepCount)
             stepCount = 0
-            Log.d("StepCounter", "Steps in last 5 seconds: $stepsIn5Sec")
             handler.postDelayed(this, 5000)
         }
     }
 
-    override fun onSensorChanged(event: SensorEvent) {
-        if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
-            stepCount++
-            Log.d("StepCounterService", "걸음 수: $stepCount")
+    private fun createNotification(): Notification {
+        val notificationChannelId = "STEP_COUNTER_SERVICE_CHANNEL"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                notificationChannelId,
+                "Step Counter Service",
+                NotificationManager.IMPORTANCE_LOW
+            )
+
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+
+        return NotificationCompat.Builder(this, notificationChannelId)
+            .setContentTitle("Step Counter Service")
+            .setContentText("Monitoring your steps")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+    }
+
+    private suspend fun getConnectedNodeId(): String? = withContext(Dispatchers.IO) {
+        val nodeClient: NodeClient = Wearable.getNodeClient(this@StepCounterService)
+        val nodes = try {
+            Tasks.await(nodeClient.connectedNodes)
+        } catch (e: Exception) {
+            Log.e("StepCounterService", "Failed to get connected nodes", e)
+            return@withContext null
+        }
+
+        if (nodes.isEmpty()) {
+            Log.e("StepCounterService", "No connected nodes found")
+            return@withContext null
+        }
+
+        nodes.firstOrNull()?.id.also {
+            Log.d("StepCounterService", "Connected node found: $it")
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+    private fun sendStepCountToPhone(stepCount: Int) {
+        val messageClient: MessageClient = Wearable.getMessageClient(this)
 
+        CoroutineScope(Dispatchers.IO).launch {
+            val nodeId = getConnectedNodeId() ?: return@launch
+            val payload = stepCount.toString().toByteArray()
+
+            messageClient.sendMessage(nodeId, "/step_counter", payload)
+                .addOnSuccessListener {
+                    Log.d("StepCounterService", "Step count sent successfully, $stepCount")
+                }
+                .addOnFailureListener {
+                    Log.e("StepCounterService", "Failed to send step count")
+                }
+        }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_STICKY
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event?.sensor?.type == Sensor.TYPE_STEP_DETECTOR) {
+            stepCount++
+        }
     }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onDestroy() {
         super.onDestroy()
@@ -114,7 +138,5 @@ class StepCounterService : Service(), SensorEventListener {
         handler.removeCallbacks(stepRunnable)
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 }

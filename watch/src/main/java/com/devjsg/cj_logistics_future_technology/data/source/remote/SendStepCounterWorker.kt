@@ -1,7 +1,7 @@
 package com.devjsg.cj_logistics_future_technology.data.source.remote
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
@@ -11,21 +11,21 @@ import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.NodeClient
 import com.google.android.gms.wearable.Wearable
 
-class SendHeartRateAvgWorker(
+class SendStepCounterWorker(
     context: Context,
     workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val heartRateAvg = inputData.getInt("heartRateAvg", 0)
+        val stepCount = inputData.getInt("stepCount", 0)
 
         val nodeId = getSmartphoneNodeId()
         return if (nodeId != null) {
-            Log.d(TAG, "get Node Id : $nodeId")
-            sendHeartRateAvgToPhone(heartRateAvg, nodeId)
+            Log.d(ContentValues.TAG, "get Node Id : $nodeId")
+            sendStepCounterToPhone(stepCount, nodeId)
             Result.success()
         } else {
-            Log.e(TAG, "No connected node found")
+            Log.e(ContentValues.TAG, "No connected node found")
             Result.failure()
         }
     }
@@ -37,16 +37,16 @@ class SendHeartRateAvgWorker(
     }
 
     @SuppressLint("VisibleForTests")
-    private fun sendHeartRateAvgToPhone(heartRateAvg: Int, nodeId: String) {
+    private fun sendStepCounterToPhone(stepCount: Int, nodeId: String) {
         val messageClient: MessageClient = Wearable.getMessageClient(applicationContext)
-        val payload = heartRateAvg.toString().toByteArray()
+        val payload = stepCount.toString().toByteArray()
 
-        messageClient.sendMessage(nodeId, "/heart_rate_avg", payload)
+        messageClient.sendMessage(nodeId, "/step_counter", payload)
             .addOnSuccessListener {
-                Log.d(TAG, "Successfully sent heart rate avg data to phone: $heartRateAvg")
+                Log.d(ContentValues.TAG, "Successfully sent step count data to phone: $stepCount")
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Failed to send heart rate avg data to phone", e)
+                Log.e(ContentValues.TAG, "Failed to send step count data to phone", e)
             }
     }
 }
