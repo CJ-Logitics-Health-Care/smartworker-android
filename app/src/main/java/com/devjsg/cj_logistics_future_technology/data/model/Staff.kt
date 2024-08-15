@@ -1,5 +1,6 @@
 package com.devjsg.cj_logistics_future_technology.data.model
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,6 +23,7 @@ data class ContestResponse(
 )
 
 @Serializable
+@Immutable
 data class Data(
     val nowPage: Int,
     val allPageCount: Int,
