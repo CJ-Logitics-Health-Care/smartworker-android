@@ -8,6 +8,12 @@ AGP 8.4.1
 KSP 1.9.22-1.0.17  
   
 적용 라이브러리 : Android Jetpack(Compose, Compose Navigation, Hilt etc.), WearOS, HealthServices, JWT, DataStore, WearOs DataLayer, Coroutines, Ktor, Biometric, Paing3, Concurrent, SecurityCryptoKtx, WorkManager, Firebase(firebaseCrashlytics, FCM, App Distribution), Google Map, MpAndroidChart
+
+### (본선 현장대회) 직원 레포트 화면
+| ![KakaoTalk_20240811_153211951-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/54fa2dd2-bf03-4e52-8417-92d2852d3b90)<br> | ![KakaoTalk_20240811_153209758-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/00964876-afba-47e7-9e5b-de1449446b18)<br> | ![KakaoTalk_20240811_153209378-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/1eb709ac-0d35-427a-a66d-c67b54093f12) |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------: |
+| 필터 및 정렬 설정 기능                                                                                                                                         | 아이템 개수에 따른 페이징 처리                                                                                                                                     | 특정 직원 조회 기능                                                                                                                                       |
++ (추가) 스마트워치 걸음수 조회 및 데이터 처리 기능 구현 완료
   
 ### 스마트폰  화면
 | ![KakaoTalk_20240723_234415285-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/eaefdb8e-6ec8-4d1b-82c5-8cf2f2df8034) | ![KakaoTalk_20240723_234414920-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/9167e6c9-5e9d-4ea7-9c56-f30178e3c4ed)<br> | ![KakaoTalk_20240723_234414849-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/189bc617-0cb7-4b6a-8e7d-617e5e0f7fdc) |
